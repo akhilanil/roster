@@ -1,0 +1,2 @@
+from validation_exceptions import INVALID_NUMBER_OF_PARTICIPANTS
+from validation_exceptions import INVALID_NUMBER_OF_SESSIONS
