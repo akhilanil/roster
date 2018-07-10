@@ -6,5 +6,8 @@ class ParticipantSerializer(serializers.Serializer):
     """ Serializer for participants mentioned in  the
     CreateRosterSerializer """
 
-    name = serializers.CharField(max_length=15)
-    leave_dates = serializers.ListField(serializers.DateField())
+    name = serializers.CharField(max_length=15, required=True)
+    leave_dates = serializers.ListField(
+        child=serializers.DateField(),
+        required=False
+    )

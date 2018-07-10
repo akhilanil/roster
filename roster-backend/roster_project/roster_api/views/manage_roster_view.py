@@ -15,8 +15,11 @@ class ManageRosterView(viewsets.ViewSet):
 
     def create(self, request):
         serializer = CreateRosterService.process_request(request)
+
         if(serializer.is_valid()):
-            return Response({'message': serializer.data.get('participants')})
+            val = serializer.data.get('participants')
+
+            return Response({'message': val})
         else:
             return Response(
                 serializer.errors, status=status.HTTP_400_BAD_REQUEST)
