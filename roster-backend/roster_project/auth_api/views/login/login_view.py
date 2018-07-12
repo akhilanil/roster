@@ -12,4 +12,5 @@ class LoginViewSet(viewsets.ViewSet):
     def create(self, request):
         """ HTTP POST Method to validate user name and password and
                 return the Auth token"""
+
         return ObtainAuthToken.post(self, request)

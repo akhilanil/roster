@@ -17,8 +17,8 @@ class ManageRosterView(viewsets.ViewSet):
     permission_classes = (IsAuthenticated,)
 
     def create(self, request):
+        print(request.user)
         serializer = CreateRosterService.process_request(request)
-
         if(serializer.is_valid()):
             val = serializer.data.get('participants')
 
