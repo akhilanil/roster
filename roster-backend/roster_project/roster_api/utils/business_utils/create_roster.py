@@ -44,5 +44,3 @@ def prepare_roster(
 
     valid_days = create_roster_helper.getNumerOfValidDays(
         month, year, is_sunday_included, saturdays_list, total_holidays)
-
-        

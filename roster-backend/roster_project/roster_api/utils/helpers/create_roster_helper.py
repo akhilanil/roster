@@ -44,8 +44,15 @@ class CreateRosterHelper():
         participants
     ):
         """ Method to get the list containig number of sessions for each
-        participants and the remaining days to be catered """
-        
+        participants and the remaining days to be catered. The return value
+        would be as follows<br>
+
+        [2,[{"name":"","leave_dates":[],""}]]
+
+
+
+        """
+
 
         date_meta_data = [];
 
