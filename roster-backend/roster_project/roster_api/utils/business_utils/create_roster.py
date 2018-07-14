@@ -1,15 +1,16 @@
 from . import CreateRosterHelper
 
+from types import List
 
 def prepare_roster(
-    username,
-    participants,
-    holidays,
-    month,
-    year,
-    is_sunday_included,
-    saturdays_list,
-    sessions,
+    username: str,
+    participants: List,
+    holidays: List,
+    month: int,
+    year: int,
+    is_sunday_included: bool,
+    saturdays_list: List[bool],
+    sessions: List[str],
 
 ):
     """ Fucntion to handle roster creation.<br>
@@ -42,5 +43,10 @@ def prepare_roster(
     total_holidays = len(sessions)
     total_session = len(sessions)
 
-    valid_days = create_roster_helper.getNumerOfValidDays(
+    valid_days = CreateRosterHelper.getNumerOfValidDays(
         month, year, is_sunday_included, saturdays_list, total_holidays)
+
+    total_participants = len(participants)
+
+    # To hold the number of days that can be equally divided among participants.
+    equal_divide_days = valid_days / total_participants
