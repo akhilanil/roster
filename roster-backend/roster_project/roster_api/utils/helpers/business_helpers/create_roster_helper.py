@@ -1,10 +1,11 @@
-from types import List
 
-from . import CalendarHelper
-from . import datetime
+from roster_api.utils.helpers.general_helpers import calendar_helpers
+import datetime
 
-from . import ModelService
-from ..core_helpers import PrepareRoster
+from roster_api.services.model_service import model_init_service
+from roster_api.utils.helpers.core_helpers.prepare_roster import PrepareRoster
+
+from typing import List
 
 from calendar import SUNDAY, SATURDAY
 
@@ -15,8 +16,7 @@ class CreateRosterHelper():
     @classmethod
     def prepare_roster(
         number_of_days: int,
-        number_of_sessions_each_day: int,
-        participants: List[ModelService.get_participant_model_class],
+        participants: List[model_init_service.ModelService.get_participant_model_class],
         holiday_list: List[datetime.date],
         saturday_list: List[bool],
         is_sunday_included: bool,
@@ -29,6 +29,8 @@ class CreateRosterHelper():
         would be as follows<br>
 
         """
+
+        CalendarHelper = calendar_helpers.CalendarHelper
 
         # To hold the number of participants
         number_of_participants = len(participants)
@@ -82,7 +84,7 @@ class CreateRosterHelper():
                                     remaining_dates, session_list)
 
         prepare_roster = PrepareRoster()
-        participants = prepare_roster.creatae_roster_skelton(
+        return prepare_roster.creatae_roster_skelton(
                 participants, valid_session_dates, equal_divide_days,
                 remaining_session_dates)
 
@@ -91,7 +93,7 @@ class CreateRosterHelper():
         """ This method creates a List of SessionDateModels by combining the
             dates list and session list """
 
-        SessionDateModel = ModelService.get_date_session_model_class()
+        SessionDateModel = model_init_service.ModelService.get_date_session_model_class()
 
         session_date_list = []
 
@@ -119,6 +121,7 @@ class CreateRosterHelper():
             on user choice) and total holidays  """
 
         total_sundays = 0
+        CalendarHelper = calendar_helpers.CalendarHelper
 
         total_days = CalendarHelper.getNumberOfDaysInMonth(month, year)
         # 6 indicates sunday

@@ -1,1 +1,1 @@
-from .manage_roster_view import ManageRosterView
+from . import manage_roster_view

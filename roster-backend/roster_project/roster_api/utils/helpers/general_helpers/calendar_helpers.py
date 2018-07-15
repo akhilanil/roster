@@ -1,8 +1,8 @@
 import calendar
 
-from types import List
+from typing import List
 
-from . import datetime
+import datetime
 
 
 class CalendarHelper():
@@ -58,6 +58,11 @@ class CalendarHelper():
                                             for day in saturdays_tuple]
 
         return saturdays_list
+
+    @classmethod
+    def get_date_time_list(dates: List, year: int, month: int):
+        """ Method to convert the given list to date time for a month  """
+        pass
 
     @classmethod
     def get_days_of_month(year: int, month: int) -> List[datetime.date]:

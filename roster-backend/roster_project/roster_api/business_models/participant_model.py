@@ -1,7 +1,8 @@
 from typing import List
 
-from . import SessionDateModel
-from . import datetime
+from .session_date_model import SessionDateModel
+import datetime
+
 
 class ParticipantModel():
 
@@ -59,6 +60,7 @@ class ParticipantModel():
         del self.leave_dates
 
     # Property for Work dates
+    @property
     def work_sessions(self):
         return self.work_sessions
 
@@ -71,6 +73,7 @@ class ParticipantModel():
         del self.work_sessions
 
     # Property for remaining dates
+    @property
     def remaining_days(self):
         return self.remaining_days
 
@@ -83,6 +86,7 @@ class ParticipantModel():
         del self.remaining_days
 
     # Property for total working dates
+    @property
     def total_working_sessions(self):
         return self.total_working_sessions
 

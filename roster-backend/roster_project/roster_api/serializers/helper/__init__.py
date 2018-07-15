@@ -1,1 +1,1 @@
-from .participant_serializer import ParticipantSerializer
+from . import participant_serializer

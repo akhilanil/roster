@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
-from ..services import CreateRosterService
+from roster_api.services.SerializerService.create_roster_service import CreateRosterService  
 
 
 class ManageRosterView(viewsets.ViewSet):

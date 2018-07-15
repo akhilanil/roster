@@ -1,5 +1,5 @@
 
-from . import datetime
+import datetime
 
 
 class SessionDateModel():

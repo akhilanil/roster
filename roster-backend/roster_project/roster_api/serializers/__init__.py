@@ -1,1 +1,1 @@
-from .interface import CreateRosterSerializer
+from . import interface

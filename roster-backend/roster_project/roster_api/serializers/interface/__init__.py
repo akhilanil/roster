@@ -1,1 +1,1 @@
-from .create_roster_serializer import CreateRosterSerializer
+from . import create_roster_serializer

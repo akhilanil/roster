@@ -1,4 +1,4 @@
-from . import ModelService
+from roster_api.services.model_service.model_init_service import ModelService
 
 from typing import List
 
@@ -6,11 +6,11 @@ from typing import List
 class PrepareRoster():
 
     def creatae_roster_skelton(
-            participant_details: List[ModelService.get_participant_model_class()],
-            month_dates_sessions: List[ModelService.get_date_session_model_class()],
-            total_equal_sessions: int,
-            remaining_dates_sessions: List[ModelService.get_date_session_model_class()]
-            ) -> List:
+        participant_details: List[ModelService.get_participant_model_class()],
+        month_dates_sessions: List[ModelService.get_date_session_model_class()],
+        total_equal_sessions: int,
+        remaining_dates_sessions: List[ModelService.get_date_session_model_class()]
+    ) -> List:
         """ This method divides the working days among the participants """
 
         start_index = 0
@@ -19,7 +19,7 @@ class PrepareRoster():
         equal_dates_sessions_remaining = []
 
         # This for loop assign working days for each participant by considering
-        # the leave date of the participanat
+        # the leave date of the participant
 
         for participant in participant_details:
             sliced_month_list = month_dates_sessions[start_index:last_index]

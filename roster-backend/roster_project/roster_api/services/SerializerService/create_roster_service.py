@@ -1,4 +1,4 @@
-from ...serializers import CreateRosterSerializer
+from ...serializers.interface import create_roster_serializer
 
 
 class CreateRosterService():
@@ -11,18 +11,18 @@ class CreateRosterService():
     def get_serializer_class(seld):
         """ Static method get the associated serializer class """
 
-        return CreateRosterSerializer
+        return create_roster_serializer.CreateRosterSerializer
 
     @classmethod
     def get_serializer_instance(self):
         """ Static method to get the Instance of serializer class """
 
         if(self.create_roster_serializer is None):
-            self.create_roster_serializer = CreateRosterSerializer()
+            self.create_roster_serializer = create_roster_serializer.CreateRosterSerializer()
         return self.create_roster_serializer
 
     @classmethod
     def process_request(self, request):
         """ Method to process the requested data """
 
-        return CreateRosterSerializer(data=request.data)
+        return create_roster_serializer.CreateRosterSerializer(data=request.data)

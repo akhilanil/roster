@@ -1,2 +1,2 @@
-from .participant_model  import ParticipantModel
-from .session_date_model import SessionDateModel
+from . import participant_model
+from . import session_date_model
