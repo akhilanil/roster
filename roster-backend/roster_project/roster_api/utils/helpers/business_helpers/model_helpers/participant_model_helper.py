@@ -11,8 +11,8 @@ class ParticipantModelHelper():
 
     @classmethod
     def create_participant_models(
-            participants: List[Dict[str, List[Dict[datetime.date, List[str]]]]]
-            ):
+        self, participants: List[Dict[str, List[Dict[datetime.date, List[str]]]]]
+    ):
         """ Method to create List of participant models """
 
         participant_models = []

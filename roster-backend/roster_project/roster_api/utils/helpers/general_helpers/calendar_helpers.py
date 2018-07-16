@@ -8,13 +8,13 @@ import datetime
 class CalendarHelper():
 
     @classmethod
-    def getNumberOfDaysInMonth(month, year):
+    def getNumberOfDaysInMonth(self, month, year):
         """Method to get the number of days in month"""
 
         return calendar.monthrange(year, month)[1]
 
     @classmethod
-    def getNumberOfParticularDayInMonth(day, month, year):
+    def getNumberOfParticularDayInMonth(self, day, month, year):
         """ Method to get the number occurence of a particular day in a month.
             The parmeter day must be a number indicating the position of the
             day in week. Positioning starts from monday with value 0. Month and
@@ -30,7 +30,7 @@ class CalendarHelper():
         return day_count
 
     @classmethod
-    def calculateInvalidSaturdays(saturdays_list, total_saturdays):
+    def calculateInvalidSaturdays(self, saturdays_list, total_saturdays):
         """ Method to get the number of invalid saturday based on
             saturdays_list.<br>Parameter saturdays_list contains list of
             boolean indicating whether that saturday of week is to be
@@ -40,7 +40,7 @@ class CalendarHelper():
         lambda is_required_saturday: is_required_saturday == True, saturdays_list)))
 
     @classmethod
-    def get_day_list_of_month(year: int, month: int, day: int) -> List[datetime.date]:
+    def get_day_list_of_month(self, year: int, month: int, day: int) -> List[datetime.date]:
 
         """ Method to get the list of particular day of a month """
 
@@ -60,12 +60,31 @@ class CalendarHelper():
         return saturdays_list
 
     @classmethod
-    def get_date_time_list(dates: List, year: int, month: int):
+    def get_date_time_list(self, dates: List, year: int, month: int):
         """ Method to convert the given list to date time for a month  """
         pass
 
     @classmethod
-    def get_days_of_month(year: int, month: int) -> List[datetime.date]:
+    def convert_str_list_to_date(self, str_date_list: List[str]) -> List[datetime.date]:
+        """ Method to convert list of dates in string to List[datetime.date]
+            The date format must be YYYY-MM-DD """
+        date_list = [
+                        datetime.datetime.strptime(date, '%Y-%m-%d').date()
+                                for date in str_date_list
+                    ]
+        return date_list
+
+
+    @classmethod
+    def convert_str_to_date(self, str_date: str) -> datetime.date:
+
+        date = datetime.datetime.strptime(str_date, '%Y-%m-%d').date()
+        return date
+
+
+
+    @classmethod
+    def get_days_of_month(self, year: int, month: int) -> List[datetime.date]:
         num_days = calendar.monthrange(year, month)[1]
         days = [datetime.date(year, month, day) for day in range(1, num_days+1)]
         return days

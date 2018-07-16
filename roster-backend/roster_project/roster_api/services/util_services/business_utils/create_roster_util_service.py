@@ -6,7 +6,7 @@ class CreateRosterUtilService():
     create_roster_util = None
 
     @classmethod
-    def get_create_util_obj(self):
+    def get_create_util_obj(self) -> create_roster.CreateRosterUtil:
         if(self.create_roster_util is None):
             self.create_roster_util = create_roster.CreateRosterUtil()
         return self.create_roster_util

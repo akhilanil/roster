@@ -15,7 +15,7 @@ class CreateRosterHelper():
 
     @classmethod
     def prepare_roster(
-        number_of_days: int,
+        self,
         participants: List[model_init_service.ModelService.get_participant_model_class],
         holiday_list: List[datetime.date],
         saturday_list: List[bool],
@@ -35,8 +35,7 @@ class CreateRosterHelper():
         # To hold the number of participants
         number_of_participants = len(participants)
 
-        # To hold the number of days that can be equally divided among participants.
-        equal_divide_days = number_of_days / number_of_participants
+
 
         # TODO : Validate wheter equal_divide_days is not equal to zero
 
@@ -48,8 +47,11 @@ class CreateRosterHelper():
                                                 year, month, SATURDAY)
 
         # Find the saturdays to be excluded
-        list_invalid_saturdays = [
-            sat for index, sat in list_of_saturdays if saturday_list[index]]
+        list_invalid_saturdays = []
+        for index, is_valid_sat in enumerate(saturday_list):
+            if not is_valid_sat:
+                list_invalid_saturdays.append(list_of_saturdays[index])
+
 
         # This list contains all the dates that are to be removed from
         # dates_of_month
@@ -68,11 +70,18 @@ class CreateRosterHelper():
             list_of_days_to_remove
         ]
 
-        if number_of_days == len(valid_dates):
-            print("SUCCESS ALGO")
+        number_of_days = len(valid_dates)
+
+        # To hold the number of days that can be equally divided among participants.
+        equal_divide_days = int(number_of_days / number_of_participants)
+        print("---------------->",number_of_days,equal_divide_days)
+        # To hold the number of sessions
+        equal_divide_session = equal_divide_days * len(session_list)
 
         # Calculate the remaining days
         remaining_days = number_of_days % number_of_participants
+
+        remaining_dates = []
         if not remaining_days:
             remaining_dates = valid_dates[(remaining_days * -1):]
             valid_dates = valid_dates[:(remaining_days * -1)]
@@ -85,11 +94,11 @@ class CreateRosterHelper():
 
         prepare_roster = PrepareRoster()
         return prepare_roster.creatae_roster_skelton(
-                participants, valid_session_dates, equal_divide_days,
+                participants, valid_session_dates, equal_divide_session,
                 remaining_session_dates)
 
     @classmethod
-    def prepare_month_date_session(valid_dates, session_list):
+    def prepare_month_date_session(self, valid_dates, session_list):
         """ This method creates a List of SessionDateModels by combining the
             dates list and session list """
 
@@ -106,37 +115,3 @@ class CreateRosterHelper():
                 session_date_list.append(session_date_model)
 
         return session_date_list
-
-    @classmethod
-    def getNumerOfValidDays(
-        month,
-        year,
-        is_sunday_included,
-        saturdays_list,
-        total_holidays
-    ):
-        """ Method to get the number of valid days. Number of valid days is
-            equal to the difference between total days and sum of total sundays
-            in a month, total saturdays (saurdays which can be excluded based
-            on user choice) and total holidays  """
-
-        total_sundays = 0
-        CalendarHelper = calendar_helpers.CalendarHelper
-
-        total_days = CalendarHelper.getNumberOfDaysInMonth(month, year)
-        # 6 indicates sunday
-        if(not is_sunday_included):
-            total_sundays = \
-                CalendarHelper.getNumberOfParticularDayInMonth(6, month, year)
-
-        # 5 indicate saturday
-        total_saturdays_in_month = \
-            CalendarHelper.getNumberOfParticularDayInMonth(5, month, year)
-
-        total_invalid_saturdays = CalendarHelper.calculateInvalidSaturdays(
-            saturdays_list, total_saturdays_in_month)
-
-        total_number_of_valid_days = total_days - total_sundays - \
-            total_invalid_saturdays - total_holidays
-
-        return total_number_of_valid_days

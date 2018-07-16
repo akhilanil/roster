@@ -1,7 +1,7 @@
 from ...serializers.interface import create_roster_serializer
 
 
-class CreateRosterService():
+class CreateRosterSerializerService():
 
     """ Class which handles the service required for create roster view """
 

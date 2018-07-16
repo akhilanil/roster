@@ -1,11 +1,14 @@
 from roster_api.utils.helpers.business_helpers import create_roster_helper
 from roster_api.utils.helpers.business_helpers.model_helpers import participant_model_helper
+from roster_api.utils.helpers.general_helpers.calendar_helpers import CalendarHelper
+
 from typing import List
 
 
 class CreateRosterUtil():
 
     def prepare_roster(
+        self,
         username: str,
         participants: List,
         holidays: List,
@@ -42,15 +45,12 @@ class CreateRosterUtil():
 
              """
 
-        total_holidays = len(sessions)
-
-        valid_days = create_roster_helper.CreateRosterHelper.getNumerOfValidDays(
-            month, year, is_sunday_included, saturdays_list, total_holidays)
-
         roster_for_participants = \
             participant_model_helper.ParticipantModelHelper.create_participant_models(participants)
 
+        holiday_list = CalendarHelper.convert_str_list_to_date(holidays)
+
         return create_roster_helper.CreateRosterHelper.prepare_roster(
-            valid_days, roster_for_participants, holidays, saturdays_list,
+            roster_for_participants, holiday_list, saturdays_list,
             is_sunday_included, sessions, year, month
-            )
+        )
