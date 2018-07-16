@@ -76,8 +76,9 @@ class CreateRosterHelper():
         equal_divide_days = int(number_of_days / number_of_participants)
         print("---------------->",number_of_days,equal_divide_days)
         # To hold the number of sessions
-        equal_divide_session = equal_divide_days * len(session_list)
+        #equal_divide_session = equal_divide_days * len(session_list)
 
+        equal_divide_session = equal_divide_days
         # Calculate the remaining days
         remaining_days = number_of_days % number_of_participants
 
@@ -98,20 +99,15 @@ class CreateRosterHelper():
                 remaining_session_dates)
 
     @classmethod
-    def prepare_month_date_session(self, valid_dates, session_list):
-        """ This method creates a List of SessionDateModels by combining the
-            dates list and session list """
+    def prepare_month_date_session(self, dates: datetime, session_list: List[str]):
+        """ This method creates a Dict with each row containig a List
+        representing a particualar session"""
 
         SessionDateModel = model_init_service.ModelService.get_date_session_model_class()
 
-        session_date_list = []
+        session_date_dict = {}
 
         for session in session_list:
-            for valid_date in valid_dates:
-                session_date_model = SessionDateModel()
-                session_date_model.session_name = session
-                session_date_model.date = valid_date
+            session_date_dict[session] = [SessionDateModel(session, date) for date in dates]
 
-                session_date_list.append(session_date_model)
-
-        return session_date_list
+        return session_date_dict

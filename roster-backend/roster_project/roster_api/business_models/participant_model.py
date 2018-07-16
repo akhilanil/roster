@@ -1,7 +1,7 @@
-from typing import List
+from typing import List, Dict
 
 from .session_date_model import SessionDateModel
-import datetime
+
 
 
 class ParticipantModel():
@@ -11,7 +11,8 @@ class ParticipantModel():
                  leave_dates: List[SessionDateModel] = None,
                  work_sessions: List[SessionDateModel] = None,
                  remaining_days: int = 0,
-                 total_working_sessions: int = 0
+                 total_working_sessions: int = 0,
+                 session_count: Dict[str, int] = None
                  ):
 
         # To hold the name of Participant
@@ -24,6 +25,8 @@ class ParticipantModel():
         self._remaining_days = remaining_days
         # To hold the number of working days assigned
         self._total_working_sessions = total_working_sessions
+        # To hold the number of assigned sessions
+        self._session_count = session_count
 
     def is_date_already_assigned(self, session_date: SessionDateModel):
         """ Method to check whether the participant is asigned with the
@@ -101,3 +104,15 @@ class ParticipantModel():
     @total_working_sessions.deleter
     def total_working_sessions(self):
         del self._total_working_sessions
+
+    @property
+    def session_count(self):
+        return self._session_count
+
+    @session_count.setter
+    def remaining_days(self, session_count):
+        self._session_count = session_count
+
+    @session_count.deleter
+    def session_count(self):
+        del self._session_count
