@@ -40,5 +40,6 @@ class PrepareRosterHelper():
 
         for session_date in sliced_month_list:
             if session_date not in leave_dates:
+
                 participant._work_sessions.append(session_date)
                 participant._session_count[session_date._session_name] += 1

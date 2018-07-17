@@ -11,20 +11,39 @@ class ParticipantModelHelper():
 
     @classmethod
     def create_participant_models(
-        self, participants: List[Dict[str, List[Dict[datetime.date, List[str]]]]]
+        self,
+        participants: List[Dict[str, List[Dict[datetime.date, List[str]]]]],
+        sessions_list: List[str]
     ):
         """ Method to create List of participant models """
 
         participant_models = []
 
-        ParticipantModel = model_init_service.ModelService.get_participant_model_class()
+        ParticipantModel = \
+            model_init_service.ModelService.get_participant_model_class()
 
         for participant in participants:
 
             user_name = participant.get("name", "")
             session_dates = SessionDateModelHelper.create_session_date_models(
                                         participant.get("leaveSessions"))
-            participant_model = ParticipantModel(user_name, session_dates)
+            session_conut_dict = \
+                ParticipantModelHelper.create_session_conut_dict(sessions_list)
+            participant_model = ParticipantModel(
+                user_name, session_dates, session_conut_dict)
             participant_models.append(participant_model)
 
         return participant_models
+
+    @classmethod
+    def create_session_conut_dict(self, sessions_list: List[str]):
+        """ This method creates a dict which can be used to initialize
+            session_count in participants"""
+
+        session_conut_dict = {}
+        for session_name in sessions_list:
+            session_conut_dict[session_name] = 0
+        return session_conut_dict
+
+
+    

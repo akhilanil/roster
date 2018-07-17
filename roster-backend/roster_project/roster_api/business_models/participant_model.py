@@ -3,16 +3,15 @@ from typing import List, Dict
 from .session_date_model import SessionDateModel
 
 
-
 class ParticipantModel():
 
     def __init__(self,
                  name: str = None,
                  leave_dates: List[SessionDateModel] = None,
-                 work_sessions: List[SessionDateModel] = None,
+                 session_count: Dict[str, int] = None,
                  remaining_days: int = 0,
-                 total_working_sessions: int = 0,
-                 session_count: Dict[str, int] = None
+                 work_sessions: List[SessionDateModel] = [],
+                 total_working_sessions: int = 0
                  ):
 
         # To hold the name of Participant
@@ -25,20 +24,21 @@ class ParticipantModel():
         self._remaining_days = remaining_days
         # To hold the number of working days assigned
         self._total_working_sessions = total_working_sessions
-        # To hold the number of assigned sessions
+        # To hold the number days of assigned to a sessions
         self._session_count = session_count
 
     def is_date_already_assigned(self, session_date: SessionDateModel):
         """ Method to check whether the participant is asigned with the
             given date """
 
-        for session_date in self.leave_dates:
-            if session_date._date == session_date._date:
+        for participant_session_date in self.leave_dates:
+            if participant_session_date._date == session_date._date:
                 return True
 
     def __str__(self):
-        return "Participants : Name:{} Work:{} Total:{} ".format(
-            self._name, self._work_sessions[0].__str__(), self._total_working_sessions)
+        return "Participants : Name:{} Work:{} Total:{} Remaining:{} ".format(
+            self._name, self._work_sessions[0].__str__(),
+            self._total_working_sessions, self._remaining_days)
 
     # Property for name
     @property

@@ -83,8 +83,9 @@ class CreateRosterHelper():
         remaining_days = number_of_days % number_of_participants
 
         remaining_dates = []
-        if not remaining_days:
+        if remaining_days:
             remaining_dates = valid_dates[(remaining_days * -1):]
+
             valid_dates = valid_dates[:(remaining_days * -1)]
 
         valid_session_dates = CreateRosterHelper.prepare_month_date_session(
@@ -92,6 +93,12 @@ class CreateRosterHelper():
 
         remaining_session_dates = CreateRosterHelper.prepare_month_date_session(
                                     remaining_dates, session_list)
+
+        [setattr(participant, '_remaining_days', equal_divide_days * len(session_list))
+                                    for participant in participants]
+
+        # import pdb;
+        # pdb.set_trace()
 
         prepare_roster = PrepareRoster()
         return prepare_roster.creatae_roster_skelton(
