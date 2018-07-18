@@ -29,8 +29,10 @@ class ParticipantModelHelper():
                                         participant.get("leaveSessions"))
             session_conut_dict = \
                 ParticipantModelHelper.create_session_conut_dict(sessions_list)
+            work_sessions_list = []
             participant_model = ParticipantModel(
-                user_name, session_dates, session_conut_dict)
+                user_name, session_dates, session_conut_dict, work_sessions_list)
+            
             participant_models.append(participant_model)
 
         return participant_models
@@ -44,6 +46,3 @@ class ParticipantModelHelper():
         for session_name in sessions_list:
             session_conut_dict[session_name] = 0
         return session_conut_dict
-
-
-    

@@ -9,8 +9,8 @@ class ParticipantModel():
                  name: str = None,
                  leave_dates: List[SessionDateModel] = None,
                  session_count: Dict[str, int] = None,
-                 remaining_days: int = 0,
                  work_sessions: List[SessionDateModel] = [],
+                 remaining_days: int = 0,
                  total_working_sessions: int = 0
                  ):
 
@@ -18,14 +18,15 @@ class ParticipantModel():
         self._name = name
         # To hold the list days in which the participant is on leave
         self._leave_dates = leave_dates
+        # To hold the number days of assigned to a sessions
+        self._session_count = session_count
         # To hold the list days assigned for the participant
         self._work_sessions = work_sessions
         # To hold the number of days remaining days to be assigned.
         self._remaining_days = remaining_days
         # To hold the number of working days assigned
         self._total_working_sessions = total_working_sessions
-        # To hold the number days of assigned to a sessions
-        self._session_count = session_count
+
 
     def is_date_already_assigned(self, session_date: SessionDateModel):
         """ Method to check whether the participant is asigned with the
@@ -36,9 +37,26 @@ class ParticipantModel():
                 return True
 
     def __str__(self):
-        return "Participants : Name:{} Work:{} Total:{} Remaining:{} ".format(
-            self._name, self._work_sessions[0].__str__(),
-            self._total_working_sessions, self._remaining_days)
+
+        _leave_dates = ""
+        _work_sessions = ""
+        _session_count = ""
+        for date in self.leave_dates:
+            _leave_dates += (date.__str__()+" "+"\n")
+
+        for work in self._work_sessions:
+            _work_sessions += (work.__str__()+" "+"\n")
+
+        for key, value in self._session_count.items():
+            _session_count += (str(key)+":"+str(value)+"\n")
+
+        _to_str = "Participants : {} \n Leave: {}\nWork: {}\nSessions: {}\n Remaining: {}  Total Work: {}".format(
+                        self._name, _leave_dates, _work_sessions,
+                        _session_count, self._remaining_days,
+                        self._total_working_sessions)
+
+
+        return _to_str
 
     # Property for name
     @property
@@ -65,6 +83,19 @@ class ParticipantModel():
     @leave_dates.deleter
     def leave_dates(self):
         del self._leave_dates
+
+    @property
+    def session_count(self):
+        return self._session_count
+
+    @session_count.setter
+    def remaining_days(self, session_count):
+        self._session_count = session_count
+
+    @session_count.deleter
+    def session_count(self):
+        del self._session_count
+
 
     # Property for Work dates
     @property
@@ -104,15 +135,3 @@ class ParticipantModel():
     @total_working_sessions.deleter
     def total_working_sessions(self):
         del self._total_working_sessions
-
-    @property
-    def session_count(self):
-        return self._session_count
-
-    @session_count.setter
-    def remaining_days(self, session_count):
-        self._session_count = session_count
-
-    @session_count.deleter
-    def session_count(self):
-        del self._session_count
