@@ -29,11 +29,12 @@ class ManageRosterView(viewsets.ViewSet):
             is_sunday_included = serializer.data.get('isSundayIncluded')
             saturdays_included = serializer.data.get('saturdaysIncluded')
             session_names = serializer.data.get('sessionNames')
+            algo_name = serializer.data.get('algorithmUsed')
 
             create_roster_util = CreateRosterUtilService.get_create_util_obj()
             roster = create_roster_util.prepare_roster(
                 request.user, participants, holidays, month, year,
-                    is_sunday_included, saturdays_included, session_names)
+                    is_sunday_included, saturdays_included, session_names, algo_name)
 
             print(roster[0])
             return Response({'message': roster.__str__()})

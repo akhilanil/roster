@@ -1,16 +1,29 @@
 from roster_api.services.model_service.model_init_service import ModelService
 from .prepare_roster_helper import PrepareRosterHelper
-from typing import List
+from typing import List, Dict
+from .algorithms import algo_interface
 
 
-class PrepareRoster():
+class PrepareRoster(object):
+
+    def __init__(self):
+        self._algorithm_interface = None
+
+    def __get_algo_interface_obj(self):
+        """ Method to get the object for  AlgorithInterface """
+
+        if self._algorithm_interface is None:
+            self._algorithm_interface = algo_interface.AlgorithInterface()
+        return self._algorithm_interface
 
     def creatae_roster_skelton(
         self,
         participant_details: List[ModelService.get_participant_model_class()],
         month_dates_sessions: List[ModelService.get_date_session_model_class()],
         total_equal_sessions: int,
-        remaining_dates_sessions: List[ModelService.get_date_session_model_class()]
+        remaining_dates_sessions: List[ModelService.get_date_session_model_class()],
+        algo_name: str,
+        algo_args: Dict
     ) :
         """ This method divides the working days among the participants """
 
@@ -23,19 +36,22 @@ class PrepareRoster():
         # the leave date of the participant
         import pdb;
 
+        self._algorithm_interface.get_algo_interface_class(
+            algo_name, algo_args)
+
         for participant in participant_details:
 
-            sliced_month_list = PrepareRosterHelper.convert_dict_to_list(
-                month_dates_sessions, start_index, last_index)
-            leave_dates = participant._leave_dates
-            # pdb.set_trace()
+            # sliced_month_list = PrepareRosterHelper.convert_dict_to_list(
+            #     month_dates_sessions, start_index, last_index)
+            # leave_dates = participant._leave_dates
+            # # pdb.set_trace()
+            #
+            #
+            # PrepareRosterHelper.assign_work_for_participant(
+            #     participant, leave_dates, sliced_month_list
+            # )
 
-
-            PrepareRosterHelper.assign_work_for_participant(
-                participant, leave_dates, sliced_month_list
-            )
-
-            equal_dates_sessions_remaining.extend(leave_dates)
+            equal_dates_sessions_remaining.extend(participant._leave_dates)
             start_index += total_equal_sessions
             last_index += total_equal_sessions
             participant.total_working_sessions = len(participant.work_sessions)

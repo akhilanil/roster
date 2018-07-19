@@ -2,9 +2,10 @@ from rest_framework import serializers
 
 from ..helper import participant_serializer
 
-from ..constants import create_roster_constants
+from roster_api.constants.serializer_const import create_roster_constants
 
-from ..exceptions import validation_exceptions
+
+from roster_api.exceptions.serializer_exceptions import validation_exceptions
 
 
 class CreateRosterSerializer(serializers.Serializer):
@@ -38,6 +39,8 @@ class CreateRosterSerializer(serializers.Serializer):
         min_value=1
     )
     rosterForYear = serializers.IntegerField(required=True)
+
+    algorithmUsed = serializers.CharField(required=True)
 
     def validate_participants(self, value):
 

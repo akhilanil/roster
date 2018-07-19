@@ -17,6 +17,7 @@ class CreateRosterUtil():
         is_sunday_included: bool,
         saturdays_list: List[bool],
         sessions: List[str],
+        algo_name: str
 
     ):
         """ Fucntion to handle roster creation.<br>
@@ -54,5 +55,5 @@ class CreateRosterUtil():
 
         return create_roster_helper.CreateRosterHelper.prepare_roster(
             roster_for_participants, holiday_list, saturdays_list,
-            is_sunday_included, sessions, year, month
+            is_sunday_included, sessions, year, month, algo_name
         )

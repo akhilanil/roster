@@ -22,7 +22,8 @@ class CreateRosterHelper():
         is_sunday_included: bool,
         session_list: List[str],
         year: int,
-        month: int
+        month: int,
+        algo_name: str
     ):
         """ Method to get the list containig number of sessions for each
         participants and the remaining days to be catered. The return value
@@ -99,11 +100,17 @@ class CreateRosterHelper():
 
         # import pdb;
         # pdb.set_trace()
+        # Argument list which is to be passed to the algrithm
+        args = {
+                "participants": participants,
+                "session_date_dict": valid_session_dates
+                }
+
 
         prepare_roster = PrepareRoster()
         return prepare_roster.creatae_roster_skelton(
                 participants, valid_session_dates, equal_divide_session,
-                remaining_session_dates)
+                remaining_session_dates, algo_name, args)
 
     @classmethod
     def prepare_month_date_session(self, dates: datetime, session_list: List[str]):
