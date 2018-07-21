@@ -31,12 +31,12 @@ class PrepareRoster(object):
 
         # This for loop assign working days for each participant by considering
         # the leave date of the participant
-        import pdb;
+
         self.__init_algo_interface_obj()
         equal_dates_sessions_remaining = \
             self._algorithm_interface.apply_algorithm(algo_name, algo_args)
 
-        pdb.set_trace()
+
         equal_dates_sessions_remaining = PrepareRosterHelper.add_list_to_dict(
             remaining_dates_sessions, equal_dates_sessions_remaining
         )
@@ -69,18 +69,18 @@ class PrepareRoster(object):
                             if date not in participant.leave_dates \
                                     and not participant.is_date_already_assigned(date) \
                                     and participant.remaining_days:
-                                # pdb.set_trace()
+
                                 participant.work_sessions.append(date)
                                 participant.session_count[date._session_name] += 1
                                 participant.remaining_days -= 1
                                 participant.total_working_sessions += 1
-                                # pdb.set_trace()
+
                             else:
                                 temp_equal_date_remaining.append(date)
                         equal_dates_sessions_remaining[key] = \
                             temp_equal_date_remaining
 
-        pdb.set_trace()
+
         # At this point working days are divided equally among the participants
         # in best possible manner. The Remaining dates are given to
         # participants arbitrarily.
@@ -98,7 +98,7 @@ class PrepareRoster(object):
                     participant.total_working_sessions += 1
                 else:
                     i = 1
-                    pdb.set_trace()
+
                     while i < len(participant_details):
                         swappable_participant = participant_details[i]
                         if not swappable_participant.is_date_already_assigned(date) \
@@ -118,20 +118,6 @@ class PrepareRoster(object):
                                 participant.remaining_days -= 1
                                 participant.total_working_sessions += 1
                                 break
+                        i += 1
 
-                        i+=1
-
-
-                # for participant in participant_details:
-                #     pdb.set_trace()
-                #     if not participant.is_date_already_assigned(date):
-                #         if date not in participant.leave_dates:
-                #             participant._work_sessions.append(date)
-                #             participant._session_count[date._session_name] += 1
-                #             participant._remaining_days -= 1
-                #             participant._total_working_sessions += 1
-                #             break
-                #         else:
-                #             pass
-        pdb.set_trace()
         return participant_details

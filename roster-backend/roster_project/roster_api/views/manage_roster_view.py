@@ -15,7 +15,7 @@ class ManageRosterView(viewsets.ViewSet):
 
     serializer_class = CreateRosterSerializerService.get_serializer_class()
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    permission_classes = ()
 
     def create(self, request):
 
@@ -30,10 +30,13 @@ class ManageRosterView(viewsets.ViewSet):
             saturdays_included = serializer.data.get('saturdaysIncluded')
             session_names = serializer.data.get('sessionNames')
             algo_name = serializer.data.get('algorithmUsed')
+            user_name = request.user
+            if not request.user.is_authenticated:
+                user_name = None
 
             create_roster_util = CreateRosterUtilService()
             roster = create_roster_util.prepare_roster(
-                request.user, participants, holidays, month, year,
+                user_name, participants, holidays, month, year,
                     is_sunday_included, saturdays_included, session_names, algo_name)
 
             for x in roster:

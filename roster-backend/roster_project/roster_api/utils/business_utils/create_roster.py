@@ -1,6 +1,10 @@
 from roster_api.utils.helpers.business_helpers import create_roster_helper
 from roster_api.utils.helpers.business_helpers.model_helpers import participant_model_helper
+
 from roster_api.utils.helpers.general_helpers.calendar_helpers import CalendarHelper
+
+from roster_api.utils.general_utils.hashing import HashingUtil
+
 
 from typing import List
 
@@ -46,14 +50,21 @@ class CreateRosterUtil():
             </ul>
 
              """
-
         roster_for_participants = \
             participant_model_helper.ParticipantModelHelper.create_participant_models(
                         participants, sessions)
 
         holiday_list = CalendarHelper.convert_str_list_to_date(holidays)
 
-        return create_roster_helper.CreateRosterHelper.prepare_roster(
+        particiapnts = create_roster_helper.CreateRosterHelper.prepare_roster(
             roster_for_participants, holiday_list, saturdays_list,
             is_sunday_included, sessions, year, month, algo_name
         )
+
+        if username is not None:
+            # Generate the hash and store in DB and pass the hash value to view
+            _hash_value = HashingUtil.generate_unique_hash(username, month, year)
+            return _hash_value
+        else:
+
+            return particiapnts
