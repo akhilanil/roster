@@ -5,17 +5,20 @@ from typing import Dict
 
 class AlgorithInterface():
 
-    def get_algo_interface_class(self, algo_name: str, args_dict: Dict):
+    def __init__(self):
+        self.common_method_name = "algo_"
+
+    def apply_algorithm(self, algo_name: str, args_dict: Dict):
         """ This method serves as the interface method for the getting
             the algorithm class specified by the algo_name  """
 
-        interface_method_name = "interface_class_" + algo_name
+        interface_method_name = self.common_method_name + algo_name.lower()
 
         method = getattr(self, interface_method_name)
-        method(args_dict)
+        return method(args_dict)
 
-    def __interface_class_SEQUENCE_ROSTER_ALGORITHM(self, args_dict: Dict):
+    def algo_sequence_roster_algorithm(self, args_dict: Dict):
         participant_arg = args_dict.get("participants", None)
         session_dict_args = args_dict.get("session_date_dict", None)
-        sequence_roster.SequenceRosterAlgorithm.set_work_list(
+        return sequence_roster.SequenceRosterAlgorithm.set_work_list(
             participant_arg, session_dict_args)

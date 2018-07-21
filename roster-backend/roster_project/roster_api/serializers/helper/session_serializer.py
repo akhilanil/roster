@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 
-from ..constants import create_roster_constants
+from roster_api.constants.serializer_const import create_roster_constants
 
 
 class SessionSerializer(serializers.Serializer):

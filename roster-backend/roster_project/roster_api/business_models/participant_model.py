@@ -32,8 +32,8 @@ class ParticipantModel():
         """ Method to check whether the participant is asigned with the
             given date """
 
-        for participant_session_date in self.leave_dates:
-            if participant_session_date._date == session_date._date:
+        for participant_session_date in self.work_sessions:
+            if participant_session_date.date == session_date.date:
                 return True
 
     def __str__(self):
@@ -44,16 +44,16 @@ class ParticipantModel():
         for date in self.leave_dates:
             _leave_dates += (date.__str__()+" "+"\n")
 
-        for work in self._work_sessions:
+        for work in self.work_sessions:
             _work_sessions += (work.__str__()+" "+"\n")
 
-        for key, value in self._session_count.items():
+        for key, value in self.session_count.items():
             _session_count += (str(key)+":"+str(value)+"\n")
 
         _to_str = "Participants : {} \n Leave: {}\nWork: {}\nSessions: {}\n Remaining: {}  Total Work: {}".format(
-                        self._name, _leave_dates, _work_sessions,
-                        _session_count, self._remaining_days,
-                        self._total_working_sessions)
+                        self.name, _leave_dates, _work_sessions,
+                        _session_count, self.remaining_days,
+                        self.total_working_sessions)
 
 
         return _to_str
@@ -95,7 +95,6 @@ class ParticipantModel():
     @session_count.deleter
     def session_count(self):
         del self._session_count
-
 
     # Property for Work dates
     @property

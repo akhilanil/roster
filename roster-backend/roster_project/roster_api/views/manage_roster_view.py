@@ -31,12 +31,13 @@ class ManageRosterView(viewsets.ViewSet):
             session_names = serializer.data.get('sessionNames')
             algo_name = serializer.data.get('algorithmUsed')
 
-            create_roster_util = CreateRosterUtilService.get_create_util_obj()
+            create_roster_util = CreateRosterUtilService()
             roster = create_roster_util.prepare_roster(
                 request.user, participants, holidays, month, year,
                     is_sunday_included, saturdays_included, session_names, algo_name)
 
-            print(roster[0])
+            for x in roster:
+                print(x)
             return Response({'message': roster.__str__()})
         else:
             return Response(

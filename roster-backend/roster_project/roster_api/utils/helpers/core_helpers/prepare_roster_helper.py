@@ -21,6 +21,26 @@ class PrepareRosterHelper():
         return required_date_list
 
     @classmethod
+    def sort_participants(
+            self,
+            participants: List[ModelService.get_participant_model_class()],
+            session_name: str
+    ):
+        " The method handles the logic for sorting the participant list "
+
+        base_value = participants[0].total_working_sessions
+
+        _is_total_work_same = \
+            all(base_value == participant.total_working_sessions for participant in participants)
+
+        if _is_total_work_same:
+            participants.sort(
+                key=lambda x: x.session_count[session_name], reverse=False)
+        else:
+            participants.sort(
+                key=lambda x: x.total_working_sessions, reverse=False)
+
+    @classmethod
     def add_list_to_dict(
         self,
         date_dict: Dict[str, List[ModelService.get_date_session_model_class()]],

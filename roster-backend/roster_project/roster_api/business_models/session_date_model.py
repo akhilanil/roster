@@ -10,11 +10,11 @@ class SessionDateModel():
 
     def __eq__(self, session_date_model):
         return self._session_name == session_date_model._session_name and \
-                self._date == session_date_model._date
+                self.date == session_date_model.date
 
     def __str__(self):
         return "Session Name: {} Date : {}".format(
-                self._session_name, self._date)
+                self.session_name, self.date)
 
     # Property for session_name
     @property
