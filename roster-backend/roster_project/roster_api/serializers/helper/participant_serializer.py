@@ -8,5 +8,5 @@ class ParticipantSerializer(serializers.Serializer):
     """ Serializer for participants mentioned in  the
         CreateRosterSerializer """
 
-    name = serializers.CharField(max_length=15, required=True)
+    name = serializers.CharField(max_length=30, required=True)
     leaveSessions = SessionSerializer(many=True)

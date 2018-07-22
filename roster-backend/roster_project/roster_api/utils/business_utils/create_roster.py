@@ -3,13 +3,58 @@ from roster_api.utils.helpers.business_helpers.model_helpers import participant_
 
 from roster_api.utils.helpers.general_helpers.calendar_helpers import CalendarHelper
 
-from roster_api.utils.general_utils.hashing import HashingUtil
+from roster_api.utils.general_utils.unique_key import UniqueKeyUtil
 
+from ..db_ops import save_roster
 
 from typing import List
 
 
 class CreateRosterUtil():
+
+    def __init__(self):
+        self.save_roster = None
+
+    def init_save_roster(self):
+            if not self.save_roster:
+                self.save_roster = save_roster.RosterSave()
+
+    def convert_participant_for_view(self, participants):
+
+        participants_list = []
+        for participant in participants:
+            participant_dict = {}
+            participant_dict['name'] = participant.name
+            work = ""
+            for work_session in participant.work_sessions:
+                work = work + work_session.session_name + ":" + \
+                                    str(work_session.date.day)+","
+            participant_dict['work'] = work
+            session = ""
+            for key, val in participant.session_count.items():
+                session = session + key + ":" + val + ","
+            participant_dict['sessions'] = session
+            participants_list.append(participant_dict)
+        return participants_list
+
+    def convert_for_client(self, unique_id, user_name, month, year, title, participants):
+
+        participant_dict = {}
+
+        if unique_id:
+            participant_dict['id'] = unique_id
+
+        participant_dict['user_name'] = user_name
+
+        participant_dict['month'] = month
+
+        participant_dict['year'] = year
+
+        participant_dict['title'] = title
+
+        participant_dict['participants'] = self.convert_participant_for_view(participants)
+
+        return participant_dict
 
     def prepare_roster(
         self,
@@ -21,7 +66,8 @@ class CreateRosterUtil():
         is_sunday_included: bool,
         saturdays_list: List[bool],
         sessions: List[str],
-        algo_name: str
+        algo_name: str,
+        title: str
 
     ):
         """ Fucntion to handle roster creation.<br>
@@ -56,15 +102,21 @@ class CreateRosterUtil():
 
         holiday_list = CalendarHelper.convert_str_list_to_date(holidays)
 
-        particiapnts = create_roster_helper.CreateRosterHelper.prepare_roster(
+        participants = create_roster_helper.CreateRosterHelper.prepare_roster(
             roster_for_participants, holiday_list, saturdays_list,
             is_sunday_included, sessions, year, month, algo_name
         )
 
+        _unique_key = None
         if username is not None:
             # Generate the hash and store in DB and pass the hash value to view
-            _hash_value = HashingUtil.generate_unique_hash(username, month, year)
-            return _hash_value
-        else:
+            _unique_key = UniqueKeyUtil.generate_unique_key()
 
-            return particiapnts
+            self.init_save_roster()
+            self.save_roster.handle_save_roster(
+                self.convert_for_client(
+                    _unique_key, username, month, year, title, participants))
+            return _unique_key
+        else:
+            return self.convert_for_client(
+                _unique_key, username, month, year, title, participants)
