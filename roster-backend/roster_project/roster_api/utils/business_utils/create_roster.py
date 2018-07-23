@@ -7,6 +7,8 @@ from roster_api.utils.general_utils.unique_key import UniqueKeyUtil
 
 from ..db_ops import save_roster
 
+from roster_api.exceptions.roster_exceptions.save_roster_exception import DuplicateRecordError,RequiredDataError
+
 from typing import List
 
 
@@ -113,9 +115,16 @@ class CreateRosterUtil():
             _unique_key = UniqueKeyUtil.generate_unique_key()
 
             self.init_save_roster()
-            self.save_roster.handle_save_roster(
-                self.convert_for_client(
-                    _unique_key, username, month, year, title, participants))
+
+            try:
+                self.save_roster.handle_save_roster(
+                    self.convert_for_client(
+                        _unique_key, username, month, year, title, participants))
+            except DuplicateRecordError:
+                raise DuplicateRecordError
+            except RequiredDataError:
+                raise RequiredDataError
+
             return _unique_key
         else:
             return self.convert_for_client(

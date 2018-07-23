@@ -1,8 +1,6 @@
-from django.db import models 
+from django.db import models
 from django.db.models import Model
 from .managers.user_roster_manager import UserRosterManager
-
-
 
 
 class UserRosterModel(Model):
@@ -25,5 +23,8 @@ class UserRosterModel(Model):
 
     objects = UserRosterManager()
 
+    class Meta:
+        unique_together = ('user_name', 'month', 'year', 'title', )
+
     def __str__(self):
-        return self.unique_id
+        return (self.unique_id + " -> " + self.user_name)

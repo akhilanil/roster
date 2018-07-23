@@ -3,10 +3,7 @@ from . import user_roster_model
 from .managers.user_roster_details_manager import UserRosterDetailsManager
 
 
-# def get_models():
-#
-#     from models import Model
-#     return M
+
 
 class UserRosterDetailsModel(models.Model):
     """ Model to define details of user_roster_model """

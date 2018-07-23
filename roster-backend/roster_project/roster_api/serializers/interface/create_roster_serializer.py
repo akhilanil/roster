@@ -41,7 +41,9 @@ class CreateRosterSerializer(serializers.Serializer):
     )
     rosterForYear = serializers.IntegerField(required=True)
 
-    algorithmUsed = serializers.CharField(required=True)
+    algorithmUsed = serializers.CharField(required=True, max_length=20)
+
+    title = serializers.CharField(required=True, max_length=15)
 
     def validate_participants(self, value):
 

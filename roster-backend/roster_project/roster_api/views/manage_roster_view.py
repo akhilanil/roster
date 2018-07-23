@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
+from roster_api.exceptions.roster_exceptions.save_roster_exception import DuplicateRecordError,RequiredDataError
 
 from roster_api.services.SerializerService.create_roster_service import CreateRosterSerializerService
 from roster_api.services.util_services.business_utils.create_roster_util_service import CreateRosterUtilService
@@ -30,18 +31,26 @@ class ManageRosterView(viewsets.ViewSet):
             saturdays_included = serializer.data.get('saturdaysIncluded')
             session_names = serializer.data.get('sessionNames')
             algo_name = serializer.data.get('algorithmUsed')
+            title = serializer.data.get('title')
             user_name = request.user
             if not request.user.is_authenticated:
                 user_name = None
 
             create_roster_util = CreateRosterUtilService()
-            roster = create_roster_util.prepare_roster(
-                user_name, participants, holidays, month, year,
-                    is_sunday_included, saturdays_included, session_names, algo_name)
+            roster = None
+            error = None
+            try:
+                roster = create_roster_util.prepare_roster(
+                    user_name, participants, holidays, month, year,
+                        is_sunday_included, saturdays_included, session_names, algo_name, title)
 
-            for x in roster:
-                print(x)
-            return Response({'message': roster.__str__()})
+            except DuplicateRecordError as duplicate_error:
+                raise DuplicateRecordError
+            except RequiredDataError as required_data_error:
+                raise required_data_error.get_error_dict()
+
+
+            return Response({'message': roster,'error': error})
         else:
             return Response(
                 serializer.errors, status=status.HTTP_400_BAD_REQUEST)

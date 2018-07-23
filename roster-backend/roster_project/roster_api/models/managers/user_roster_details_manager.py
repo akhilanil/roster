@@ -1,7 +1,10 @@
 from django.db import models
+from django.db import IntegrityError
 
-from roster_api.exceptions.roster_exceptions import save_roster_exception
+import traceback
 
+
+from roster_api.exceptions.roster_exceptions.save_roster_exception import DuplicateRecordError, RequiredDataError
 
 class UserRosterDetailsManager(models.Manager):
 
@@ -22,13 +25,17 @@ class UserRosterDetailsManager(models.Manager):
 
         if not participant_name or not participant_dates \
                 or not per_session_count:
-            raise ValueError(save_roster_exception.REQUIRED_DATA_MISSING)
+            raise RequiredDataError(traceback.format_exc())
         else:
-            participant = \
-                self.model(participant_name=participant_name,
-                           participant_dates=participant_dates,
-                           per_session_count=per_session_count,
-                           user_roster_deatils=user_roster_deatils)
-            participant.save(using=self._db)
+            try:
+                participant = \
+                    self.model(participant_name=participant_name,
+                               participant_dates=participant_dates,
+                               per_session_count=per_session_count,
+                               user_roster_deatils=user_roster_deatils)
+                participant.save(using=self._db)
+            except IntegrityError:
+                raise DuplicateRecordError(traceback.format_exc())
+
 
             return participant

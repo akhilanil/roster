@@ -1,5 +1,6 @@
-
+from roster_api.exceptions.roster_exceptions.save_roster_exception import DuplicateRecordError, RequiredDataError
 from roster_api.services.db_services import roster_db_services
+
 
 class RosterSave():
     """ Handles method related to saving roster  """
@@ -20,13 +21,13 @@ class RosterSave():
         year = participants['year']
         title = participants['title']
 
-        user_roster = self.roster_db_services.insert_user_roster(
-            unique_id,
-            user_name,
-            month,
-            year,
-            title
-        )
+        try:
+            user_roster = self.roster_db_services.insert_user_roster(
+                unique_id, user_name, month, year, title)
+        except DuplicateRecordError:
+            raise DuplicateRecordError
+        except RequiredDataError:
+            raise RequiredDataError
 
         all_participants = participants['participants']
 
@@ -35,10 +36,10 @@ class RosterSave():
             work = participant['work']
             sessions = participant['sessions']
 
-            self.roster_db_services.insert_user_roster_deatils(
-                name,
-                work,
-                sessions,
-                user_roster
-
-            )
+            try:
+                self.roster_db_services.insert_user_roster_deatils(
+                    name, work, sessions, user_roster)
+            except DuplicateRecordError:
+                raise DuplicateRecordError
+            except RequiredDataError:
+                raise RequiredDataError

@@ -1,5 +1,6 @@
 from roster_api.utils.business_utils import create_roster
 from typing import List
+from roster_api.exceptions.roster_exceptions.save_roster_exception import DuplicateRecordError,RequiredDataError
 
 
 class CreateRosterUtilService():
@@ -20,9 +21,17 @@ class CreateRosterUtilService():
                        is_sunday_included: bool,
                        saturdays_list: List[bool],
                        sessions: List[str],
-                       algo_name: str
+                       algo_name: str,
+                       title: str
                        ):
 
         self.__initialize_create_util_obj()
-        return self._create_roster_util.prepare_roster(username, participants, holidays,
-            month, year, is_sunday_included, saturdays_list, sessions, algo_name)
+
+        try:
+            return self._create_roster_util.prepare_roster(username,
+                    participants, holidays, month, year, is_sunday_included,
+                    saturdays_list, sessions, algo_name, title)
+        except DuplicateRecordError:
+            raise DuplicateRecordError
+        except RequiredDataError:
+            raise RequiredDataError
