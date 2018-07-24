@@ -5,7 +5,10 @@ from .views import manage_roster_view
 
 router = DefaultRouter()
 router.register(
+    'my-roster', manage_roster_view.ManageRosterView, base_name='my-roster')
+router.register(
     'new-roster', manage_roster_view.ManageRosterView, base_name='new-roster')
+
 
 urlpatterns = [
     path('', include(router.urls)),

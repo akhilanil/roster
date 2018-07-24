@@ -1,7 +1,7 @@
 from abc import ABCMeta, abstractmethod
 
 
-class AbstractRosterException():
+class AbstractRosterException(Exception):
 
     __metaclass__ = ABCMeta
 

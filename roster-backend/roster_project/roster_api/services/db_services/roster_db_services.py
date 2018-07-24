@@ -8,10 +8,10 @@ class RosterDBServices():
         try:
             return self.get_UserRosterModel_import().objects.create_user_roster(
                                             unique_id, user_name, month, year, title)
-        except DuplicateRecordError:
-            raise DuplicateRecordError
-        except RequiredDataError:
-            raise RequiredDataError
+        except DuplicateRecordError as duplicate_error:
+            raise duplicate_error
+        except RequiredDataError as required_data_error:
+            raise required_data_error
 
     def insert_user_roster_deatils(
                                 self,
@@ -31,11 +31,11 @@ class RosterDBServices():
         except RequiredDataError:
             raise RequiredDataError
 
-    def get_UserRosterDetailsModel_import():
+    def get_UserRosterDetailsModel_import(self):
 
         from roster_api.models.user_roster_deatils_model import UserRosterDetailsModel
         return UserRosterDetailsModel
 
-    def get_UserRosterModel_import():
+    def get_UserRosterModel_import(self):
         from roster_api.models.user_roster_model import UserRosterModel
         return UserRosterModel

@@ -17,7 +17,7 @@ class UserRosterDetailsManager(models.Manager):
                                     participant_name,
                                     participant_dates,
                                     per_session_count,
-                                    user_roster_deatils
+                                    user_roster
                                     ):
         """
         Method to create user roster details
@@ -28,11 +28,12 @@ class UserRosterDetailsManager(models.Manager):
             raise RequiredDataError(traceback.format_exc())
         else:
             try:
+                
                 participant = \
                     self.model(participant_name=participant_name,
                                participant_dates=participant_dates,
                                per_session_count=per_session_count,
-                               user_roster_deatils=user_roster_deatils)
+                               user_roster=user_roster)
                 participant.save(using=self._db)
             except IntegrityError:
                 raise DuplicateRecordError(traceback.format_exc())

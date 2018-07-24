@@ -34,7 +34,7 @@ class CreateRosterUtil():
             participant_dict['work'] = work
             session = ""
             for key, val in participant.session_count.items():
-                session = session + key + ":" + val + ","
+                session = session + key + ":" + str(val) + ","
             participant_dict['sessions'] = session
             participants_list.append(participant_dict)
         return participants_list
@@ -120,12 +120,14 @@ class CreateRosterUtil():
                 self.save_roster.handle_save_roster(
                     self.convert_for_client(
                         _unique_key, username, month, year, title, participants))
-            except DuplicateRecordError:
-                raise DuplicateRecordError
-            except RequiredDataError:
-                raise RequiredDataError
+            except DuplicateRecordError as duplicate_error:
+                raise duplicate_error
+            except RequiredDataError as required_data_error:
+                raise required_data_error
 
             return _unique_key
         else:
+            import pdb
+            pdb.set_trace()
             return self.convert_for_client(
                 _unique_key, username, month, year, title, participants)

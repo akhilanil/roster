@@ -9,6 +9,7 @@ from roster_api.constants.algo_const import algo_names_const
 from roster_api.exceptions.serializer_exceptions import validation_exceptions
 from roster_api.exceptions.algo_exceptions import invalid_algo_exception
 
+
 class CreateRosterSerializer(serializers.Serializer):
     """ Serializer for roster creation request """
 
@@ -41,7 +42,7 @@ class CreateRosterSerializer(serializers.Serializer):
     )
     rosterForYear = serializers.IntegerField(required=True)
 
-    algorithmUsed = serializers.CharField(required=True, max_length=20)
+    algorithmUsed = serializers.CharField(required=True, max_length=50)
 
     title = serializers.CharField(required=True, max_length=15)
 

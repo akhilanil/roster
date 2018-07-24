@@ -2,6 +2,14 @@ from django.db import models
 
 from roster_api.exceptions.roster_exceptions import save_roster_exception
 
+from django.db import IntegrityError
+
+import traceback
+
+from roster_api.exceptions.roster_exceptions.save_roster_exception import DuplicateRecordError
+from roster_api.exceptions.roster_exceptions.save_roster_exception import UnexpectedDBError
+from roster_api.exceptions.roster_exceptions.save_roster_exception import RequiredDataError
+
 
 class UserRosterManager(models.Manager):
 
@@ -15,20 +23,27 @@ class UserRosterManager(models.Manager):
         """
 
         if not id:
-            raise ValueError(save_roster_exception.UNIQUE_ID_REQUIRED)
+            raise RequiredDataError("", save_roster_exception.UNIQUE_ID_REQUIRED)
         elif not month or not year or not title:
             raise ValueError(save_roster_exception.REQUIRED_DATA_MISSING)
         else:
-            user = \
-                self.model(
-                        unique_id=unique_id,
-                        user_name=user_name,
-                        month=month,
-                        year=year,
-                        title=title
-                )
+            # import pdb; pdb.set_trace()
+            try:
+                user = \
+                    self.model(
+                            unique_id=unique_id,
+                            user_name=str(user_name),
+                            month=month,
+                            year=year,
+                            title=title
+                    )
 
-            user.save(using=self._db)
+                user.save(using=self._db)
+            except IntegrityError:
+                raise DuplicateRecordError(traceback.format_exc())
+            except Exception:
+                raise UnexpectedDBError(traceback.format_exc())
+
             return user
 
     def delete_user_roster(self, unique_id):

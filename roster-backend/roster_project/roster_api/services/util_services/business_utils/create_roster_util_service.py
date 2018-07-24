@@ -31,7 +31,7 @@ class CreateRosterUtilService():
             return self._create_roster_util.prepare_roster(username,
                     participants, holidays, month, year, is_sunday_included,
                     saturdays_list, sessions, algo_name, title)
-        except DuplicateRecordError:
-            raise DuplicateRecordError
-        except RequiredDataError:
-            raise RequiredDataError
+        except DuplicateRecordError as duplicate_error:
+            raise duplicate_error
+        except RequiredDataError as required_data_error:
+            raise required_data_error

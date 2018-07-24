@@ -24,10 +24,10 @@ class RosterSave():
         try:
             user_roster = self.roster_db_services.insert_user_roster(
                 unique_id, user_name, month, year, title)
-        except DuplicateRecordError:
-            raise DuplicateRecordError
-        except RequiredDataError:
-            raise RequiredDataError
+        except DuplicateRecordError as duplicate_error:
+            raise duplicate_error
+        except RequiredDataError as required_data_error:
+            raise required_data_error
 
         all_participants = participants['participants']
 
@@ -39,7 +39,7 @@ class RosterSave():
             try:
                 self.roster_db_services.insert_user_roster_deatils(
                     name, work, sessions, user_roster)
-            except DuplicateRecordError:
-                raise DuplicateRecordError
-            except RequiredDataError:
-                raise RequiredDataError
+            except DuplicateRecordError as duplicate_error:
+                raise duplicate_error
+            except RequiredDataError as required_data_error:
+                raise required_data_error

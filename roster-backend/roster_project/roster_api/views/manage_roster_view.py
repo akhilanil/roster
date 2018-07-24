@@ -4,9 +4,12 @@ from rest_framework import status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from roster_api.exceptions.roster_exceptions.save_roster_exception import DuplicateRecordError,RequiredDataError
+from rest_framework import status
 
 from roster_api.services.SerializerService.create_roster_service import CreateRosterSerializerService
 from roster_api.services.util_services.business_utils.create_roster_util_service import CreateRosterUtilService
+
+from django.db import transaction
 
 
 class ManageRosterView(viewsets.ViewSet):
@@ -18,6 +21,7 @@ class ManageRosterView(viewsets.ViewSet):
     authentication_classes = (TokenAuthentication,)
     permission_classes = ()
 
+    @transaction.atomic
     def create(self, request):
 
         serializer = CreateRosterSerializerService.process_request(request)
@@ -38,19 +42,22 @@ class ManageRosterView(viewsets.ViewSet):
 
             create_roster_util = CreateRosterUtilService()
             roster = None
-            error = None
+            process_status = status.HTTP_201_CREATED
             try:
-                roster = create_roster_util.prepare_roster(
-                    user_name, participants, holidays, month, year,
-                        is_sunday_included, saturdays_included, session_names, algo_name, title)
+                with transaction.atomic():
+                    roster = create_roster_util.prepare_roster(
+                        user_name, participants, holidays, month, year,
+                            is_sunday_included, saturdays_included, session_names, algo_name, title)
 
             except DuplicateRecordError as duplicate_error:
-                raise DuplicateRecordError
+                roster = duplicate_error.error_value
+                process_status = status.HTTP_403_FORBIDDEN
+
             except RequiredDataError as required_data_error:
-                raise required_data_error.get_error_dict()
+                roster = required_data_error.error_value
+                process_status = status.HTTP_500_INTERNAL_SERVER_ERROR
 
-
-            return Response({'message': roster,'error': error})
+            return Response({'message': roster}, status=process_status)
         else:
             return Response(
                 serializer.errors, status=status.HTTP_400_BAD_REQUEST)
