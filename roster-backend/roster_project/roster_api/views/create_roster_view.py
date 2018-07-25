@@ -12,7 +12,7 @@ from roster_api.services.util_services.business_utils.create_roster_util_service
 from django.db import transaction
 
 
-class ManageRosterView(viewsets.ViewSet):
+class CreateRosterView(viewsets.ViewSet):
 
     """ Manges the roster. Handles the Creation, Updation and Display
         fucntionalities of the Roster """
@@ -20,6 +20,7 @@ class ManageRosterView(viewsets.ViewSet):
     serializer_class = CreateRosterSerializerService.get_serializer_class()
     authentication_classes = (TokenAuthentication,)
     permission_classes = ()
+
 
     @transaction.atomic
     def create(self, request):

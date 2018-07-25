@@ -31,7 +31,6 @@ class UserRosterManager(models.Manager):
             try:
                 user = \
                     self.model(
-                            unique_id=unique_id,
                             user_name=str(user_name),
                             month=month,
                             year=year,

@@ -2,12 +2,14 @@ from django.db import models
 from django.db.models import Model
 from .managers.user_roster_manager import UserRosterManager
 
+import uuid
+
 
 class UserRosterModel(Model):
     """ Model to define user roster for a particular user """
 
     # Denotes the unique Id of the user ID generated for the particular month
-    unique_id = models.CharField(max_length=50, primary_key=True)
+    unique_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     # Denotes the username
     user_name = models.CharField(max_length=30)
@@ -27,4 +29,4 @@ class UserRosterModel(Model):
         unique_together = ('user_name', 'month', 'year', 'title', )
 
     def __str__(self):
-        return (self.unique_id + " -> " + self.user_name)
+        return (str(self.unique_id) + " -> " + self.user_name)
