@@ -23,7 +23,6 @@ class GetRosterView(mixins.RetrieveModelMixin,
         # import pdb; pdb.set_trace()
         # return user
 
-
     def get_serializer_class(self):
-         from roster_api.services.SerializerService import view_roster_service
-         return view_roster_service.ViewRosterSerializerService.get_serializer_class()
+        from roster_api.services.SerializerService import view_roster_service
+        return view_roster_service.ViewRosterSerializerService.get_serializer_class()

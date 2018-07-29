@@ -23,7 +23,8 @@ class UserRosterDetailsModel(models.Model):
     # User Roster Details
     user_roster = models.ForeignKey(
                                 user_roster_model.UserRosterModel,
-                                on_delete=models.CASCADE
+                                on_delete=models.CASCADE,
+                                related_name='user_rotsers'
                             )
 
     objects = UserRosterDetailsManager()
