@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from roster_api.exceptions.roster_exceptions.save_roster_exception import DuplicateRecordError,RequiredDataError
-from rest_framework import status
+
 
 from roster_api.services.SerializerService.create_roster_service import CreateRosterSerializerService
 from roster_api.services.util_services.business_utils.create_roster_util_service import CreateRosterUtilService

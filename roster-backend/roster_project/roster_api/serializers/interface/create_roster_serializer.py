@@ -42,7 +42,8 @@ class CreateRosterSerializer(serializers.Serializer):
     )
     rosterForYear = serializers.IntegerField(required=True)
 
-    algorithmUsed = serializers.CharField(required=True, max_length=50)
+    algorithmUsed = serializers.CharField(max_length=50,
+                                        default='SEQUENCE_ROSTER_ALGORITHM')
 
     title = serializers.CharField(required=True, max_length=15)
 

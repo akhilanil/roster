@@ -43,3 +43,5 @@ class RosterSave():
                 raise duplicate_error
             except RequiredDataError as required_data_error:
                 raise required_data_error
+
+            return user_roster.unique_id

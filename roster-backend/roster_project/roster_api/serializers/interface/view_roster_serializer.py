@@ -18,8 +18,7 @@ class ViewRosterSerializer(serializers.ModelSerializer):
     """
 
     user_rotsers = UserDetailsSerializer(many=True, read_only=True)
-    lookup_field = 'unique_id'
-
+    
     class Meta:
 
         model = user_roster_model.UserRosterModel

@@ -117,7 +117,7 @@ class CreateRosterUtil():
             self.init_save_roster()
 
             try:
-                self.save_roster.handle_save_roster(
+                _unique_key = self.save_roster.handle_save_roster(
                     self.convert_for_client(
                         _unique_key, username, month, year, title, participants))
             except DuplicateRecordError as duplicate_error:
