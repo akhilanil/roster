@@ -1,0 +1,8 @@
+mat-grid-tile {
+  /* background: #515F79; */
+}
+
+.grid-container{
+  max-height: 100vh;
+  overflow: hidden;
+}
