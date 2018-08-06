@@ -1,6 +1,30 @@
 <div class="grid-container">
-  <mat-grid-list cols="2" rowHeight = "38em">
-    <mat-grid-tile >Home DESC</mat-grid-tile>
+  <mat-grid-list
+        [cols]="breakpoint"
+        rowHeight = "38em"
+        [gutterSize] = "isGutterRequired ? '10em' : '0em'" 
+        (window:resize)="onResize($event)">
+    <mat-grid-tile >
+      <div class="home-desc-conatiner">
+        <h1 class = "desc-heading">
+          {{homeDescHeader}}
+        </h1>
+        <p class = "desc-text" >
+          {{homeDescText}}
+        </p>
+        <div class="button-row">
+          <button mat-raised-button color="primary"
+                  (click)="onStateChanged()">
+            {{buttonName}}
+          </button>
+          <button mat-raised-button color="primary">
+            {{continueButton}}
+          </button>
+        </div>
+      </div>
+
+
+    </mat-grid-tile>
     <mat-grid-tile >
       <router-outlet></router-outlet>
     </mat-grid-tile>

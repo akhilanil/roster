@@ -1,8 +1,35 @@
+@import url('https://fonts.googleapis.com/css?family=Nunito:600i|Open+Sans');
+
 mat-grid-tile {
   /* background: #515F79; */
 }
 
 .grid-container{
-  max-height: 100vh;
-  overflow: hidden;
+  /* max-height: 100vh;
+  overflow: hidden; */
+}
+
+.desc-heading {
+
+  font-family: 'Nunito', sans-serif;
+  text-align: center;
+
+}
+
+.desc-text {
+  font-family: 'Open Sans', sans-serif;
+  text-align: center;
+}
+
+.home-desc-conatiner {
+  padding:20px
+}
+
+.button-row {
+  text-align: center;
+}
+
+.button-row button,
+.button-row a {
+  margin-right: 8px;
 }
