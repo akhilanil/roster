@@ -10,6 +10,9 @@ import { AppRoutingModule } from './app-routing.module';
 /*Core module import*/
 import { CoreModule } from './core/core.module'
 
+/* Form Builder import */
+import {FormBuilder} from '@angular/forms';
+
 @NgModule({
   declarations: [
     AppComponent
@@ -20,8 +23,9 @@ import { CoreModule } from './core/core.module'
     CoreModule.forRoot(),
     AppRoutingModule,
 
+
   ],
-  providers: [],
+  providers: [FormBuilder,],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

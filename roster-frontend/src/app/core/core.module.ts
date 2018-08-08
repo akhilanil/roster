@@ -8,6 +8,12 @@ import { HeaderComponent } from './header/header.component';
 import { MatToolbarModule} from '@angular/material';
 
 
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { RequestInterceptorService } from './services/auth/request-interceptor.service'
+import { Optional, SkipSelf } from '@angular/core';
+// import { TestService } from '@app/core/services';
+
+
 @NgModule({
   imports: [
     CommonModule,
@@ -22,10 +28,22 @@ import { MatToolbarModule} from '@angular/material';
   declarations: [HeaderComponent]
 })
 export class CoreModule {
+  constructor(@Optional() @SkipSelf() core:CoreModule){
+    if(core) {
+      throw new Error("This is core module and is not suppsed to Run");
+    }
+  }
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: CoreModule,
-      providers: [  ]
+      providers: [
+        {
+          provide: HTTP_INTERCEPTORS,
+          useClass: RequestInterceptorService,
+          multi: true
+        },
+        // TestService,
+      ]
     };
   }
 
