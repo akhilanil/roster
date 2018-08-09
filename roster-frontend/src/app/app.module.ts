@@ -7,8 +7,11 @@ import { AppComponent } from './app.component';
 /* Main App routing import */
 import { AppRoutingModule } from './app-routing.module';
 
+// /*Core module import*/
+// import { CoreModule } from './core/core.module'
+
 /*Core module import*/
-import { CoreModule } from './core/core.module'
+import { CoreModule } from '@app/core/core.module'
 
 /* Form Builder import */
 import {FormBuilder} from '@angular/forms';
@@ -22,6 +25,7 @@ import {FormBuilder} from '@angular/forms';
     BrowserAnimationsModule,
     CoreModule.forRoot(),
     AppRoutingModule,
+   
 
 
   ],

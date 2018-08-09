@@ -13,7 +13,7 @@ import { HOME_DESC_TEXT } from './constants/ui-constants'
 import { LOGIN_URL } from './constants/url-constants'
 import { REGISTER_URL } from './constants/url-constants'
 
-//import { TestService } from '@app/core/services/test.service'
+
 
 
 @Component({
@@ -50,7 +50,7 @@ export class HomeDescComponent implements OnInit {
   isGutterRequired : boolean;
 
 
-  constructor(private router: Router, /*private testService: TestService*/) {
+  constructor(private router: Router) {
 
     /* Checks the current url and set appropriate value for the route */
     if(this.router.url === LOGIN_URL){
@@ -91,7 +91,7 @@ export class HomeDescComponent implements OnInit {
       this.buttonName = LOGIN_BUTTON
       this.router.navigate([REGISTER_URL])
     }
-    // this.testService.testing();
+     
   }
 
 }

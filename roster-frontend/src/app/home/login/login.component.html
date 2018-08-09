@@ -2,27 +2,28 @@
   <mat-grid-list cols="1" rowHeight="1:1">
     <mat-grid-tile>
 
-      <div class="input-conatiner">
+      <form class="input-conatiner" (ngSubmit)="onSubmit()" name="flagForm" novalidate>
         <p>
-          <mat-form-field [floatLabel]="options.value.floatLabel">
+          <mat-form-field [floatLabel]="options.value.floatLabel" >
             <mat-label>{{usernameInputLabel}}</mat-label>
-            <input matInput placeholder="">
+            <input matInput [formControl]="emailControl" required>
+            <mat-error *ngIf="emailControl.invalid ">{{getEmailErrorMessage()}}</mat-error>
           </mat-form-field>
         </p>
         <p>
           <mat-form-field>
-            <input matInput placeholder={{passwordInputLabel}} [type]="hide ? 'password' : 'text'">
+            <input matInput [formControl]="passwordControl" placeholder={{passwordInputLabel}} [type]="hide ? 'password' : 'text'">
             <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+            <mat-error *ngIf="passwordControl.invalid ">{{getPswrdErrorMessage()}}</mat-error>
           </mat-form-field>
         </p>
         <p style="text-align:center">
-          <button mat-raised-button color="primary">
+          <button mat-raised-button color="primary" >
             {{loginButton}}
           </button>
+          <!-- <mat-error *ngIf="formControl.invalid ">{{getAuthErrorMessage()}}</mat-error> -->
         </p>
-
-
-      </div>
+      </form>
 
     </mat-grid-tile>
   </mat-grid-list>

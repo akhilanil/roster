@@ -8,10 +8,13 @@ import { HeaderComponent } from './header/header.component';
 import { MatToolbarModule} from '@angular/material';
 
 
+import { HttpClientModule } from '@angular/common/http';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RequestInterceptorService } from './services/auth/request-interceptor.service'
 import { Optional, SkipSelf } from '@angular/core';
-// import { TestService } from '@app/core/services';
+
+import { TokenService, AuthenticationService } from '@services/auth';
+
 
 
 @NgModule({
@@ -19,11 +22,13 @@ import { Optional, SkipSelf } from '@angular/core';
     CommonModule,
     CoreRoutingModule,
     MatToolbarModule,
+    HttpClientModule
 
   ],
   exports: [
     MatToolbarModule,
-    HeaderComponent
+    HeaderComponent,
+    HttpClientModule
   ],
   declarations: [HeaderComponent]
 })
@@ -42,7 +47,8 @@ export class CoreModule {
           useClass: RequestInterceptorService,
           multi: true
         },
-        // TestService,
+        TokenService,
+        AuthenticationService
       ]
     };
   }

@@ -10,12 +10,18 @@ import { RegisterComponent } from './register/register.component';
 /* Material Module imports  */
 import { MaterialModule } from '../material.module';
 
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+
+
+
 
 @NgModule({
   imports: [
     CommonModule,
     HomeRoutingModule,
-    MaterialModule
+    MaterialModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   declarations: [HomeDescComponent, LoginComponent, RegisterComponent]
 })
