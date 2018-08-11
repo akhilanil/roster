@@ -15,6 +15,13 @@ import { REQUIRED_PSWRD_FIELD_MSG } from './constants/ui-constants'
 import { INVALID_EMAIL_PSWRD_MSG } from './constants/ui-constants'
 
 
+/* Interface imports */
+import { Users } from '@interfaces/users-interface'
+
+/* Service imports  */
+import { AuthenticationService } from '@services/auth'
+import { TokenService } from '@services/auth'
+
 
 @Component({
   selector: 'app-login',
@@ -46,11 +53,19 @@ export class LoginComponent implements OnInit {
   /* Two way data binding for password */
   userPassword: string;
 
+  /* User interface  */
+  userModel: Users;
+
+  /* Set to true if wrong Credentials are entered */
+  isWrongCredentials: boolean;
+
+  /* Set to true  if the login button clicked atleast once*/
+  hasTriedToLogin: boolean;
 
 
-
-
-  constructor(fb: FormBuilder) {
+  constructor(fb: FormBuilder,
+              private authService: AuthenticationService,
+              private tokenService: TokenService) {
 
     this.options = fb.group({
       hideRequired: false,
@@ -63,6 +78,9 @@ export class LoginComponent implements OnInit {
     this.loginButton = LOGIN_BUTTON;
     this.emailControl  = new FormControl('', [Validators.required, Validators.email]);
     this.passwordControl = new FormControl('', [Validators.required]);
+    this.isWrongCredentials = false;
+    this.userModel = {} as Users;
+    this.hasTriedToLogin = false;
 
   }
 
@@ -78,16 +96,29 @@ export class LoginComponent implements OnInit {
   }
 
   getAuthErrorMessage() {
-    // return this.email.hasError('required') ? REQUIRED_EMAIL_FIELD_MSG :
-    //     this.email.hasError('email') ? VALID_EMAIL_FIELD_MSG :
-    //         '';
+    return this.isWrongCredentials ? INVALID_EMAIL_PSWRD_MSG : "";
+
   }
 
   onSubmit() {
-    console.log(this.emailControl.value)
-    console.log(this.passwordControl.value)
-    console.log(this.emailControl.valid)
-    console.log(this.passwordControl.valid)
+
+    this.hasTriedToLogin = true;
+    this.userModel.username = this.emailControl.value;
+    this.userModel.password = this.passwordControl.value;
+
+    this.authService.userLogin(this.userModel).subscribe(
+        (val) => {
+            console.log(val['token'])
+            this.tokenService.saveToken(val['token']);
+            this.isWrongCredentials = false;
+        },
+        response => {
+            this.isWrongCredentials = true;
+        },
+        () => {
+            console.log("The POST observable is now completed.");
+        });
+
   }
 
 

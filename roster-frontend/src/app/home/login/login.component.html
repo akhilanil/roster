@@ -12,16 +12,18 @@
         </p>
         <p>
           <mat-form-field>
-            <input matInput [formControl]="passwordControl" placeholder={{passwordInputLabel}} [type]="hide ? 'password' : 'text'">
+            <input matInput [formControl]="passwordControl" placeholder={{passwordInputLabel}} [type]="hide ? 'text' : 'password'">
             <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
             <mat-error *ngIf="passwordControl.invalid ">{{getPswrdErrorMessage()}}</mat-error>
           </mat-form-field>
         </p>
         <p style="text-align:center">
-          <button mat-raised-button color="primary" >
+          <button mat-raised-button color="primary"
+                      [disabled]="(emailControl.invalid || passwordControl.invalid) ">
             {{loginButton}}
           </button>
-          <!-- <mat-error *ngIf="formControl.invalid ">{{getAuthErrorMessage()}}</mat-error> -->
+          <br><br><br>
+          <mat-error *ngIf="isWrongCredentials">{{getAuthErrorMessage()}}</mat-error>
         </p>
       </form>
 

@@ -30,8 +30,12 @@ export class RequestInterceptorService implements HttpInterceptor {
     }
     req = req.clone({ headers: req.headers.set('Accept', 'application/json') });
 
-    if (req.headers.get('No-Auth') == "True")
-            return next.handle(req.clone());
+    if (req.headers.get('No-Auth') == "True"){
+      console.log("intercept:  "+req)
+      return next.handle(req.clone());
+    }
+
+
 
     if(this.tokenService.isAuthenticated()) {
       const token: string = this.tokenService.getToken();

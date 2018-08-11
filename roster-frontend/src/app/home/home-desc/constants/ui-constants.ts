@@ -6,7 +6,7 @@ export const LOGIN_BUTTON: string = 'Login';
 export const REGISTER_BUTTON: string = 'Signup';
 
 /* Register button */
-export const CONTINUE_BUTTON: string = 'Continue without login';
+export const CONTINUE_BUTTON: string = 'Continue without signup';
 
 /* Heading for home component */
 export const HOME_DESC_HEADING: string = 'Make Rosters on the go..!!';
