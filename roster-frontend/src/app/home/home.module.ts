@@ -10,7 +10,10 @@ import { RegisterComponent } from './register/register.component';
 /* Material Module imports  */
 import { MaterialModule } from '../material.module';
 
+import { SharedModule } from '@app/shared/shared.module';
+
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { NewRosterComponent } from './new-roster/new-roster.component';
 
 
 
@@ -21,8 +24,9 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
     HomeRoutingModule,
     MaterialModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    SharedModule
   ],
-  declarations: [HomeDescComponent, LoginComponent, RegisterComponent]
+  declarations: [HomeDescComponent, LoginComponent, RegisterComponent, NewRosterComponent]
 })
 export class HomeModule { }

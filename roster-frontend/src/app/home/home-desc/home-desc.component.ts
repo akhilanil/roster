@@ -10,8 +10,8 @@ import { HOME_DESC_HEADING } from './constants/ui-constants'
 import { HOME_DESC_TEXT } from './constants/ui-constants'
 
 /* Routing URL constants */
-import { LOGIN_URL } from './constants/url-constants'
-import { REGISTER_URL } from './constants/url-constants'
+import { LOGIN_URL, CONTINUE_URL, REGISTER_URL } from './constants/url-constants'
+
 
 
 
@@ -91,7 +91,11 @@ export class HomeDescComponent implements OnInit {
       this.buttonName = LOGIN_BUTTON
       this.router.navigate([REGISTER_URL])
     }
-     
+
+  }
+
+  onContinue() {
+    this.router.navigate([CONTINUE_URL])
   }
 
 }

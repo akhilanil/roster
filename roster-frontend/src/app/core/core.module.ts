@@ -14,7 +14,7 @@ import { RequestInterceptorService } from './services/auth/request-interceptor.s
 import { Optional, SkipSelf } from '@angular/core';
 
 import { TokenService, AuthenticationService } from '@services/auth';
-
+import { DateUtilsService } from '@services/utils';
 
 
 @NgModule({
@@ -48,7 +48,8 @@ export class CoreModule {
           multi: true
         },
         TokenService,
-        AuthenticationService
+        AuthenticationService,
+        DateUtilsService
       ]
     };
   }

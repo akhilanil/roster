@@ -5,7 +5,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { HomeDescComponent } from './home-desc/home-desc.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
-
+import { NewRosterComponent } from './new-roster/new-roster.component'
 
 const routes: Routes = [
   {
@@ -25,6 +25,10 @@ const routes: Routes = [
         redirectTo: 'login'
       }
     ]
+  },
+  {
+    path:'create-roster',
+    component: NewRosterComponent,
   },
   { path:'', redirectTo: 'home', pathMatch: 'full' },
 ];
