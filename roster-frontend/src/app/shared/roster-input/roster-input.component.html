@@ -6,36 +6,67 @@
       <mat-form-field floatLabel="auto" >
         <!-- Title input field -->
         <mat-label>{{titleInputLabel}}</mat-label>
-        <input matInput [formControl]="titleControl" required maxlength="14">
+        <input matInput [formControl]="titleControl" required maxlength="14" required>
         <mat-error *ngIf="titleControl.invalid ">{{getTitleErrroMessage()}}</mat-error>
       </mat-form-field>
 
       <mat-form-field>
         <!-- Year Drop down -->
-        <mat-select [placeholder]="yearLabel" [formControl]="yearControl" required>
-          <mat-option *ngFor="let year of yearDropDown" [value]="year">
+        <mat-select [placeholder]="yearLabel"
+                    [formControl]="yearControl"
+                    (selectionChange)="yearOrMonthSelect($event.value)"
+                    [aria-label]="yearAriaLabel"
+                    required>
+          <mat-option *ngFor="let year of yearDropDown" [value]="year.value">
             {{year.name}}
           </mat-option>
         </mat-select>
         <mat-error *ngIf="yearControl.invalid">{{getYearErrroMessage()}}</mat-error>
 
         <!-- Month Drop down -->
-        <mat-select [placeholder]="monthLabel" [formControl]="monthControl" required>
-          <mat-option *ngFor="let month of monthDropDown" [value]="month">
+        <mat-select [placeholder]="monthLabel"
+                    [formControl]="monthControl"
+                    (selectionChange)="yearOrMonthSelect($event.value)"
+                    [aria-label]="monthAriaLabel"
+                    required>
+          <mat-option *ngFor="let month of monthDropDown" [value]="month.value">
             {{month.name}}
           </mat-option>
         </mat-select>
         <mat-error *ngIf="monthControl.invalid">{{getMonthErrroMessage()}}</mat-error>
-
       </mat-form-field>
-        <mat-slide-toggle labelPosition = 'before' (change)="saturdaySlideToggle($event)">
+
+      <!-- Slider -->
+      <mat-form-field>
+        <mat-slide-toggle labelPosition = 'before'
+                          [(ngModel)] = "isSaturdayIncluded"
+                          (change)="weekendSlideToggle($event)">
           {{saturdaysIncludedLabel}}
         </mat-slide-toggle>
-        <mat-slide-toggle labelPosition = 'before' (change)="sudaySlideToggle($event)">
+        <mat-slide-toggle labelPosition = 'before'
+                          [(ngModel)] = "isSundayIncluded"
+                          (change)="weekendSlideToggle($event)">
           {{sundaysIncludedLabel}}
         </mat-slide-toggle>
+      </mat-form-field>
+
       <mat-form-field>
 
+        <!-- Holiday Drop down -->
+        <mat-select [placeholder]="holidayLabel"
+                    [formControl]="holidayControl"
+                    multiple>
+          <mat-select-trigger>
+            {{holidayControl.value ? holidayControl.value[0] : ''}}
+            <span *ngIf="holidayControl.value?.length > 1" class="example-additional-selection">
+              (+{{holidayControl.value.length - 1}} more)
+            </span>
+          </mat-select-trigger>
+          <mat-option *ngFor="let holiday of holidaysDropDown" [value]="holiday.value">
+            {{holiday.name}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="monthControl.invalid">{{getMonthErrroMessage()}}</mat-error>
 
       </mat-form-field>
 

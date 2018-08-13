@@ -29,3 +29,12 @@ export const SUNDAYS_INCLUDED_LABEL: string = 'Sundays Included';
 
 /* Required error message for year field */
 export const SATURDAYS_INCLUDED_LABEL: string = 'Saturdays Included';
+
+/* Label for year field */
+export const HOLIDAYS_SELECT_LABEL: string = 'Select the holidays ';
+
+/* Aria label for year drop down */
+export const YEAR_SELECT_ARIA_LABEL: string = 'Year Select';
+
+/* Aria label for month drop down */
+export const MONTH_SELECT_ARIA_LABEL: string = 'Month Select';

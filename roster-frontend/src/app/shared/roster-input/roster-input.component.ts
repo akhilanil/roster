@@ -9,14 +9,15 @@ import { TITLE_INPUT_LABEL, TITLE_INPUT_ERROR_MAXLEN, TITLE_INPUT_ERROR_REQUIRED
 import { YEAR_SELECT_LABEL, YEAR_SELECT_ERROR_REQUIRED } from './constants/ui-constants';
 import { MONTH_SELECT_LABEL, MONTH_SELECT_ERROR_REQUIRED } from './constants/ui-constants'
 import { SUNDAYS_INCLUDED_LABEL, SATURDAYS_INCLUDED_LABEL } from './constants/ui-constants'
-
+import { YEAR_SELECT_ARIA_LABEL, MONTH_SELECT_ARIA_LABEL } from './constants/ui-constants'
+import { HOLIDAYS_SELECT_LABEL } from './constants/ui-constants'
 
 /* Custom service imports */
 import { DateUtilsService } from '@services/utils';
 
 /* Interface imports */
 import { DateModel } from '@interfaces/business-interface'
-import { MatSlideToggleChange } from '@angular/material';
+import { MatSlideToggleChange, MatSelectChange } from '@angular/material';
 
 
 @Component({
@@ -34,18 +35,31 @@ export class RosterInputComponent implements OnInit {
   titleControl: FormControl;
 
   /* Values to be set in year drop down list */
-  yearDropDown: Array<{name: string, value: string}>;
+  yearDropDown: Array<{name: string, value: number}>;
   yearControl: FormControl;
-  yearLabel: string
+  yearLabel: string;
+  yearAriaLabel: string;
+
 
   /* Values to be set in month drop down list */
-  monthDropDown: Array<{name: string, value: string}>;
+  monthDropDown: Array<{name: string, value: number}>;
   monthControl: FormControl;
-  monthLabel: string
+  monthLabel: string;
+  monthAriaLabel: string;
 
-  /* Labels for slide toggle */
+  /* Labels and values for slide toggle */
   sundaysIncludedLabel: string;
   saturdaysIncludedLabel: string;
+  isSaturdayIncluded: boolean;
+  isSundayIncluded: boolean;
+
+  /* Values to be set in month drop down list */
+  holidaysDropDown: Array<{name: string, value: string}>;
+  holidayControl: FormControl;
+  holidayLabel: string;
+
+
+
 
 
   constructor(private dateUtilService: DateUtilsService) {
@@ -55,8 +69,10 @@ export class RosterInputComponent implements OnInit {
     this.yearLabel = YEAR_SELECT_LABEL;
     this.monthLabel = MONTH_SELECT_LABEL;
     this.sundaysIncludedLabel = SUNDAYS_INCLUDED_LABEL;
-    this.saturdaysIncludedLabel = SATURDAYS_INCLUDED_LABEL
-
+    this.saturdaysIncludedLabel = SATURDAYS_INCLUDED_LABEL;
+    this.monthAriaLabel = MONTH_SELECT_ARIA_LABEL;
+    this.yearAriaLabel = YEAR_SELECT_ARIA_LABEL;
+    this.holidayLabel = HOLIDAYS_SELECT_LABEL;
   }
 
   ngOnInit( ) {
@@ -112,29 +128,52 @@ export class RosterInputComponent implements OnInit {
     yearList.forEach(year =>{
         this.yearDropDown.push({
           'name': year.toString(),
-          'value': year.toString()
+          'value': year
         });
     });
 
     monthList.forEach(month =>{
         this.monthDropDown.push({
           'name': month.toString(),
-          'value': month.toString()
+          'value': month
         });
     });
   }
 
 
-  sudaySlideToggle(event: MatSlideToggleChange) {
+  /* Method invoked when year or month select is changed  */
+  yearOrMonthSelect(event: MatSelectChange) {
 
-    // event.checked
-    
-
-  }
-
-  saturdaySlideToggle(event: MatSlideToggleChange) {
-
+    var year = this.monthControl.value;
+    var month = this.yearControl.value;
+    this.updateHolidayList(year, month, this.isSaturdayIncluded, this.isSundayIncluded);
 
   }
 
+
+  /* Method invoked when saturday or sunday slider is toggled  */
+  weekendSlideToggle(event: MatSlideToggleChange) {
+
+    var year = this.monthControl.value;
+    var month = this.yearControl.value;
+    this.updateHolidayList(year, month, this.isSaturdayIncluded, this.isSundayIncluded);
+
+  }
+
+
+  updateHolidayList(year: number, month: number, isSaturdayIncluded: boolean, isSundayIncluded:boolean) {
+
+    var dateList: Array<string> =
+                    this.dateUtilService.getValidDays(year, month,
+                              isSaturdayIncluded, isSundayIncluded);
+
+
+    dateList.forEach( date => {
+
+      this.holidaysDropDown.push({
+        'name': date,
+        'value': date
+      })
+    });
+  }
 }
