@@ -1,12 +1,11 @@
 <mat-horizontal-stepper linear #stepper>
-  <mat-step [stepControl]="firstFormGroup" [editable]="true">
-    <form novalidate #initalForm = ngForm (ngSubmit)="onSubmit(initalForm) [formGroup]="initalFormGroup"">
-
+  <mat-step [stepControl]="initalFormGroup" label="ONE">
+      <form novalidate #initalForm = ngForm (ngSubmit)="onSubmit(initalForm)" [formGroup]="initalFormGroup">
       <ng-template matStepLabel>{{initStepLabel}}</ng-template>
       <mat-form-field floatLabel="auto" >
         <!-- Title input field -->
         <mat-label>{{titleInputLabel}}</mat-label>
-        <input matInput [formControl]="titleControl" required maxlength="14" required>
+        <input matInput [formControl]="titleControl" maxlength="14" required>
         <mat-error *ngIf="titleControl.invalid ">{{getTitleErrroMessage()}}</mat-error>
       </mat-form-field>
 
@@ -21,8 +20,9 @@
             {{year.name}}
           </mat-option>
         </mat-select>
-        <mat-error *ngIf="yearControl.invalid">{{getYearErrroMessage()}}</mat-error>
-
+        <mat-error *ngIf="yearControl.invalid">{{getYearErrorMessage()}}</mat-error>
+      </mat-form-field>  
+      <mat-form-field>
         <!-- Month Drop down -->
         <mat-select [placeholder]="monthLabel"
                     [formControl]="monthControl"
@@ -33,22 +33,22 @@
             {{month.name}}
           </mat-option>
         </mat-select>
-        <mat-error *ngIf="monthControl.invalid">{{getMonthErrroMessage()}}</mat-error>
+        <mat-error *ngIf="monthControl.invalid">{{getMonthErrorMessage()}}</mat-error>
       </mat-form-field>
 
       <!-- Slider -->
-      <mat-form-field>
+      <div>
         <mat-slide-toggle labelPosition = 'before'
-                          [(ngModel)] = "isSaturdayIncluded"
+                          formControlName="saturdayToggle"
                           (change)="weekendSlideToggle($event)">
           {{saturdaysIncludedLabel}}
         </mat-slide-toggle>
         <mat-slide-toggle labelPosition = 'before'
-                          [(ngModel)] = "isSundayIncluded"
+                          formControlName="sundayToggle"
                           (change)="weekendSlideToggle($event)">
           {{sundaysIncludedLabel}}
         </mat-slide-toggle>
-      </mat-form-field>
+      </div>
 
       <mat-form-field>
 
@@ -66,12 +66,33 @@
             {{holiday.name}}
           </mat-option>
         </mat-select>
-        <mat-error *ngIf="monthControl.invalid">{{getMonthErrroMessage()}}</mat-error>
-
+        <mat-error *ngIf="monthControl.invalid">{{getMonthErrorMessage()}}</mat-error>
       </mat-form-field>
 
+      <mat-form-field>
+        <!-- Participants number  Drop down -->
+        <mat-select [placeholder]="totalParticipaLabel"
+                      [formControl]="totalParticipantControl"
+                      required>
+          <mat-option *ngFor="let participant of totalParticipantDropDown" [value]="participant.value">
+            {{participant.name}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="totalParticipantControl.invalid">{{getParticipantErrorMessage()}}</mat-error>
 
-
+        <!-- Session number  Drop down -->
+        <mat-select [placeholder]="totalSessionLabel"
+                    [formControl]="totalSessionControl"
+                    required>
+          <mat-option *ngFor="let session of totalSessionDropDown" [value]="session.value">
+            {{session.name}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="totalSessionControl.invalid">{{getSessionErrorMessage()}}</mat-error>
+      </mat-form-field>
+      <div>
+        <button mat-raised-button color="primary" matStepperNext>Next</button>
+      </div>
     </form>
   </mat-step>
 </mat-horizontal-stepper>

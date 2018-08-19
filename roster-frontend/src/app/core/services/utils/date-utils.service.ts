@@ -16,7 +16,7 @@ export class DateUtilsService {
                 isSundayIncluded: boolean): Array<string> {
 
 
-    var dateList: Array<string>;
+    var dateList: Array<string> = new Array<string>();
 
     var numberOfDaysInMonth = new Date(year, month, 0).getDate();
 
@@ -49,7 +49,7 @@ export class DateUtilsService {
     var month = currentDate.getMonth()
     var year = currentDate.getFullYear()
 
-    var validMonthYearList: Array<DateModel>
+    var validMonthYearList: Array<DateModel> = new Array<DateModel>();
 
     for(var i = 0; i < duration ; i++) {
       var validMonthYearObj = {
