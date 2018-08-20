@@ -15,6 +15,10 @@ export class DateUtilsService {
                 isSaturdayIncluded: boolean,
                 isSundayIncluded: boolean): Array<string> {
 
+    console.log(year,month)
+
+
+    month = month - 1;
 
     var dateList: Array<string> = new Array<string>();
 
@@ -22,20 +26,22 @@ export class DateUtilsService {
 
     for(var i = 1; i <= numberOfDaysInMonth; i++) {
 
-      var date: string = i + "-" + month + "-" + year;
+      var date: string = i + "-" + (month + 1) + "-" + year;
 
-      var isSaturday: boolean = new Date(year, month-1, i).getDay() != 6
+      var isSaturday: boolean = new Date(year, month-1, i).getDay() == 6
 
-      var isSunday: boolean = new Date(year, month-1, i).getDay() != 0
+      var isSunday: boolean = new Date(year, month-1, i).getDay() == 0
 
       if( (isSaturday && isSaturdayIncluded) ||
           (isSunday && isSundayIncluded) ||
           (!isSunday && !isSaturday)) {
 
             dateList.push(date);
+
       }
-      return dateList;
     }
+
+    return dateList;
   }
 
 
@@ -46,7 +52,7 @@ export class DateUtilsService {
   getValidMonthAndYear(duration: number = 6): Array<DateModel>{
 
     var currentDate = new Date();
-    var month = currentDate.getMonth()
+    var month = currentDate.getMonth() + 1;
     var year = currentDate.getFullYear()
 
     var validMonthYearList: Array<DateModel> = new Array<DateModel>();

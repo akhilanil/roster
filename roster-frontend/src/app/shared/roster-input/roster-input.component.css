@@ -1,0 +1,17 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container > div {
+  margin: 10px;
+}
+
+
+
+.year-month, .slider-container, .session-participant {
+  flex-wrap: wrap;
+  flex-direction: row;
+  align-content: space-between;
+}

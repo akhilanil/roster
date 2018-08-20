@@ -80,6 +80,8 @@ export class RosterInputComponent implements OnInit {
   totalParticipantControl: FormControl;
   totalParticipaLabel: string
 
+  /* Array consisting of dateModels  */
+  dateModels: Array<DateModel>
 
 
   constructor(private dateUtilService: DateUtilsService,
@@ -97,8 +99,9 @@ export class RosterInputComponent implements OnInit {
 
     this.totalSessionLabel = SESSION_NUM_SELECT_LABEL,
     this.totalParticipaLabel = PARTICIPANT_NUM_SELECT_LABEL;
-    this.totalSessionDropDown = this.prepareNumberDropDown(MAX_SESSIONS);
     this.totalParticipantDropDown = this.prepareNumberDropDown(MAX_PARTICIPANTS);
+    this.totalSessionDropDown = this.prepareNumberDropDown(MAX_SESSIONS);
+
 
     /* Intialise Controllers */
     this.initFromConroller()
@@ -106,7 +109,6 @@ export class RosterInputComponent implements OnInit {
     /* Intialise arrays for dropdown */
     this.yearDropDown         = new Array<{name: string, value: number}>();
     this.holidaysDropDown     = new Array<{name: string, value: string}>();
-    this.totalSessionDropDown = new Array<{name: string, value: number}>();
     this.monthDropDown        = new Array<{name: string, value: number}>();
 
     /* Setting slide toggles to false */
@@ -137,6 +139,7 @@ export class RosterInputComponent implements OnInit {
     this.titleControl = new FormControl('', [Validators.required, Validators.maxLength(14)]);
     this.yearControl = new FormControl('', [Validators.required]);
     this.monthControl = new FormControl('', [Validators.required]);
+    this.monthControl.disable();
     this.holidayControl = new FormControl('');
     this.totalParticipantControl = new FormControl('', [Validators.required]);
     this.totalSessionControl = new FormControl('', [Validators.required]);
@@ -155,7 +158,9 @@ export class RosterInputComponent implements OnInit {
         'value': i
       })
     }
+
     return  dropDownArray;
+
   }
 
 
@@ -194,45 +199,53 @@ export class RosterInputComponent implements OnInit {
   /* Method to set year and month drop down  */
   prepareYearAndMonthDropDown(dateModels: Array<DateModel>): void {
 
-    var yearCounter: number = 0;
-    var monthCounter: number = 0;
-    var counter: number = 0;
+    this.dateModels = dateModels;
 
+    this.yearDropDown =
+            this.dateModels.filter((element, index, modelArray) => {
+              return modelArray.map( arrayObj => arrayObj.year).indexOf(element.year) === index
+            }).map((dateModel) => {
+              return {
+                'name': dateModel.year.toString(),
+                'value':dateModel. year
+              }
+            });
 
-    var yearList: Array<number> = new Array<number>();
-    var monthList: Array<number> = new Array<number>();
-
-    for(let dateModel of dateModels) {
-      yearList[counter] = dateModel.year;
-      monthList[counter] = dateModel.month
-      counter++;
-    }
-
-    yearList = yearList.filter((element, index, yearArray) => index === yearArray.indexOf(element))
-    console.log("YEAR", yearList)
-
-    yearList.forEach(year =>{
-        this.yearDropDown.push({
-          'name': year.toString(),
-          'value': year
-        });
-    });
-
-    monthList.forEach(month =>{
-        this.monthDropDown.push({
-          'name': month.toString(),
-          'value': month
-        });
-    });
   }
 
+
+  /* Method to set values to month drop down */
+  setMonthDropDown(year: number): void {
+
+    this.monthDropDown =
+        this.dateModels.filter(dateModel =>  dateModel.year === year ).map((dateModel) => {
+          return {
+            'name': dateModel.month.toString(),
+            'value':dateModel. month
+          }
+        });
+
+  }
 
   /* Method invoked when year or month select is changed  */
   yearOrMonthSelect(event: MatSelectChange) {
 
-    var year = this.monthControl.value;
-    var month = this.yearControl.value;
-    this.updateHolidayList(year, month, this.isSaturdayIncluded, this.isSundayIncluded);
+    var year = this.yearControl.value;
+
+    if(event.source.ariaLabel=== this.yearAriaLabel)
+      this.setMonthDropDown(year);
+
+    if(this.monthControl.disabled) {
+      this.monthControl.enable();
+    }
+    else {
+      var month = this.monthControl.value;
+      console.log('year',year)
+      console.log('month',month)
+      this.updateHolidayList(year, month, this.isSaturdayIncluded, this.isSundayIncluded);
+    }
+
+
 
   }
 
@@ -243,8 +256,10 @@ export class RosterInputComponent implements OnInit {
     this.isSundayIncluded = this.initalFormGroup.controls['sundayToggle'].value? true: false;
     this.isSaturdayIncluded = this.initalFormGroup.controls['saturdayToggle'].value ? true : false;
 
-    var year = this.monthControl.value;
-    var month = this.yearControl.value;
+    var month = this.monthControl.value;
+    var year = this.yearControl.value;
+
+
     this.updateHolidayList(year, month, this.isSaturdayIncluded, this.isSundayIncluded);
 
   }
@@ -252,11 +267,17 @@ export class RosterInputComponent implements OnInit {
 
   updateHolidayList(year: number, month: number, isSaturdayIncluded: boolean, isSundayIncluded:boolean) {
 
+    if(!(this.yearControl.dirty && this.monthControl.dirty)) {
+      return;
+    }
+
+
     var dateList: Array<string> =
-                    this.dateUtilService.getValidDays(year, month,
+                    this.dateUtilService.getValidDays(month, year,
                               isSaturdayIncluded, isSundayIncluded);
 
 
+    this.holidaysDropDown = [];
     dateList.forEach( date => {
 
       this.holidaysDropDown.push({
