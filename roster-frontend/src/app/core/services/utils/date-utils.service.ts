@@ -18,7 +18,7 @@ export class DateUtilsService {
     console.log(year,month)
 
 
-    month = month - 1;
+    // month = month - 1;
 
     var dateList: Array<string> = new Array<string>();
 
@@ -26,7 +26,7 @@ export class DateUtilsService {
 
     for(var i = 1; i <= numberOfDaysInMonth; i++) {
 
-      var date: string = i + "-" + (month + 1) + "-" + year;
+      var date: string = i + "-" + (month ) + "-" + year;
 
       var isSaturday: boolean = new Date(year, month-1, i).getDay() == 6
 
