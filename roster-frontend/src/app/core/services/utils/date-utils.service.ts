@@ -15,9 +15,6 @@ export class DateUtilsService {
                 isSaturdayIncluded: boolean,
                 isSundayIncluded: boolean): Array<string> {
 
-    console.log(year,month)
-
-
     // month = month - 1;
 
     var dateList: Array<string> = new Array<string>();
@@ -26,7 +23,7 @@ export class DateUtilsService {
 
     for(var i = 1; i <= numberOfDaysInMonth; i++) {
 
-      var date: string = i + "-" + (month ) + "-" + year;
+      var date: string = year + "-" + (month ) + "-" + i;
 
       var isSaturday: boolean = new Date(year, month-1, i).getDay() == 6
 
@@ -37,7 +34,6 @@ export class DateUtilsService {
           (!isSunday && !isSaturday)) {
 
             dateList.push(date);
-
       }
     }
 
@@ -72,5 +68,47 @@ export class DateUtilsService {
     }
     return validMonthYearList;
   }
+
+
+
+  /*
+   * This service method is invoked to prepare saturday list for create roster request
+   */
+  prepareSaturdayListForRequest(isSaturdayIncluded: boolean, holidayList: Array<string>,
+                                year: number, month: number): Array<boolean> {
+
+    var saturdayList: Array<boolean>;
+    var all_dates = this.getValidDays(month, year, true, false)
+
+    if(!isSaturdayIncluded) {
+
+      saturdayList = all_dates.filter((dates) => {
+        var dateSplit: Array<string> = dates.split("-");
+        return new Date(
+                  Number.parseInt(dateSplit[0]),
+                  Number.parseInt(dateSplit[1])-1,
+                  Number.parseInt(dateSplit[2])
+                ).getDay() === 6
+      }).map((filteredDate) => {return false})
+
+    } else {
+      saturdayList = all_dates.filter((dates) => {
+        var dateSplit: Array<string> = dates.split("-");
+        return new Date(
+                  Number.parseInt(dateSplit[0]),
+                  Number.parseInt(dateSplit[1])-1,
+                  Number.parseInt(dateSplit[2])
+                ).getDay() === 6
+      }).map((filteredDate) => {
+        if (holidayList.findIndex(holiday => holiday === filteredDate)!=-1){
+          return false;
+        } else {
+          return true;
+        }
+      });
+    }
+    return saturdayList;
+  }
+
 
 }

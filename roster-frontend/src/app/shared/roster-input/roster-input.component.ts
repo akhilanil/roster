@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
+import { MatSlideToggleChange, MatSelectChange } from '@angular/material';
 
 import {FormControl, Validators, FormGroup, FormBuilder} from '@angular/forms';
 
@@ -25,7 +25,10 @@ import { DateUtilsService } from '@services/utils';
 
 /* Interface imports */
 import { DateModel } from '@interfaces/business-interface'
-import { MatSlideToggleChange, MatSelectChange } from '@angular/material';
+import { CreateRosterRQModel, ParticipantModel, LeaveSessionModel} from '@interfaces/business-interface'
+
+
+
 
 
 @Component({
@@ -82,6 +85,11 @@ export class RosterInputComponent implements OnInit {
 
   /* Array consisting of dateModels  */
   dateModels: Array<DateModel>
+
+  /* Create Roster Request Models */
+  createRosterRQModel: CreateRosterRQModel;
+  participantModel: ParticipantModel;
+  leaveSessionModel: LeaveSessionModel;
 
 
   constructor(private dateUtilService: DateUtilsService,
@@ -240,8 +248,7 @@ export class RosterInputComponent implements OnInit {
     }
     else {
       var month = this.monthControl.value;
-      console.log('year',year)
-      console.log('month',month)
+
       this.updateHolidayList(year, month, this.isSaturdayIncluded, this.isSundayIncluded);
     }
 
@@ -286,4 +293,53 @@ export class RosterInputComponent implements OnInit {
       })
     });
   }
+
+
+  private initRequestModelSkelton(_title: string, _year: number, _month: number,
+                          _numberOfSessions: number, _saturdaysIncluded: Array<boolean>,
+                          _isSundayIncluded:boolean, _holidays: Array<string>) {
+
+    this.createRosterRQModel = {
+      title: _title,
+      rosterForYear: _year,
+      rosterForMonth: _month,
+      sessionNames: [],
+      numberOfSessions: _numberOfSessions,
+      saturdaysIncluded: _saturdaysIncluded,
+      isSundayIncluded: _isSundayIncluded,
+      holidays: _holidays,
+      participants: []
+
+    };
+  }
+
+
+  onInitSubmit() {
+
+    var title = this.titleControl.value;
+    var year = this.yearControl.value;
+    var month = this.monthControl.value;
+    var numberOfSessions = this.totalSessionControl.value;
+    var isSundayIncluded = this.isSundayIncluded;
+    var isSaturdayIncluded = this.isSaturdayIncluded
+    var holidays = this.holidayControl.value;
+
+
+    var saturdaysIncluded =
+          this.dateUtilService.prepareSaturdayListForRequest( isSaturdayIncluded,
+                                                              holidays,
+                                                              year, month);
+
+    this.initRequestModelSkelton(title, year, month,
+            numberOfSessions, saturdaysIncluded, isSundayIncluded, holidays)
+
+
+    console.log(this.createRosterRQModel)
+
+  }
+
+
+
+
+
 }

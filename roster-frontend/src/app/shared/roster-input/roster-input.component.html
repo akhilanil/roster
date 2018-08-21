@@ -1,6 +1,6 @@
 <mat-horizontal-stepper linear #stepper>
   <mat-step [stepControl]="initalFormGroup" label="ONE">
-      <form novalidate #initalForm = ngForm (ngSubmit)="onSubmit(initalForm)" [formGroup]="initalFormGroup">
+      <form novalidate #initalForm = ngForm (ngSubmit)="onInitSubmit()" [formGroup]="initalFormGroup">
       <ng-template matStepLabel>{{initStepLabel}}</ng-template>
 
       <div class="container title">
@@ -76,7 +76,7 @@
                         multiple>
               <mat-select-trigger>
                 {{holidayControl.value ? holidayControl.value[0] : ''}}
-                <span *ngIf="holidayControl.value?.length > 1" class="example-additional-selection">
+                <span *ngIf="holidayControl.value?.length > 1" >
                   (+{{holidayControl.value.length - 1}} more)
                 </span>
               </mat-select-trigger>
@@ -117,8 +117,6 @@
         </mat-form-field>
         </div>
       </div>
-
-
       <div class="container">
         <button mat-raised-button color="primary" matStepperNext>Next</button>
       </div>
