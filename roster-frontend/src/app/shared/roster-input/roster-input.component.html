@@ -92,6 +92,20 @@
       <div class="container session-participant">
         <div class="">
           <mat-form-field>
+          <!-- Session number  Drop down -->
+            <mat-select [placeholder]="totalSessionLabel"
+                        [formControl]="totalSessionControl"
+                        (selectionChange)="onSessionSelected($event)"
+                        required>
+                        <mat-option *ngFor="let participant of totalSessionDropDown" [value]="participant.value">
+                          {{participant.name}}
+                        </mat-option>
+            </mat-select>
+            <mat-error *ngIf="totalSessionControl.invalid">{{getSessionErrorMessage()}}</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="">
+          <mat-form-field>
             <!-- Participants number  Drop down -->
               <mat-select [placeholder]="totalParticipaLabel"
                           [formControl]="totalParticipantControl"
@@ -102,19 +116,6 @@
               </mat-select>
               <mat-error *ngIf="totalParticipantControl.invalid">{{getParticipantErrorMessage()}}</mat-error>
             </mat-form-field>
-        </div>
-        <div class="">
-          <mat-form-field>
-          <!-- Session number  Drop down -->
-            <mat-select [placeholder]="totalSessionLabel"
-                        [formControl]="totalSessionControl"
-                        required>
-                        <mat-option *ngFor="let participant of totalSessionDropDown" [value]="participant.value">
-                          {{participant.name}}
-                        </mat-option>
-            </mat-select>
-            <mat-error *ngIf="totalSessionControl.invalid">{{getSessionErrorMessage()}}</mat-error>
-        </mat-form-field>
         </div>
       </div>
       <div class="container">

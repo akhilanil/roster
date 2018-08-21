@@ -107,8 +107,8 @@ export class RosterInputComponent implements OnInit {
 
     this.totalSessionLabel = SESSION_NUM_SELECT_LABEL,
     this.totalParticipaLabel = PARTICIPANT_NUM_SELECT_LABEL;
-    this.totalParticipantDropDown = this.prepareNumberDropDown(MAX_PARTICIPANTS);
-    this.totalSessionDropDown = this.prepareNumberDropDown(MAX_SESSIONS);
+
+    this.totalSessionDropDown = this.prepareNumberDropDown(1, MAX_SESSIONS);
 
 
     /* Intialise Controllers */
@@ -147,20 +147,23 @@ export class RosterInputComponent implements OnInit {
     this.titleControl = new FormControl('', [Validators.required, Validators.maxLength(14)]);
     this.yearControl = new FormControl('', [Validators.required]);
     this.monthControl = new FormControl('', [Validators.required]);
-    this.monthControl.disable();
+
     this.holidayControl = new FormControl('');
     this.totalParticipantControl = new FormControl('', [Validators.required]);
     this.totalSessionControl = new FormControl('', [Validators.required]);
+
+    this.monthControl.disable();
+    this.totalParticipantControl.disable();
   }
 
 
 
 
   /* Returns the array used to prepare arrays for participant and session dropdowns */
-  private prepareNumberDropDown( maxValue ): Array<{name: string, value: number}> {
+  private prepareNumberDropDown(minValue: number, maxValue: number ): Array<{name: string, value: number}> {
 
     var dropDownArray: Array<{name: string, value: number}> = new Array();
-    for (var i = 1; i <= maxValue; i++) {
+    for (var i = minValue; i <= maxValue; i++) {
       dropDownArray.push({
         'name': i.toString(),
         'value': i
@@ -313,6 +316,11 @@ export class RosterInputComponent implements OnInit {
     };
   }
 
+  onSessionSelected() {
+    this.totalParticipantControl.enable();
+    this.totalParticipantDropDown = this.prepareNumberDropDown(this.totalSessionControl.value, MAX_PARTICIPANTS);
+  }
+
 
   onInitSubmit() {
 
@@ -334,7 +342,7 @@ export class RosterInputComponent implements OnInit {
             numberOfSessions, saturdaysIncluded, isSundayIncluded, holidays)
 
 
-    console.log(this.createRosterRQModel)
+    // console.log(this.createRosterRQModel)
 
   }
 
