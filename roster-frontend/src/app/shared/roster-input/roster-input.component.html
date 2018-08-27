@@ -123,4 +123,43 @@
       </div>
     </form>
   </mat-step>
+  <mat-step *ngIf = "secondFormGroup" [stepControl]="secondFormGroup">
+    <form novalidate #initalForm = ngForm (ngSubmit)="onSecondSubmit()" [formGroup]="secondFormGroup">
+      <ng-template matStepLabel>{{secondStepLabel}}</ng-template>
+      <div class="container participants">
+        <div *ngFor="let participant of totalParticipants">
+          <mat-form-field floatLabel="auto" >
+
+            <mat-label>{{participant.displayLabel}}</mat-label>
+            <input matInput [formControlName]="participant.formControlName" maxlength="14" >
+            <mat-error *ngIf="participant.formControlName.errors?.required ">{{getParticipantRequiredErrorMessage()}}</mat-error>
+            <mat-error *ngIf="participant.formControlName.errors?.maxLength ">{{getParticipantLengthErrorMessage()}}</mat-error>
+          </mat-form-field>
+
+          <!-- <p>HAHA:{{participant}}</p> -->
+        </div>
+      </div>
+      <div class="container sessions">
+        <div *ngFor="let session of totalSessions">
+          <mat-form-field floatLabel="auto" >
+
+            <mat-label>{{session.displayLabel}}</mat-label>
+
+            <input matInput [formControlName]="session.formControlName" maxlength="14" >
+            <mat-error *ngIf="session.formControlName.errors?.required ">{{getSessionRequiredErrorMessage()}}</mat-error>
+            <mat-error *ngIf="session.formControlName.errors?.maxLength ">{{getSessionLengthErrorMessage()}}</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="container">
+        <div class="">
+            <button mat-raised-button color="primary" matStepperPrevious>Back</button>
+        </div>
+        <div class="">
+            <button mat-raised-button color="primary" matStepperNext>Next</button>
+        </div>
+
+      </div>
+    </form>
+  </mat-step>
 </mat-horizontal-stepper>

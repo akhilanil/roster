@@ -1,6 +1,10 @@
 /* Label for first stepper */
 export const INITIAL_STEP_LABEL: string = 'Let\'s get started';
 
+/* Label for second stepper */
+export const SECOND_STEP_LABEL: string = 'Who all are in?';
+
+
 /* Label for title field */
 export const TITLE_INPUT_LABEL: string = 'Title for roster ';
 
@@ -44,6 +48,24 @@ export const PARTICIPANT_NUM_SELECT_LABEL: string = 'Number of Participants ';
 
 /* Required error message for participant drop down */
 export const PARTICIPANT_SELECT_ERROR_REQUIRED: string = 'Please select number of participants';
+
+/* Label for participant field */
+export const PARTICIPANT_INPUT_LABEL: string = 'Participant ';
+
+/* Error Label for participant field */
+export const PARTICIPANT_INPUT_ERROR_REQUIRED: string = 'Participant name missing';
+
+/* Error Label for participant field */
+export const PARTICIPANT_INPUT_ERROR_MAXLEN: string = 'Participant name cannot be more than 14 characters ';
+
+/* Label for session field */
+export const SESSION_INPUT_LABEL: string = 'Session ';
+
+/* Error Label for session field */
+export const SESSION_INPUT_ERROR_REQUIRED: string = 'Session name missing';
+
+/* Error Label for session field */
+export const SESSION_INPUT_ERROR_MAXLEN: string = 'Session name cannot be more than 14 characters ';
 
 
 

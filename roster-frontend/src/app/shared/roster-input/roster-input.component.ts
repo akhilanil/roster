@@ -4,7 +4,7 @@ import { MatSlideToggleChange, MatSelectChange } from '@angular/material';
 import {FormControl, Validators, FormGroup, FormBuilder} from '@angular/forms';
 
 /* UI Constant imports */
-import { INITIAL_STEP_LABEL } from './constants/ui-constants'
+import { INITIAL_STEP_LABEL, SECOND_STEP_LABEL } from './constants/ui-constants'
 import { TITLE_INPUT_LABEL, TITLE_INPUT_ERROR_MAXLEN, TITLE_INPUT_ERROR_REQUIRED } from './constants/ui-constants'
 import { YEAR_SELECT_LABEL, YEAR_SELECT_ERROR_REQUIRED } from './constants/ui-constants';
 import { MONTH_SELECT_LABEL, MONTH_SELECT_ERROR_REQUIRED } from './constants/ui-constants'
@@ -13,6 +13,8 @@ import { YEAR_SELECT_ARIA_LABEL, MONTH_SELECT_ARIA_LABEL } from './constants/ui-
 import { HOLIDAYS_SELECT_LABEL } from './constants/ui-constants'
 import { SESSION_NUM_SELECT_LABEL, PARTICIPANT_NUM_SELECT_LABEL } from './constants/ui-constants'
 import { SESSION_SELECT_ERROR_REQUIRED, PARTICIPANT_SELECT_ERROR_REQUIRED } from './constants/ui-constants'
+import { PARTICIPANT_INPUT_LABEL, PARTICIPANT_INPUT_ERROR_REQUIRED, PARTICIPANT_INPUT_ERROR_MAXLEN } from './constants/ui-constants'
+import { SESSION_INPUT_LABEL, SESSION_INPUT_ERROR_REQUIRED, SESSION_INPUT_ERROR_MAXLEN } from './constants/ui-constants'
 
 
 
@@ -40,10 +42,11 @@ export class RosterInputComponent implements OnInit {
 
   /* Form groups */
   initalFormGroup: FormGroup;
-
+  secondFormGroup: FormGroup;
 
   /* Label for first stepper */
   initStepLabel: string;
+  secondStepLabel: string;
 
   /* Label and form control for title input field */
   titleInputLabel: string;
@@ -91,11 +94,21 @@ export class RosterInputComponent implements OnInit {
   participantModel: ParticipantModel;
   leaveSessionModel: LeaveSessionModel;
 
+  totalParticipants = [];
+  totalSessions = [];
+
+  /* Participant and session labels */
+  participantLabel: string;
+  sessionLabel: string;
+
+
 
   constructor(private dateUtilService: DateUtilsService,
               private formBuilder: FormBuilder) {
 
     this.initStepLabel = INITIAL_STEP_LABEL;
+    this.secondStepLabel = SECOND_STEP_LABEL;
+
     this.titleInputLabel = TITLE_INPUT_LABEL;
     this.yearLabel = YEAR_SELECT_LABEL;
     this.monthLabel = MONTH_SELECT_LABEL;
@@ -107,6 +120,9 @@ export class RosterInputComponent implements OnInit {
 
     this.totalSessionLabel = SESSION_NUM_SELECT_LABEL,
     this.totalParticipaLabel = PARTICIPANT_NUM_SELECT_LABEL;
+
+    this.participantLabel = PARTICIPANT_INPUT_LABEL;
+    this.sessionLabel = SESSION_INPUT_LABEL;
 
     this.totalSessionDropDown = this.prepareNumberDropDown(1, MAX_SESSIONS);
 
@@ -121,6 +137,8 @@ export class RosterInputComponent implements OnInit {
 
     /* Setting slide toggles to false */
     this.isSaturdayIncluded = this.isSundayIncluded = false ;
+
+
 
   }
 
@@ -137,8 +155,10 @@ export class RosterInputComponent implements OnInit {
       tsc: this.totalSessionControl,
       saturdayToggle: new FormControl('',[Validators.required]).setValue(false),
       sundayToggle: new FormControl('',[Validators.required]).setValue(false)
+
     })
 
+    this.buildSecondFormGroup(8, 4);
   }
 
 
@@ -341,11 +361,69 @@ export class RosterInputComponent implements OnInit {
     this.initRequestModelSkelton(title, year, month,
             numberOfSessions, saturdaysIncluded, isSundayIncluded, holidays)
 
+    let totalParticipants = this.totalParticipantControl.value;
+    let totalSessions = this.totalSessionControl.value;
+
+    this.builSessionAndParticipantInput(totalParticipants, totalSessions)
 
     // console.log(this.createRosterRQModel)
 
   }
 
+
+  builSessionAndParticipantInput(totalParticipants: number, totalSessions: number) {
+    this.totalParticipants = [];
+    this.totalSessions = [];
+
+    for(var i = 1; i <= totalParticipants; i++) {
+
+      this.totalParticipants.push( {
+        "formControlName": 'participant'+i,
+        "displayLabel": this.participantLabel+ ' ' + i
+      });
+    }
+
+    for(var i = 1; i <= totalSessions; i++) {
+
+      this.totalSessions.push( {
+        "formControlName": 'session'+i,
+        "displayLabel": this.sessionLabel+ ' ' + i
+      });
+    }
+
+  }
+
+
+
+  buildSecondFormGroup(totalParticipants: number, totalSessions: number) {
+
+    this.secondFormGroup = this.formBuilder.group({});
+
+    for(var i = 1; i <= totalParticipants; i++) {
+      this.secondFormGroup.addControl('participant'+i,  new FormControl('', [Validators.required, Validators.maxLength(14)]))
+    }
+
+    for(var i = 1; i <= totalSessions; i++) {
+      this.secondFormGroup.addControl('session'+i,  new FormControl('', [Validators.required, Validators.maxLength(14)]))
+    }
+
+  }
+
+  getSessionRequiredErrorMessage(): string {
+    return SESSION_INPUT_ERROR_REQUIRED;
+  }
+
+  getSessionLengthErrorMessage(): string {
+    return SESSION_INPUT_ERROR_MAXLEN;
+  }
+
+  getParticipantRequiredErrorMessage(): string {
+    return PARTICIPANT_INPUT_ERROR_REQUIRED;
+  }
+
+  getParticipantLengthErrorMessage(): string {
+    return PARTICIPANT_INPUT_ERROR_MAXLEN;
+  }
 
 
 

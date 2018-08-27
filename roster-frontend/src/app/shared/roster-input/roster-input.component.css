@@ -8,6 +8,10 @@
   margin: 10px;
 }
 
+.participants, .sessions {
+  flex-wrap: wrap;
+  /* width: 40%; */
+}
 
 
 .year-month, .slider-container, .session-participant {
