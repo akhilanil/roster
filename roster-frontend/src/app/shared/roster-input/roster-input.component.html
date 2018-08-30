@@ -135,16 +135,12 @@
             <mat-error *ngIf="participant.formControlName.errors?.required ">{{getParticipantRequiredErrorMessage()}}</mat-error>
             <mat-error *ngIf="participant.formControlName.errors?.maxLength ">{{getParticipantLengthErrorMessage()}}</mat-error>
           </mat-form-field>
-
-          <!-- <p>HAHA:{{participant}}</p> -->
         </div>
       </div>
       <div class="container sessions">
         <div *ngFor="let session of totalSessions">
           <mat-form-field floatLabel="auto" >
-
             <mat-label>{{session.displayLabel}}</mat-label>
-
             <input matInput [formControlName]="session.formControlName" maxlength="14" >
             <mat-error *ngIf="session.formControlName.errors?.required ">{{getSessionRequiredErrorMessage()}}</mat-error>
             <mat-error *ngIf="session.formControlName.errors?.maxLength ">{{getSessionLengthErrorMessage()}}</mat-error>

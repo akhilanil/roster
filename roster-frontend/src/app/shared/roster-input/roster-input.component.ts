@@ -43,6 +43,7 @@ export class RosterInputComponent implements OnInit {
   /* Form groups */
   initalFormGroup: FormGroup;
   secondFormGroup: FormGroup;
+  thirdFormGroup: FormGroup;
 
   /* Label for first stepper */
   initStepLabel: string;
@@ -101,6 +102,26 @@ export class RosterInputComponent implements OnInit {
   participantLabel: string;
   sessionLabel: string;
 
+
+  /* Participant names */
+  participantNames: Array<string>
+
+  /* Session names */
+  sessionNames: Array<string>
+
+
+  /* Working Days */
+  workingDays: Array<string>
+
+  /* Leave Session Group */
+  leaveSessionGroup: Array<{date: string, sessions: Array<{name: string, value: string}>}>
+
+  participantLeaveDynamicStepperBuilder: Array<
+                                  {
+                                    participantName: string,
+                                    leaveDropDownGroup: Array<{date: string, sessions: Array<{name: string, value: string}>}>,
+                                    leaveControlName: string,
+                                  }>
 
 
   constructor(private dateUtilService: DateUtilsService,
@@ -356,7 +377,8 @@ export class RosterInputComponent implements OnInit {
     var saturdaysIncluded =
           this.dateUtilService.prepareSaturdayListForRequest( isSaturdayIncluded,
                                                               holidays,
-                                                              year, month);
+                                                                year, month);
+    this.workingDays = this.prepareWorkingDays(this.holidaysDropDown, holidays);
 
     this.initRequestModelSkelton(title, year, month,
             numberOfSessions, saturdaysIncluded, isSundayIncluded, holidays)
@@ -366,9 +388,18 @@ export class RosterInputComponent implements OnInit {
 
     this.builSessionAndParticipantInput(totalParticipants, totalSessions)
 
-    // console.log(this.createRosterRQModel)
+
 
   }
+
+
+  prepareWorkingDays(holidaysDropDown: Array<{name: string, value: string}>, holidays: Array<string>) {
+
+    return holidaysDropDown.filter((days) => !holidays.includes(days.value))
+                    .map(days => days.value)
+
+  }
+
 
 
   builSessionAndParticipantInput(totalParticipants: number, totalSessions: number) {
@@ -401,6 +432,7 @@ export class RosterInputComponent implements OnInit {
 
     for(var i = 1; i <= totalParticipants; i++) {
       this.secondFormGroup.addControl('participant'+i,  new FormControl('', [Validators.required, Validators.maxLength(14)]))
+      this.thirdFormGroup.addControl('participant'+i,  new FormControl(''))
     }
 
     for(var i = 1; i <= totalSessions; i++) {
@@ -425,7 +457,107 @@ export class RosterInputComponent implements OnInit {
     return PARTICIPANT_INPUT_ERROR_MAXLEN;
   }
 
+  onSecondSubmit() {
 
+    this.totalParticipants.forEach((participants) => {
+      this.participantNames.push(this.secondFormGroup.controls[participants.formControlName].value)
+    });
 
+    this.totalSessions.forEach((sessions) => {
+      this.sessionNames.push(this.secondFormGroup.controls[sessions.formControlName].value)
+    })
 
+    this.createRosterRQModel.sessionNames = this.sessionNames;
+    this.createRosterRQModel.numberOfSessions = this.sessionNames.length;
+    this.buildLeaveSessionGroup();
+
+  }
+
+  /* Method to build contents for Leave Session dropdown */
+  buildLeaveSessionGroup() {
+
+    this.workingDays.forEach(
+      workingDay => {
+        let sessions: Array<{name: string, value: string}>
+
+        this.sessionNames.forEach((sessionName) => {
+          sessions.push({
+            'name': sessionName,
+            'value': sessionName +'#'+ workingDay
+          })
+        })
+        this.leaveSessionGroup.push(
+          {
+            'date': workingDay,
+            'sessions':sessions
+          }
+        )
+      });
+  }
+
+  buildParticipantLeaveDynamicStepperBuilder() {
+
+    this.participantNames.forEach((participantName, index) =>{
+
+      this.participantLeaveDynamicStepperBuilder.push(
+        {
+          'participantName': participantName,
+          'leaveDropDownGroup': this.leaveSessionGroup,
+          'leaveControlName': 'participant' + (index + 1),
+
+        }
+      )
+    });
+
+  }
+
+  /* This method is called when final submit is clicked   */
+  onFinalSubmit() {
+    this.participantLeaveDynamicStepperBuilder.forEach((participant) =>{
+      this.createRosterRQModel.participants.push(this.prepareParticipantModel(participant))
+    })
+    console.log(JSON.stringify(this.createRosterRQModel));
+  }
+
+  /* Method returns participant Models */
+  prepareParticipantModel(participant: {participantName: string,
+                                        leaveDropDownGroup: Array<{date: string, sessions: Array<{name: string, value: string}>}>,
+                                        leaveControlName: string,}): ParticipantModel {
+
+      let particiapntModel: ParticipantModel;
+      let leaveSessionDates: Array<string> = this.thirdFormGroup.controls[participant.leaveControlName].value
+      particiapntModel = {
+        'name': participant.participantName,
+        'leaveSessions':this.prepareLeaveSessionModels(leaveSessionDates)
+      }
+      return particiapntModel;
+  }
+
+  /* Method returns session Models */
+  prepareLeaveSessionModels(leaveSessionDates: Array<string>): Array<LeaveSessionModel> {
+
+    let leaveSessionModels: Array<LeaveSessionModel> = new Array<LeaveSessionModel>();
+    let leaveDateSessionMap: Map<string, Array<string>>
+
+    leaveSessionDates.forEach((leaveSessionDate) => {
+      let sessionDateArray:Array<string> = leaveSessionDate.split('#');
+      let date = sessionDateArray[0];
+      let session = sessionDateArray[1];
+      if(leaveDateSessionMap.has(date)) {
+        leaveDateSessionMap.get(date).push(session)
+      } else {
+        let sessions: Array<string> = new Array<string>();
+        sessions.push(session)
+      }
+    });
+
+    leaveDateSessionMap.forEach((value: Array<string>, key: string) => {
+      let leaveSessionModel: LeaveSessionModel = {
+        'leaveDate': key,
+        'sessionName': value
+      }
+      leaveSessionModels.push(leaveSessionModel);
+    });
+    return leaveSessionModels;
+  }
 }
