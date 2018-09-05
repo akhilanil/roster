@@ -1,5 +1,5 @@
 <mat-horizontal-stepper linear #stepper>
-  <mat-step [stepControl]="initalFormGroup" label="ONE">
+  <mat-step [stepControl]="initalFormGroup" >
       <form novalidate #initalForm = ngForm (ngSubmit)="onInitSubmit()" [formGroup]="initalFormGroup">
       <ng-template matStepLabel>{{initStepLabel}}</ng-template>
 
@@ -123,21 +123,21 @@
       </div>
     </form>
   </mat-step>
-  <mat-step *ngIf = "secondFormGroup" [stepControl]="secondFormGroup">
-    <form novalidate #initalForm = ngForm (ngSubmit)="onSecondSubmit()" [formGroup]="secondFormGroup">
+  <mat-step [stepControl]="secondFormGroup">
+    <form novalidate (ngSubmit)="onSecondSubmit()" [formGroup]="secondFormGroup">
       <ng-template matStepLabel>{{secondStepLabel}}</ng-template>
-      <div class="container participants">
+      <div *ngIf="isFirstStepperCompleted" class="container participants">
         <div *ngFor="let participant of totalParticipants">
           <mat-form-field floatLabel="auto" >
 
             <mat-label>{{participant.displayLabel}}</mat-label>
             <input matInput [formControlName]="participant.formControlName" maxlength="14" >
-            <mat-error *ngIf="participant.formControlName.errors?.required ">{{getParticipantRequiredErrorMessage()}}</mat-error>
+            <mat-error *ngIf="participant.formControlName.invalid">{{getParticipantRequiredErrorMessage()}}</mat-error>
             <mat-error *ngIf="participant.formControlName.errors?.maxLength ">{{getParticipantLengthErrorMessage()}}</mat-error>
           </mat-form-field>
         </div>
       </div>
-      <div class="container sessions">
+      <div *ngIf="isFirstStepperCompleted" class="container sessions">
         <div *ngFor="let session of totalSessions">
           <mat-form-field floatLabel="auto" >
             <mat-label>{{session.displayLabel}}</mat-label>
@@ -149,13 +149,48 @@
       </div>
       <div class="container">
         <div class="">
-            <button mat-raised-button color="primary" matStepperPrevious>Back</button>
+            <button mat-raised-button color="primary" matStepperPrevious (click)="isFirstStepperCompleted = false">Back</button>
         </div>
         <div class="">
             <button mat-raised-button color="primary" matStepperNext>Next</button>
         </div>
 
       </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="thirdFormGroup">
+    <form novalidate (ngSubmit)="onFinalSubmit()" [formGroup]="thirdFormGroup">
+      <ng-template matStepLabel>{{finalStepLabel}}</ng-template>
+      <div *ngIf="isSecondStepperCompleted" class="container leaves" >
+
+       <div *ngFor="let participant of participantLeaveDynamicStepperBuilder" >
+          <mat-card >
+            <mat-card-header>
+              <mat-card-title id="name">{{participant.participantName}}</mat-card-title>
+              <!-- <mat-card-subtitle>Leave Dates</mat-card-subtitle> -->
+            </mat-card-header>
+            <mat-card-content>
+              <mat-select placeholder="Leave Dates" [formControlName] = "participant.leaveControlName" multiple>
+                <mat-optgroup *ngFor="let group of participant.leaveDropDownGroup" [label]="group.date" >
+                  <mat-option *ngFor="let sessions of group.sessions" [value]="sessions.value">
+                    {{sessions.name}}
+                  </mat-option>
+                </mat-optgroup>
+              </mat-select>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="">
+            <button mat-raised-button color="primary" matStepperPrevious (click)="isSecondStepperCompleted = false">Back</button>
+        </div>
+        <div class="">
+            <button mat-raised-button color="primary" matStepperNext>Next</button>
+        </div>
+      </div>
+
     </form>
   </mat-step>
 </mat-horizontal-stepper>

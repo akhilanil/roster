@@ -4,7 +4,7 @@ import { MatSlideToggleChange, MatSelectChange } from '@angular/material';
 import {FormControl, Validators, FormGroup, FormBuilder} from '@angular/forms';
 
 /* UI Constant imports */
-import { INITIAL_STEP_LABEL, SECOND_STEP_LABEL } from './constants/ui-constants'
+import { INITIAL_STEP_LABEL, SECOND_STEP_LABEL, FINAL_STEP_LABEL } from './constants/ui-constants'
 import { TITLE_INPUT_LABEL, TITLE_INPUT_ERROR_MAXLEN, TITLE_INPUT_ERROR_REQUIRED } from './constants/ui-constants'
 import { YEAR_SELECT_LABEL, YEAR_SELECT_ERROR_REQUIRED } from './constants/ui-constants';
 import { MONTH_SELECT_LABEL, MONTH_SELECT_ERROR_REQUIRED } from './constants/ui-constants'
@@ -29,7 +29,8 @@ import { DateUtilsService } from '@services/utils';
 import { DateModel } from '@interfaces/business-interface'
 import { CreateRosterRQModel, ParticipantModel, LeaveSessionModel} from '@interfaces/business-interface'
 
-
+/* Validator class import */
+import {RosterInputValidator} from './roster-input-validator'
 
 
 
@@ -48,6 +49,7 @@ export class RosterInputComponent implements OnInit {
   /* Label for first stepper */
   initStepLabel: string;
   secondStepLabel: string;
+  finalStepLabel: string;
 
   /* Label and form control for title input field */
   titleInputLabel: string;
@@ -102,6 +104,9 @@ export class RosterInputComponent implements OnInit {
   participantLabel: string;
   sessionLabel: string;
 
+  isFirstStepperCompleted: boolean;
+  isSecondStepperCompleted: boolean;
+
 
   /* Participant names */
   participantNames: Array<string>
@@ -129,6 +134,7 @@ export class RosterInputComponent implements OnInit {
 
     this.initStepLabel = INITIAL_STEP_LABEL;
     this.secondStepLabel = SECOND_STEP_LABEL;
+    this.finalStepLabel = FINAL_STEP_LABEL;
 
     this.titleInputLabel = TITLE_INPUT_LABEL;
     this.yearLabel = YEAR_SELECT_LABEL;
@@ -156,9 +162,21 @@ export class RosterInputComponent implements OnInit {
     this.holidaysDropDown     = new Array<{name: string, value: string}>();
     this.monthDropDown        = new Array<{name: string, value: number}>();
 
+    this.participantNames = new Array<string>();
+    this.sessionNames = new Array<string>();
+
+
+    this.leaveSessionGroup = new Array();
+    this.participantLeaveDynamicStepperBuilder = new Array();
+
+
+
+
     /* Setting slide toggles to false */
     this.isSaturdayIncluded = this.isSundayIncluded = false ;
 
+    this.isFirstStepperCompleted = false;
+    this.isSecondStepperCompleted = false;
 
 
   }
@@ -179,7 +197,9 @@ export class RosterInputComponent implements OnInit {
 
     })
 
-    this.buildSecondFormGroup(8, 4);
+    this.secondFormGroup = this.formBuilder.group({});
+    this.thirdFormGroup = this.formBuilder.group({});
+
   }
 
 
@@ -388,7 +408,11 @@ export class RosterInputComponent implements OnInit {
 
     this.builSessionAndParticipantInput(totalParticipants, totalSessions)
 
+    this.createRestFormGroup(totalParticipants, totalSessions)
 
+
+
+    this.isFirstStepperCompleted = true;
 
   }
 
@@ -410,7 +434,8 @@ export class RosterInputComponent implements OnInit {
 
       this.totalParticipants.push( {
         "formControlName": 'participant'+i,
-        "displayLabel": this.participantLabel+ ' ' + i
+        "displayLabel": this.participantLabel+ ' ' + i,
+        "isValid": true
       });
     }
 
@@ -424,12 +449,10 @@ export class RosterInputComponent implements OnInit {
 
   }
 
-
-
-  buildSecondFormGroup(totalParticipants: number, totalSessions: number) {
-
-    this.secondFormGroup = this.formBuilder.group({});
-
+  /*
+   * Rest form groups can be created using participant and sesion number
+   */
+  createRestFormGroup(totalParticipants: number, totalSessions: number) {
     for(var i = 1; i <= totalParticipants; i++) {
       this.secondFormGroup.addControl('participant'+i,  new FormControl('', [Validators.required, Validators.maxLength(14)]))
       this.thirdFormGroup.addControl('participant'+i,  new FormControl(''))
@@ -438,8 +461,8 @@ export class RosterInputComponent implements OnInit {
     for(var i = 1; i <= totalSessions; i++) {
       this.secondFormGroup.addControl('session'+i,  new FormControl('', [Validators.required, Validators.maxLength(14)]))
     }
-
   }
+
 
   getSessionRequiredErrorMessage(): string {
     return SESSION_INPUT_ERROR_REQUIRED;
@@ -459,18 +482,30 @@ export class RosterInputComponent implements OnInit {
 
   onSecondSubmit() {
 
+    this.participantNames = [];
     this.totalParticipants.forEach((participants) => {
       this.participantNames.push(this.secondFormGroup.controls[participants.formControlName].value)
-    });
+      console.log(this.secondFormGroup.controls[participants.formControlName].value)
 
+    });
+    this.sessionNames = [];
     this.totalSessions.forEach((sessions) => {
       this.sessionNames.push(this.secondFormGroup.controls[sessions.formControlName].value)
     })
 
     this.createRosterRQModel.sessionNames = this.sessionNames;
     this.createRosterRQModel.numberOfSessions = this.sessionNames.length;
+
+    this.leaveSessionGroup = [];
+
     this.buildLeaveSessionGroup();
 
+    this.participantLeaveDynamicStepperBuilder = []
+    this.buildParticipantLeaveDynamicStepperBuilder()
+
+    //RosterInputValidator.checkForDuplictaes(  this.participantNames)
+
+    this.isSecondStepperCompleted = true;
   }
 
   /* Method to build contents for Leave Session dropdown */
@@ -478,7 +513,7 @@ export class RosterInputComponent implements OnInit {
 
     this.workingDays.forEach(
       workingDay => {
-        let sessions: Array<{name: string, value: string}>
+        let sessions: Array<{name: string, value: string}> = new Array<{name: string, value: string}>()
 
         this.sessionNames.forEach((sessionName) => {
           sessions.push({
@@ -486,6 +521,7 @@ export class RosterInputComponent implements OnInit {
             'value': sessionName +'#'+ workingDay
           })
         })
+
         this.leaveSessionGroup.push(
           {
             'date': workingDay,
@@ -537,19 +573,24 @@ export class RosterInputComponent implements OnInit {
   prepareLeaveSessionModels(leaveSessionDates: Array<string>): Array<LeaveSessionModel> {
 
     let leaveSessionModels: Array<LeaveSessionModel> = new Array<LeaveSessionModel>();
-    let leaveDateSessionMap: Map<string, Array<string>>
+    let leaveDateSessionMap: Map<string, Array<string>> = new Map<string, Array<string>>();
 
-    leaveSessionDates.forEach((leaveSessionDate) => {
-      let sessionDateArray:Array<string> = leaveSessionDate.split('#');
-      let date = sessionDateArray[0];
-      let session = sessionDateArray[1];
-      if(leaveDateSessionMap.has(date)) {
-        leaveDateSessionMap.get(date).push(session)
-      } else {
-        let sessions: Array<string> = new Array<string>();
-        sessions.push(session)
-      }
-    });
+    if( leaveSessionDates.length != 0) {
+      leaveSessionDates.forEach((leaveSessionDate) => {
+        let sessionDateArray:Array<string> = leaveSessionDate.split('#');
+        let session = sessionDateArray[0];
+        let date = sessionDateArray[1];
+        console.log(date,session)
+        if(leaveDateSessionMap.has(date)) {
+          leaveDateSessionMap.get(date).push(session)
+        } else {
+          let sessions: Array<string> = new Array<string>();
+          sessions.push(session)
+          leaveDateSessionMap.set(date, sessions);
+        }
+      });
+
+    }
 
     leaveDateSessionMap.forEach((value: Array<string>, key: string) => {
       let leaveSessionModel: LeaveSessionModel = {
@@ -558,6 +599,7 @@ export class RosterInputComponent implements OnInit {
       }
       leaveSessionModels.push(leaveSessionModel);
     });
+
     return leaveSessionModels;
   }
 }

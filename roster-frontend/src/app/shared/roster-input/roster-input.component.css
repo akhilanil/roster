@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Oswald:500');
+
 .container {
   display: flex;
   justify-content: center;
@@ -8,7 +10,7 @@
   margin: 10px;
 }
 
-.participants, .sessions {
+.participants, .sessions, .leaves {
   flex-wrap: wrap;
   /* width: 40%; */
 }
@@ -18,4 +20,8 @@
   flex-wrap: wrap;
   flex-direction: row;
   align-content: space-between;
+}
+
+#name {
+  font-family: 'Oswald', sans-serif;
 }

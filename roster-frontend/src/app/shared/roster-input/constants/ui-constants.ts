@@ -4,6 +4,8 @@ export const INITIAL_STEP_LABEL: string = 'Let\'s get started';
 /* Label for second stepper */
 export const SECOND_STEP_LABEL: string = 'Who all are in?';
 
+/* Final step Label */
+export const FINAL_STEP_LABEL: string = 'Anybody on leave?';
 
 /* Label for title field */
 export const TITLE_INPUT_LABEL: string = 'Title for roster ';
