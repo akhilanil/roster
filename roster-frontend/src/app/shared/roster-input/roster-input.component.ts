@@ -454,7 +454,10 @@ export class RosterInputComponent implements OnInit {
    */
   createRestFormGroup(totalParticipants: number, totalSessions: number) {
     for(var i = 1; i <= totalParticipants; i++) {
-      this.secondFormGroup.addControl('participant'+i,  new FormControl('', [Validators.required, Validators.maxLength(14)]))
+      this.secondFormGroup.addControl('participant'+i,  new FormControl('',
+                                                    [ Validators.required,
+                                                      Validators.maxLength(14),
+                                                      RosterInputValidator.checkForDuplictaes([])]))
       this.thirdFormGroup.addControl('participant'+i,  new FormControl(''))
     }
 
