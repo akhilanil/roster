@@ -5,7 +5,7 @@ import {FormControl, Validators, FormGroup, FormBuilder} from '@angular/forms';
 
 /* UI Constant imports */
 import { INITIAL_STEP_LABEL, SECOND_STEP_LABEL, FINAL_STEP_LABEL } from './constants/ui-constants'
-import { TITLE_INPUT_LABEL, TITLE_INPUT_ERROR_MAXLEN, TITLE_INPUT_ERROR_REQUIRED } from './constants/ui-constants'
+import { TITLE_INPUT_LABEL, TITLE_INPUT_ERROR_MINLEN, TITLE_INPUT_ERROR_REQUIRED } from './constants/ui-constants'
 import { YEAR_SELECT_LABEL, YEAR_SELECT_ERROR_REQUIRED } from './constants/ui-constants';
 import { MONTH_SELECT_LABEL, MONTH_SELECT_ERROR_REQUIRED } from './constants/ui-constants'
 import { SUNDAYS_INCLUDED_LABEL, SATURDAYS_INCLUDED_LABEL } from './constants/ui-constants'
@@ -13,8 +13,9 @@ import { YEAR_SELECT_ARIA_LABEL, MONTH_SELECT_ARIA_LABEL } from './constants/ui-
 import { HOLIDAYS_SELECT_LABEL } from './constants/ui-constants'
 import { SESSION_NUM_SELECT_LABEL, PARTICIPANT_NUM_SELECT_LABEL } from './constants/ui-constants'
 import { SESSION_SELECT_ERROR_REQUIRED, PARTICIPANT_SELECT_ERROR_REQUIRED } from './constants/ui-constants'
-import { PARTICIPANT_INPUT_LABEL, PARTICIPANT_INPUT_ERROR_REQUIRED, PARTICIPANT_INPUT_ERROR_MAXLEN } from './constants/ui-constants'
-import { SESSION_INPUT_LABEL, SESSION_INPUT_ERROR_REQUIRED, SESSION_INPUT_ERROR_MAXLEN } from './constants/ui-constants'
+import { PARTICIPANT_INPUT_LABEL, PARTICIPANT_INPUT_ERROR_REQUIRED, PARTICIPANT_INPUT_ERROR_MINLEN } from './constants/ui-constants'
+import { SESSION_INPUT_LABEL, SESSION_INPUT_ERROR_REQUIRED, SESSION_INPUT_ERROR_MINLEN } from './constants/ui-constants'
+import { INVALID_INPUT } from './constants/ui-constants'
 
 
 
@@ -205,7 +206,7 @@ export class RosterInputComponent implements OnInit {
 
   /* Mehtod to initialise all Form controllers */
   private initFromConroller(): void {
-    this.titleControl = new FormControl('', [Validators.required, Validators.maxLength(14)]);
+    this.titleControl = new FormControl('', [Validators.required, Validators.maxLength(14), Validators.minLength(4), Validators.pattern('^[a-zA-Z][a-zA-Z ]*[a-zA-Z]$')]);
     this.yearControl = new FormControl('', [Validators.required]);
     this.monthControl = new FormControl('', [Validators.required]);
 
@@ -215,6 +216,7 @@ export class RosterInputComponent implements OnInit {
 
     this.monthControl.disable();
     this.totalParticipantControl.disable();
+    this.holidayControl.disable();
   }
 
 
@@ -240,8 +242,10 @@ export class RosterInputComponent implements OnInit {
   getTitleErrroMessage(): string {
     if(this.titleControl.hasError('required')) {
       return TITLE_INPUT_ERROR_REQUIRED
+    } else if(this.titleControl.hasError('minlength')) {
+      return TITLE_INPUT_ERROR_MINLEN
     } else {
-      return TITLE_INPUT_ERROR_MAXLEN
+      return INVALID_INPUT;
     }
   }
 
@@ -304,16 +308,17 @@ export class RosterInputComponent implements OnInit {
 
     var year = this.yearControl.value;
 
-    if(event.source.ariaLabel=== this.yearAriaLabel)
-      this.setMonthDropDown(year);
-
-    if(this.monthControl.disabled) {
-      this.monthControl.enable();
-    }
-    else {
+    if(event.source.ariaLabel=== this.yearAriaLabel) {
+        this.setMonthDropDown(year);
+        this.holidayControl.disable();
+        this.monthControl.enable();
+        this.monthControl.reset();
+    }else {
       var month = this.monthControl.value;
 
       this.updateHolidayList(year, month, this.isSaturdayIncluded, this.isSundayIncluded);
+      this.holidayControl.enable();
+      this.holidayControl.reset();
     }
 
 
@@ -377,45 +382,46 @@ export class RosterInputComponent implements OnInit {
     };
   }
 
+  onYearSelected() {
+
+  }
+
   onSessionSelected() {
-    this.totalParticipantControl.enable();
+    //this.totalParticipantControl.markAsDirty();
+
     this.totalParticipantDropDown = this.prepareNumberDropDown(this.totalSessionControl.value, MAX_PARTICIPANTS);
+    this.totalParticipantControl.enable();
+    this.totalParticipantControl.reset();
   }
 
 
   onInitSubmit() {
 
-    var title = this.titleControl.value;
+    var title: string = this.titleControl.value.trim().toUpperCase();
     var year = this.yearControl.value;
     var month = this.monthControl.value;
     var numberOfSessions = this.totalSessionControl.value;
     var isSundayIncluded = this.isSundayIncluded;
     var isSaturdayIncluded = this.isSaturdayIncluded
-    var holidays = this.holidayControl.value;
-
+    var holidays = this.holidayControl.value ? this.holidayControl.value : [];
+    let totalParticipants = this.totalParticipantControl.value;
+    let totalSessions = this.totalSessionControl.value;
 
     var saturdaysIncluded =
           this.dateUtilService.prepareSaturdayListForRequest( isSaturdayIncluded,
-                                                              holidays,
-                                                                year, month);
+                                                              holidays, year, month);
     this.workingDays = this.prepareWorkingDays(this.holidaysDropDown, holidays);
 
     this.initRequestModelSkelton(title, year, month,
             numberOfSessions, saturdaysIncluded, isSundayIncluded, holidays)
 
-    let totalParticipants = this.totalParticipantControl.value;
-    let totalSessions = this.totalSessionControl.value;
-
     this.builSessionAndParticipantInput(totalParticipants, totalSessions)
 
     this.createRestFormGroup(totalParticipants, totalSessions)
 
-
-
     this.isFirstStepperCompleted = true;
 
   }
-
 
   prepareWorkingDays(holidaysDropDown: Array<{name: string, value: string}>, holidays: Array<string>) {
 
@@ -457,13 +463,23 @@ export class RosterInputComponent implements OnInit {
       this.secondFormGroup.addControl('participant'+i,  new FormControl('',
                                                     [ Validators.required,
                                                       Validators.maxLength(14),
-                                                      RosterInputValidator.checkForDuplictaes([])]))
+                                                      Validators.minLength(4),
+                                                      Validators.pattern('^[a-zA-Z][a-zA-Z ]*[a-zA-Z]$'),
+                                                      RosterInputValidator.checkForNameConflicts(this.secondFormGroup),
+                                                      RosterInputValidator.checkForDuplicates(this.secondFormGroup, 'participant')]))
       this.thirdFormGroup.addControl('participant'+i,  new FormControl(''))
     }
 
     for(var i = 1; i <= totalSessions; i++) {
-      this.secondFormGroup.addControl('session'+i,  new FormControl('', [Validators.required, Validators.maxLength(14)]))
+      this.secondFormGroup.addControl('session'+i,  new FormControl('',
+                                                [ Validators.required,
+                                                  Validators.maxLength(14),
+                                                  Validators.minLength(4),
+                                                  Validators.pattern('^[a-zA-Z][a-zA-Z ]*[a-zA-Z]$'),
+                                                  RosterInputValidator.checkForNameConflicts(this.secondFormGroup),
+                                                  RosterInputValidator.checkForDuplicates(this.secondFormGroup, 'session')]))
     }
+
   }
 
 
@@ -472,7 +488,7 @@ export class RosterInputComponent implements OnInit {
   }
 
   getSessionLengthErrorMessage(): string {
-    return SESSION_INPUT_ERROR_MAXLEN;
+    return SESSION_INPUT_ERROR_MINLEN;
   }
 
   getParticipantRequiredErrorMessage(): string {
@@ -480,20 +496,24 @@ export class RosterInputComponent implements OnInit {
   }
 
   getParticipantLengthErrorMessage(): string {
-    return PARTICIPANT_INPUT_ERROR_MAXLEN;
+    return PARTICIPANT_INPUT_ERROR_MINLEN;
+  }
+
+  getInvalidInputMessage(): string {
+    return INVALID_INPUT;
   }
 
   onSecondSubmit() {
 
     this.participantNames = [];
     this.totalParticipants.forEach((participants) => {
-      this.participantNames.push(this.secondFormGroup.controls[participants.formControlName].value)
-      console.log(this.secondFormGroup.controls[participants.formControlName].value)
+      this.participantNames.push(this.secondFormGroup.controls[participants.formControlName].value.trim().toUpperCase())
+
 
     });
     this.sessionNames = [];
     this.totalSessions.forEach((sessions) => {
-      this.sessionNames.push(this.secondFormGroup.controls[sessions.formControlName].value)
+      this.sessionNames.push(this.secondFormGroup.controls[sessions.formControlName].value.trim().toUpperCase())
     })
 
     this.createRosterRQModel.sessionNames = this.sessionNames;
@@ -555,6 +575,7 @@ export class RosterInputComponent implements OnInit {
     this.participantLeaveDynamicStepperBuilder.forEach((participant) =>{
       this.createRosterRQModel.participants.push(this.prepareParticipantModel(participant))
     })
+    
     console.log(JSON.stringify(this.createRosterRQModel));
   }
 
@@ -605,4 +626,6 @@ export class RosterInputComponent implements OnInit {
 
     return leaveSessionModels;
   }
+
+
 }

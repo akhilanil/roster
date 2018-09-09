@@ -15,11 +15,29 @@
   /* width: 40%; */
 }
 
+.leaves {
+  justify-content: space-around;
+}
+
+.leaves > div {
+  width : 100%;
+  box-sizing: border-box;
+}
+
+.leaveCard {
+  width: 100%;
+}
+
+
 
 .year-month, .slider-container, .session-participant {
   flex-wrap: wrap;
   flex-direction: row;
   align-content: space-between;
+}
+
+.stepper-contorl {
+  margin-top: 35px;
 }
 
 #name {

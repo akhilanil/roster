@@ -14,7 +14,7 @@ export const TITLE_INPUT_LABEL: string = 'Title for roster ';
 export const TITLE_INPUT_ERROR_REQUIRED: string = 'Title is required';
 
 /* Label for title field */
-export const TITLE_INPUT_ERROR_MAXLEN: string = 'Title cannot be more than 14 characters ';
+export const TITLE_INPUT_ERROR_MINLEN: string = 'Title cannot be  less than 4 characters ';
 
 
 /* Label for year field */
@@ -55,21 +55,22 @@ export const PARTICIPANT_SELECT_ERROR_REQUIRED: string = 'Please select number o
 export const PARTICIPANT_INPUT_LABEL: string = 'Participant ';
 
 /* Error Label for participant field */
-export const PARTICIPANT_INPUT_ERROR_REQUIRED: string = 'Participant name missing';
+export const PARTICIPANT_INPUT_ERROR_REQUIRED: string = 'Please enter the participant name';
 
 /* Error Label for participant field */
-export const PARTICIPANT_INPUT_ERROR_MAXLEN: string = 'Participant name cannot be more than 14 characters ';
+export const PARTICIPANT_INPUT_ERROR_MINLEN: string = 'Minimum 4 letters required';
 
 /* Label for session field */
 export const SESSION_INPUT_LABEL: string = 'Session ';
 
 /* Error Label for session field */
-export const SESSION_INPUT_ERROR_REQUIRED: string = 'Session name missing';
+export const SESSION_INPUT_ERROR_REQUIRED: string = 'Please enter the session name';
 
 /* Error Label for session field */
-export const SESSION_INPUT_ERROR_MAXLEN: string = 'Session name cannot be more than 14 characters ';
+export const SESSION_INPUT_ERROR_MINLEN: string = 'Minimum 4 letters required';
 
-
+/* Error label for invalid input*/
+export const INVALID_INPUT: string = 'Only letters allowed'
 
 /* Aria label for year drop down */
 export const YEAR_SELECT_ARIA_LABEL: string = 'Year Select';

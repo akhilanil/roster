@@ -7,7 +7,7 @@ mat-grid-tile {
 .grid-container{
   /* max-height: 100vh;
   overflow: hidden; */
-  background-color: rgba(0,0,0,0.1);
+  /* background-color: rgba(0,0,0,0.1); */
 }
 
 .desc-heading {

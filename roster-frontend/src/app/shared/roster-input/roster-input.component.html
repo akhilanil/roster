@@ -72,7 +72,6 @@
             <!-- Holiday Drop down -->
             <mat-select [placeholder]="holidayLabel"
                         [formControl]="holidayControl"
-                        [disabled] = "!(monthControl.dirty && yearControl.dirty)"
                         multiple>
               <mat-select-trigger>
                 {{holidayControl.value ? holidayControl.value[0] : ''}}
@@ -118,7 +117,7 @@
             </mat-form-field>
         </div>
       </div>
-      <div class="container">
+      <div class="container stepper-contorl">
         <button mat-raised-button color="primary" matStepperNext>Next</button>
       </div>
     </form>
@@ -132,8 +131,12 @@
 
             <mat-label>{{participant.displayLabel}}</mat-label>
             <input matInput [formControlName]="participant.formControlName" maxlength="14" >
-            <mat-error *ngIf="participant.formControlName.invalid">{{getParticipantRequiredErrorMessage()}}</mat-error>
-            <mat-error *ngIf="participant.formControlName.errors?.maxLength ">{{getParticipantLengthErrorMessage()}}</mat-error>
+            <mat-error *ngIf="secondFormGroup.hasError('required',participant.formControlName )">{{getParticipantRequiredErrorMessage()}}</mat-error>
+            <mat-error *ngIf="secondFormGroup.hasError('pattern',participant.formControlName )">{{getInvalidInputMessage()}}</mat-error>
+            <mat-error *ngIf="secondFormGroup.hasError('minlength',participant.formControlName )">{{getParticipantLengthErrorMessage()}}</mat-error>
+            <mat-error *ngIf="secondFormGroup.hasError('duplicates',participant.formControlName )">Duplicate  participant names</mat-error>
+            <mat-error *ngIf="secondFormGroup.hasError('conflict',participant.formControlName )">Participant and Session names cannot be same</mat-error>
+
           </mat-form-field>
         </div>
       </div>
@@ -142,12 +145,15 @@
           <mat-form-field floatLabel="auto" >
             <mat-label>{{session.displayLabel}}</mat-label>
             <input matInput [formControlName]="session.formControlName" maxlength="14" >
-            <mat-error *ngIf="session.formControlName.errors?.required ">{{getSessionRequiredErrorMessage()}}</mat-error>
-            <mat-error *ngIf="session.formControlName.errors?.maxLength ">{{getSessionLengthErrorMessage()}}</mat-error>
+            <mat-error *ngIf="secondFormGroup.hasError('required',session.formControlName )">{{getSessionRequiredErrorMessage()}}</mat-error>
+            <mat-error *ngIf="secondFormGroup.hasError('minlength',session.formControlName )">{{getSessionLengthErrorMessage()}}</mat-error>
+            <mat-error *ngIf="secondFormGroup.hasError('pattern',session.formControlName )">{{getInvalidInputMessage()}}</mat-error>
+            <mat-error *ngIf="secondFormGroup.hasError('duplicates',session.formControlName )">Duplicate  session names</mat-error>
+            <mat-error *ngIf="secondFormGroup.hasError('conflict',session.formControlName )">Participant and Session names cannot be same</mat-error>
           </mat-form-field>
         </div>
       </div>
-      <div class="container">
+      <div class="container stepper-contorl">
         <div class="">
             <button mat-raised-button color="primary" matStepperPrevious (click)="isFirstStepperCompleted = false">Back</button>
         </div>
@@ -164,13 +170,14 @@
       <div *ngIf="isSecondStepperCompleted" class="container leaves" >
 
        <div *ngFor="let participant of participantLeaveDynamicStepperBuilder" >
-          <mat-card >
+          <mat-card class = "leaveCard">
             <mat-card-header>
               <mat-card-title id="name">{{participant.participantName}}</mat-card-title>
               <!-- <mat-card-subtitle>Leave Dates</mat-card-subtitle> -->
             </mat-card-header>
             <mat-card-content>
               <mat-select placeholder="Leave Dates" [formControlName] = "participant.leaveControlName" multiple>
+                
                 <mat-optgroup *ngFor="let group of participant.leaveDropDownGroup" [label]="group.date" >
                   <mat-option *ngFor="let sessions of group.sessions" [value]="sessions.value">
                     {{sessions.name}}
@@ -182,7 +189,7 @@
         </div>
       </div>
 
-      <div class="container">
+      <div class="container stepper-contorl">
         <div class="">
             <button mat-raised-button color="primary" matStepperPrevious (click)="isSecondStepperCompleted = false">Back</button>
         </div>
