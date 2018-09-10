@@ -11,5 +11,5 @@ export interface CreateRosterRSModel {
   month: string | number // Month for which roster is prepared
   year: string | number // Year for which roster is prepared
   title: string // Title of the roster prepared
-  user_rotsers: ParticipantRSModel
+  user_rotsers: Array<ParticipantRSModel>
 }

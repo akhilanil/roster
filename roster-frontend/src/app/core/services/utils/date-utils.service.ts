@@ -67,7 +67,7 @@ export class DateUtilsService {
 
 
   /* Returns a map having day number as key and day name as value   */
-  private getDayNameMap(): Map<number, string> {
+  public getDayNameMap(): Map<number, string> {
 
     let dayNameMap: Map<number, string> = new Map<number, string>();
 
