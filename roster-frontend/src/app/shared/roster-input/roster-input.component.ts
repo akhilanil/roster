@@ -17,7 +17,8 @@ import { PARTICIPANT_INPUT_LABEL, PARTICIPANT_INPUT_ERROR_REQUIRED, PARTICIPANT_
 import { SESSION_INPUT_LABEL, SESSION_INPUT_ERROR_REQUIRED, SESSION_INPUT_ERROR_MINLEN } from './constants/ui-constants'
 import { INVALID_INPUT } from './constants/ui-constants'
 
-
+/* URL constants */
+import {LOGIN_URL} from './constants/url-constants'
 
 /* Business Constant imports */
 import { MAX_PARTICIPANTS, MAX_SESSIONS } from '@constants/business/general-constants'
@@ -34,6 +35,7 @@ import { CreateRosterRSModel } from '@interfaces/business-interface'
 
 /* Validator class import */
 import {RosterInputValidator} from './roster-input-validator'
+import { Router } from '@angular/router';
 
 
 
@@ -134,6 +136,7 @@ export class RosterInputComponent implements OnInit {
 
   constructor(private dateUtilService: DateUtilsService,
               private manageRosterService: ManageRosterService,
+              private router: Router,
               private formBuilder: FormBuilder) {
 
     this.initStepLabel = INITIAL_STEP_LABEL;
@@ -369,7 +372,7 @@ export class RosterInputComponent implements OnInit {
 
   private initRequestModelSkelton(_title: string, _year: number, _month: number,
                           _numberOfSessions: number, _saturdaysIncluded: Array<boolean>,
-                          _isSundayIncluded:boolean, _holidays: Array<string>) {
+                          _isSundayIncluded:boolean, _holidays: Array<string>, algo: string = 'SEQUENCE_ROSTER_ALGORITHM') {
 
     this.createRosterRQModel = {
       title: _title,
@@ -380,6 +383,7 @@ export class RosterInputComponent implements OnInit {
       saturdaysIncluded: _saturdaysIncluded,
       isSundayIncluded: _isSundayIncluded,
       holidays: _holidays,
+      algorithmUsed: algo,
       participants: []
 
     };
@@ -582,9 +586,13 @@ export class RosterInputComponent implements OnInit {
 
       (val: string | CreateRosterRSModel) => {
         this.manageRosterService.setRosterDisplaySubject(val);
+        if(typeof val != 'string') {
+            this.router.navigate([LOGIN_URL])
+        }
+
       },
       (response) => {
-
+        console.log(response);
       },
       () => {
         console.log("The POST observable is now completed.");
@@ -619,7 +627,7 @@ export class RosterInputComponent implements OnInit {
         let sessionDateArray:Array<string> = leaveSessionDate.split('#');
         let session = sessionDateArray[0];
         let date = sessionDateArray[1];
-        console.log(date,session)
+
         if(leaveDateSessionMap.has(date)) {
           leaveDateSessionMap.get(date).push(session)
         } else {
@@ -634,7 +642,7 @@ export class RosterInputComponent implements OnInit {
     leaveDateSessionMap.forEach((value: Array<string>, key: string) => {
       let leaveSessionModel: LeaveSessionModel = {
         'leaveDate': key,
-        'sessionName': value
+        'sessionNames': value
       }
       leaveSessionModels.push(leaveSessionModel);
     });

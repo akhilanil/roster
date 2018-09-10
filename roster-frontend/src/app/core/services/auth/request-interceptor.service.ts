@@ -31,7 +31,7 @@ export class RequestInterceptorService implements HttpInterceptor {
     req = req.clone({ headers: req.headers.set('Accept', 'application/json') });
 
     if (req.headers.get('No-Auth') == "True"){
-      console.log("intercept:  "+req)
+
       return next.handle(req.clone());
     }
 
@@ -48,13 +48,10 @@ export class RequestInterceptorService implements HttpInterceptor {
         tap(
           succ => {},
           err => {
-            console.log("ERROR HANDLE")
+            console.log(err)
           }
         )
       )
-
     }
-
   }
-
 }

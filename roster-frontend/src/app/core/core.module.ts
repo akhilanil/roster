@@ -5,7 +5,7 @@ import { CoreRoutingModule } from './core-routing.module';
 import { HeaderComponent } from './header/header.component';
 
 /* Angular Material imports */
-import { MatToolbarModule} from '@angular/material';
+import { MatToolbarModule, MatButtonModule} from '@angular/material';
 
 
 import { HttpClientModule } from '@angular/common/http';
@@ -16,12 +16,14 @@ import { Optional, SkipSelf } from '@angular/core';
 import { TokenService, AuthenticationService } from '@services/auth';
 import { DateUtilsService, UrlBuilderService } from '@services/utils';
 import { ManageRosterService } from '@services/roster'
+import { ViewRosterRouteGaurdService } from '@services/routes/gaurds'
 
 @NgModule({
   imports: [
     CommonModule,
     CoreRoutingModule,
     MatToolbarModule,
+    MatButtonModule,
     HttpClientModule
 
   ],
@@ -51,7 +53,8 @@ export class CoreModule {
         AuthenticationService,
         DateUtilsService,
         UrlBuilderService,
-        ManageRosterService
+        ManageRosterService,
+        ViewRosterRouteGaurdService
       ]
     };
   }

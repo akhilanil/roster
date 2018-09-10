@@ -34,7 +34,8 @@ export class DisplayRosterComponent implements OnInit {
   ngOnInit() {
     this.manageRosterService.currentRoster.subscribe((message: CreateRosterRSModel) => {
       this.displayRoster = message;
-      if(this.displayRoster) {
+      console.log(this.displayRoster)
+      if(typeof this.displayRoster != 'string' && this.displayRoster.toString() != 'No Data') {
           this.updateViewRoster();
       }
 
@@ -61,7 +62,7 @@ export class DisplayRosterComponent implements OnInit {
 
     this.insertDateModels(dateModels);
 
-    let participantModel : Array<ParticipantRSModel> = this.displayRoster.user_rotsers
+    let participantModel : Array<ParticipantRSModel> = this.displayRoster.participants
     this.insertParticipantRSModel(participantModel);
 
     console.log(JSON.stringify(this.rosterData));
@@ -75,9 +76,9 @@ export class DisplayRosterComponent implements OnInit {
 
     participantModels.forEach((participantModel) => {
 
-      let participantName = participantModel.participant_name;
+      let participantName = participantModel.name;
       let participantSessionMap = new Map<string, string>();
-      let sessionDates: Array<string> = participantModel.participant_dates.split(',');
+      let sessionDates: Array<string> = participantModel.work.split(',');
 
       sessionDates.forEach(sessionDate => {
         if(sessionDate.trim().length != 0) {

@@ -4,7 +4,7 @@ import { Users } from '@interfaces/users-interface'
 
 import { HttpClient, HttpHeaders, HttpErrorResponse, HttpResponse } from "@angular/common/http";
 import { Router } from '@angular/router';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
 
 /* Custom Service Imports */
@@ -28,6 +28,7 @@ export class AuthenticationService {
 
     // const url = this.router.url +' /auth';
     const url = this.urlBuilderService.buildLoginUrl();
+
     const requestBody = {
       "username" : user.username,
       "password" : user.password
@@ -39,8 +40,26 @@ export class AuthenticationService {
     return this.httpClient.post(url, requestBody, {headers: loginHeaders})
       .pipe(
           catchError((err: HttpErrorResponse) => {
+            console.log(err)
             return throwError(err.status);
       })
     )
   }
+
+  userLogout() {
+    const url = this.urlBuilderService.buildLoginUrl();
+
+    return this.httpClient.delete(url, {}).pipe(
+       catchError((err: HttpErrorResponse) => {
+         console.log(err)
+         return throwError(err.status);
+       }),
+       tap(res => {
+         this.tokenService.removeToken();
+       })
+     )
+
+  }
+
+
 }

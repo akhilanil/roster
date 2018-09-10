@@ -22,8 +22,9 @@ import { DisplayRosterComponent } from './display-roster/display-roster.componen
     MaterialModule,
     FormsModule,
     ReactiveFormsModule,
+    DisplayRosterComponent,
 
   ],
-  declarations: [RosterInputComponent, DisplayRosterComponent]
+  declarations: [RosterInputComponent, DisplayRosterComponent, DisplayRosterComponent]
 })
 export class SharedModule { }

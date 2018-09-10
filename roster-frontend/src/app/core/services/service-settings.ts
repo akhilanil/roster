@@ -1,5 +1,5 @@
 /* IP address of the server*/
-export const SERVER_IP_ADDRESS: string = '192.168.1.4:8080'
+export const SERVER_IP_ADDRESS: string = 'http://192.168.1.6:8000'
 
 /* Login Url */
 export const LOGIN_URL: string = '/login/'

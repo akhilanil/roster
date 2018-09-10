@@ -4,6 +4,6 @@
 
 export interface LeaveSessionModel {
   leaveDate: string; // Should be in "YYYY-MM-DD"
-  sessionName: Array<string> // Stores the session names of a particular date
+  sessionNames: Array<string> // Stores the session names of a particular date
 
 }

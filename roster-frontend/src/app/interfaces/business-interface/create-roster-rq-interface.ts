@@ -6,7 +6,7 @@ import {ParticipantModel} from './participant-interface'
 
 export interface CreateRosterRQModel {
   title: string; // Title of Roster
-  algorithmUsed?: string // Algorithm used by the system
+  algorithmUsed: string // Algorithm used by the system
   rosterForYear: number // year for which the roster is made
   rosterForMonth: number // Month for which the roster is made
   sessionNames: Array<string> // name of sessions

@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Cardo');
+@import url('https://fonts.googleapis.com/css?family=Lato:400,700');
 
 .github-icon {
   padding: 0 14px;
@@ -19,4 +20,10 @@
   font-variant: normal;
   font-weight: 700;
   line-height: 26.4px;
+}
+
+.content-text{
+  font-family: 'Lato', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
 }
