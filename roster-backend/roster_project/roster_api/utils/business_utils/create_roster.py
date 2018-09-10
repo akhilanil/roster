@@ -127,7 +127,6 @@ class CreateRosterUtil():
 
             return _unique_key
         else:
-            import pdb
-            pdb.set_trace()
+            
             return self.convert_for_client(
                 _unique_key, username, month, year, title, participants)

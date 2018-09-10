@@ -10,6 +10,7 @@ import { HomeDescComponent } from './home-desc/home-desc.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { NewRosterComponent } from './new-roster/new-roster.component';
+import { ViewRosterComponent } from './view-roster/view-roster.component';
 
 @NgModule({
   imports: [
@@ -17,6 +18,6 @@ import { NewRosterComponent } from './new-roster/new-roster.component';
     HomeRoutingModule,
     SharedModule
   ],
-  declarations: [HomeDescComponent, LoginComponent, RegisterComponent, NewRosterComponent]
+  declarations: [HomeDescComponent, LoginComponent, RegisterComponent, NewRosterComponent, ViewRosterComponent]
 })
 export class HomeModule { }

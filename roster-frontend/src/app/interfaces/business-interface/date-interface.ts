@@ -6,5 +6,6 @@ export interface DateModel {
   date: number;
   month: number;
   year: number;
+  day?: string;
 
 }

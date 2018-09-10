@@ -9,7 +9,7 @@ export class DateUtilsService {
 
   constructor() { }
 
-
+  /* Return the days of month */
   getValidDays( month: number,
                 year: number,
                 isSaturdayIncluded: boolean,
@@ -38,6 +38,49 @@ export class DateUtilsService {
     }
 
     return dateList;
+  }
+
+
+  /* Method to get all dates of month. Array of DateModel is returned. */
+  public getAllDaysOfMonth(month: number, year: number): Array<DateModel> {
+
+    let allDays: Array<DateModel> = new Array<DateModel>();
+
+    var numberOfDaysInMonth = new Date(year, month, 0).getDate();
+
+    let dayNameMap: Map<number, string> = this.getDayNameMap();
+
+    for(let i = 0; i < numberOfDaysInMonth; i++) {
+
+      let dayName: string = dayNameMap.get(new Date(year, month-1, i).getDay())
+
+      let dateModel: DateModel = {
+        date: i,
+        month: month,
+        year: year,
+        day: dayName
+      }
+      allDays.push(dateModel);
+    }
+    return allDays;
+  }
+
+
+  /* Returns a map having day number as key and day name as value   */
+  private getDayNameMap(): Map<number, string> {
+
+    let dayNameMap: Map<number, string> = new Map<number, string>();
+
+    dayNameMap.set(0, 'SUNDAY')
+    dayNameMap.set(1, 'MONDAY')
+    dayNameMap.set(2, 'TUESDAY')
+    dayNameMap.set(3, 'WEDNESDAY')
+    dayNameMap.set(4, 'THURSDAY')
+    dayNameMap.set(5, 'FRIDAY')
+    dayNameMap.set(6, 'SATURDAY')
+
+
+    return dayNameMap;
   }
 
 

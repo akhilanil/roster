@@ -25,10 +25,12 @@ import { MAX_PARTICIPANTS, MAX_SESSIONS } from '@constants/business/general-cons
 
 /* Custom service imports */
 import { DateUtilsService } from '@services/utils';
+import { ManageRosterService } from '@services/roster';
 
 /* Interface imports */
 import { DateModel } from '@interfaces/business-interface'
 import { CreateRosterRQModel, ParticipantModel, LeaveSessionModel} from '@interfaces/business-interface'
+import { CreateRosterRSModel } from '@interfaces/business-interface'
 
 /* Validator class import */
 import {RosterInputValidator} from './roster-input-validator'
@@ -131,6 +133,7 @@ export class RosterInputComponent implements OnInit {
 
 
   constructor(private dateUtilService: DateUtilsService,
+              private manageRosterService: ManageRosterService,
               private formBuilder: FormBuilder) {
 
     this.initStepLabel = INITIAL_STEP_LABEL;
@@ -575,7 +578,19 @@ export class RosterInputComponent implements OnInit {
     this.participantLeaveDynamicStepperBuilder.forEach((participant) =>{
       this.createRosterRQModel.participants.push(this.prepareParticipantModel(participant))
     })
-    
+    this.manageRosterService.createNewRoster(this.createRosterRQModel).subscribe(
+
+      (val: string | CreateRosterRSModel) => {
+        this.manageRosterService.setRosterDisplaySubject(val);
+      },
+      (response) => {
+
+      },
+      () => {
+        console.log("The POST observable is now completed.");
+      }
+
+    );
     console.log(JSON.stringify(this.createRosterRQModel));
   }
 

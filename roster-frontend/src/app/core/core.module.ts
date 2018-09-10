@@ -15,7 +15,7 @@ import { Optional, SkipSelf } from '@angular/core';
 
 import { TokenService, AuthenticationService } from '@services/auth';
 import { DateUtilsService, UrlBuilderService } from '@services/utils';
-
+import { ManageRosterService } from '@services/roster'
 
 @NgModule({
   imports: [
@@ -50,7 +50,8 @@ export class CoreModule {
         TokenService,
         AuthenticationService,
         DateUtilsService,
-        UrlBuilderService
+        UrlBuilderService,
+        ManageRosterService
       ]
     };
   }
