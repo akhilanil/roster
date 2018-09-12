@@ -27,7 +27,7 @@ SECRET_KEY = '9v%9r3kjs)@i=ej=7d&iu0et=52l#p&q(d-^_(#dk9pmn$++hl'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.1.6', 'localhost']
 
 
 # Application definition
@@ -42,11 +42,17 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
+    
     'auth_api',
     'roster_api',
 
 ]
-
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    )
+}
 
 
 MIDDLEWARE = [

@@ -1,1 +1,2 @@
-from .login_view import LoginViewSet
+from .authentication import ExpiringTokenAuthentication
+# from .login_view import LoginViewSet

@@ -111,6 +111,7 @@ class CreateRosterUtil():
 
         _unique_key = None
         if username is not None:
+            print("User------>",username)
             # Generate the hash and store in DB and pass the hash value to view
             _unique_key = UniqueKeyUtil.generate_unique_key()
 
@@ -127,6 +128,6 @@ class CreateRosterUtil():
 
             return _unique_key
         else:
-            
+
             return self.convert_for_client(
                 _unique_key, username, month, year, title, participants)

@@ -2,7 +2,8 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework import viewsets, mixins
 # from roster_api.services.SerializerService import view_roster_service
 # from roster_api.serializers.interface.view_roster_serializer import ViewRosterSerializer
-#
+
+from auth_api.views.login.authentication import ExpiringTokenAuthentication
 
 
 class GetRosterView(mixins.RetrieveModelMixin,
@@ -13,7 +14,7 @@ class GetRosterView(mixins.RetrieveModelMixin,
 
     """
 
-    authentication_classes = (TokenAuthentication,)
+    authentication_classes = (ExpiringTokenAuthentication,)
     permission_classes = ()
     lookup_field = 'unique_id'
     # serializer_class = ViewRosterSerializer
@@ -25,15 +26,15 @@ class GetRosterView(mixins.RetrieveModelMixin,
 
         if self.action == 'list':
             user = self.request.user
-            # print("------------------->",user)
+
             query_set = UserRosterModel.objects.filter(user_name=user)
-            # values = ['unique_id', 'month']
-            # query_set.values(*values)
+
             return query_set
 
         if self.action == 'retrieve':
             unique_id = self.kwargs["unique_id"]
             return UserRosterModel.objects.filter(unique_id=unique_id)
+
 
     def get_serializer_class(self):
         from roster_api.services.SerializerService import view_roster_service
