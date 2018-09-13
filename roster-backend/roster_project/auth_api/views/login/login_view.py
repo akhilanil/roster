@@ -1,8 +1,4 @@
-from rest_framework import viewsets
-from rest_framework.authtoken.serializers import AuthTokenSerializer
-from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework.response import Response
 from rest_framework import status
 
 import datetime
@@ -15,27 +11,6 @@ import pytz
 
 class LoginViewSet(ObtainAuthToken):
     """ Authenticates user and returns AuthToken """
-
-    # serializer_class = AuthTokenSerializer
-    # authentication_classes = (TokenAuthentication,)
-    #
-    # def create(self, request):
-    #     """ HTTP POST Method to validate user name and password and
-    #             return the Auth token"""
-    #
-    #     return ObtainAuthToken.post(self, request)
-    #
-    # def delete(self, request):
-    #     try:
-    #         resp = request.user
-    #         print(resp.auth_token)
-    #         print(request.token)
-    #         resp.auth_token.delete()
-    #     except (AttributeError):
-    #         pass
-    #
-    #     return Response({"success": ("Successfully logged out.")},
-    #                 status=status.HTTP_200_OK)
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
@@ -54,4 +29,5 @@ class LoginViewSet(ObtainAuthToken):
             response_data = {'token': token.key}
             return HttpResponse(json.dumps(response_data), content_type="application/json")
 
+        print(serializer.errors)
         return HttpResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

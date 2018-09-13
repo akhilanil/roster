@@ -1,4 +1,3 @@
-from rest_framework.authentication import TokenAuthentication
 from rest_framework import viewsets, mixins
 # from roster_api.services.SerializerService import view_roster_service
 # from roster_api.serializers.interface.view_roster_serializer import ViewRosterSerializer
