@@ -106,17 +106,18 @@ export class LoginComponent implements OnInit {
     this.userModel.username = this.emailControl.value;
     this.userModel.password = this.passwordControl.value;
 
+
     this.authService.userLogin(this.userModel).subscribe(
         (val) => {
-            console.log(val['token'])
             this.tokenService.saveToken(val['token']);
             this.isWrongCredentials = false;
+            
         },
         response => {
             this.isWrongCredentials = true;
         },
         () => {
-            console.log("The POST observable is now completed.");
+            console.log("User Logged in");
         });
 
   }

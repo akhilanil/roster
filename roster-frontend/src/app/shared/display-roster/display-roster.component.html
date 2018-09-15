@@ -1,3 +1,30 @@
-<p>
-  display-roster works!
-</p>
+<div class="wrapper container">
+
+  <div class="calendar conatiner">
+    <!-- Cntainer for a row in calendar -->
+    <div class="week conatiner" *ngFor = "let rosterWeek of rosterData">
+      <!-- Conatiner for a single day -->
+      <div class="day-block" *ngFor = "let day of rosterWeek">
+        <mat-card class="day-block-card">
+          <mat-card-header class="center-component">
+            <div class="mat-card-header-text"><h3 id="dayHeaderText" *ngIf = "day.isValid; else invalidDay"> {{day.calendar.day}} </h3></div>
+            <ng-template #invalidDay><h3 id="dayHeaderText">NOT THIS MONTH</h3></ng-template>
+          </mat-card-header>
+          <mat-card-content class="center-component">
+            <div *ngIf = "day.isValid; else invalidMonthYear"><h1>{{day.calendar.date}}</h1></div>
+            <div *ngIf = "day.isValid"><h4>{{getMonthFromNumber(day.calendar.month)}} {{day.calendar.year}}</h4></div>
+            <ng-template #invalidMonthYear><h4 id="dayHeaderText">NOT THIS MONTH</h4></ng-template>
+          </mat-card-content>
+          <mat-card-actions class="center-component">
+            <button mat-button (click)="openRosterInBottomSheet(day.participantSessionMap)"
+                    [disabled] =  "!day.isValid || day.isHoliday" >
+                    View Roster
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>
+
+  </div>
+
+</div>

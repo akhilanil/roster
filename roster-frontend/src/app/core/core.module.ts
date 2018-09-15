@@ -5,7 +5,7 @@ import { CoreRoutingModule } from './core-routing.module';
 import { HeaderComponent } from './header/header.component';
 
 /* Angular Material imports */
-import { MatToolbarModule, MatButtonModule} from '@angular/material';
+import { MatToolbarModule, MatButtonModule, MatIconModule} from '@angular/material';
 
 
 import { HttpClientModule } from '@angular/common/http';
@@ -24,7 +24,8 @@ import { ViewRosterRouteGaurdService } from '@services/routes/gaurds'
     CoreRoutingModule,
     MatToolbarModule,
     MatButtonModule,
-    HttpClientModule
+    HttpClientModule,
+    MatIconModule
 
   ],
   exports: [

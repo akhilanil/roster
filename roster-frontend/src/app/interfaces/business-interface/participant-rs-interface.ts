@@ -5,8 +5,8 @@
 
 
 export interface ParticipantRSModel {
-  name: string // Name of the participant
-  work: string // Comma seperated dates with each part having session and date seperated by :
-  sessions: string // Number of session worked by a participant
+  participant_name: string // Name of the participant
+  participant_dates: string // Comma seperated dates with each part having session and date seperated by :
+  per_session_count: string // Number of session worked by a participant
 
 }

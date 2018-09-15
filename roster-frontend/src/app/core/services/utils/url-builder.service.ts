@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { SERVER_IP_ADDRESS, LOGIN_URL, NEW_ROSTER_URL } from '../service-settings'
+import { SERVER_IP_ADDRESS, LOGIN_URL, NEW_ROSTER_URL, LIST_ROSTERS_URL } from '../service-settings'
 
 @Injectable({
   providedIn: 'root'
@@ -30,6 +30,10 @@ export class UrlBuilderService {
 
     return  this.getServerAddress() + NEW_ROSTER_URL;
 
+  }
+
+  public buildListRostersUrl(): string {
+    return this.getServerAddress() + LIST_ROSTERS_URL;
   }
 
 }

@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css?family=Oswald:500');
+
+.conatiner {
+  display: flex;
+}
+
+.wrapper {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  margin: 10px;
+  width: 100%;
+}
+
+.calendar {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  margin: 10px;
+  width: 95%;
+}
+
+.week {
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 95%;
+}
+
+.day-block {
+  flex-grow: 1;
+  align-content: space-around;
+  flex-direction: column;
+  justify-content: center;
+  margin: 10px;
+  width: 12.5%;
+}
+
+/* Day header for Day of the week */
+#dayHeaderText {
+  font-family: 'Oswald', sans-serif;
+
+
+}
+
+/* Centers the div component */
+.center-component {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.day-block-card{
+  max-width: 100%;
+  min-height: 100%;
+}

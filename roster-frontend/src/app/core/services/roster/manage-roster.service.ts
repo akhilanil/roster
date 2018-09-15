@@ -75,4 +75,18 @@ export class ManageRosterService {
   }
 
 
+  /* Method to get All rosters of user */
+  public getAllRostersOfUser(): Observable<Array<CreateRosterRSModel>> {
+
+    const url = this.urlBuilderService.buildListRostersUrl();
+
+    return this.httpClient.get(url).pipe(
+      map((res: Array<CreateRosterRSModel>) => res),
+      catchError((err: HttpErrorResponse) => throwError(err.status))
+    )
+
+  }
+
+
+
 }

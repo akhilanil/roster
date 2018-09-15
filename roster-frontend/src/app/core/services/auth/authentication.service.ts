@@ -24,7 +24,7 @@ export class AuthenticationService {
               ) { }
 
 
-  userLogin(user: Users) {
+  userLogin(user: Users): Observable<any> {
 
     // const url = this.router.url +' /auth';
     const url = this.urlBuilderService.buildLoginUrl();
@@ -42,7 +42,7 @@ export class AuthenticationService {
           catchError((err: HttpErrorResponse) => {
             console.log(err)
             return throwError(err.status);
-      })
+          })
     )
   }
 

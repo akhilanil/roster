@@ -50,7 +50,7 @@ export class DateUtilsService {
 
     let dayNameMap: Map<number, string> = this.getDayNameMap();
 
-    for(let i = 0; i < numberOfDaysInMonth; i++) {
+    for(let i = 1; i <= numberOfDaysInMonth; i++) {
 
       let dayName: string = dayNameMap.get(new Date(year, month-1, i).getDay())
 
