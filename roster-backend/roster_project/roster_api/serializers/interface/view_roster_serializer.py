@@ -17,10 +17,10 @@ class ViewRosterSerializer(serializers.ModelSerializer):
         Serializer for viewing the roster created by the user
     """
 
-    user_rotsers = UserDetailsSerializer(many=True, read_only=True)
-    
+    user_rosters = UserDetailsSerializer(many=True, read_only=True)
+
     class Meta:
 
         model = user_roster_model.UserRosterModel
-        fields = ('unique_id', 'user_name', 'month', 'year', 'title', 'user_rotsers')
+        fields = ('unique_id', 'user_name', 'month', 'year', 'title', 'user_rosters')
         depth = 1

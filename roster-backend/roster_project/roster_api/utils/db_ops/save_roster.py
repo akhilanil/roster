@@ -29,12 +29,12 @@ class RosterSave():
         except RequiredDataError as required_data_error:
             raise required_data_error
 
-        all_participants = participants['participants']
+        all_participants = participants['user_rotsers']
 
         for participant in all_participants:
-            name = participant['name']
-            work = participant['work']
-            sessions = participant['sessions']
+            name = participant['participant_name']
+            work = participant['participant_dates']
+            sessions = participant['per_session_count']
 
             try:
                 self.roster_db_services.insert_user_roster_deatils(

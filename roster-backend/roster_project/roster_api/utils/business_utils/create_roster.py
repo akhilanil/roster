@@ -26,16 +26,16 @@ class CreateRosterUtil():
         participants_list = []
         for participant in participants:
             participant_dict = {}
-            participant_dict['name'] = participant.name
+            participant_dict['participant_name'] = participant.name
             work = ""
             for work_session in participant.work_sessions:
                 work = work + work_session.session_name + ":" + \
                                     str(work_session.date.day)+","
-            participant_dict['work'] = work
+            participant_dict['participant_dates'] = work
             session = ""
             for key, val in participant.session_count.items():
                 session = session + key + ":" + str(val) + ","
-            participant_dict['sessions'] = session
+            participant_dict['per_session_count'] = session
             participants_list.append(participant_dict)
         return participants_list
 
@@ -54,7 +54,7 @@ class CreateRosterUtil():
 
         participant_dict['title'] = title
 
-        participant_dict['participants'] = self.convert_participant_for_view(participants)
+        participant_dict['user_rosters'] = self.convert_participant_for_view(participants)
 
         return participant_dict
 
@@ -111,7 +111,7 @@ class CreateRosterUtil():
 
         _unique_key = None
         if username is not None:
-            print("User------>",username)
+
             # Generate the hash and store in DB and pass the hash value to view
             _unique_key = UniqueKeyUtil.generate_unique_key()
 

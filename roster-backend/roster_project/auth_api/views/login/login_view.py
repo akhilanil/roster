@@ -20,7 +20,7 @@ class LoginViewSet(ObtainAuthToken):
 
             utc_now = (datetime.datetime.utcnow()).replace(tzinfo=pytz.UTC);
 
-            if not created and token.created < utc_now - datetime.timedelta(minutes=1):
+            if not created and token.created < utc_now - datetime.timedelta(hours=1):
                 token.delete()
                 token = Token.objects.create(user=serializer.validated_data['user'])
                 token.created = datetime.datetime.utcnow()
