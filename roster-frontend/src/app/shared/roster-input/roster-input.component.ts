@@ -18,7 +18,7 @@ import { SESSION_INPUT_LABEL, SESSION_INPUT_ERROR_REQUIRED, SESSION_INPUT_ERROR_
 import { INVALID_INPUT } from './constants/ui-constants'
 
 /* URL constants */
-import {LOGIN_URL} from './constants/url-constants'
+import {NEW_ROSTER_URL} from './constants/url-constants'
 
 /* Business Constant imports */
 import { MAX_PARTICIPANTS, MAX_SESSIONS } from '@constants/business/general-constants'
@@ -587,7 +587,7 @@ export class RosterInputComponent implements OnInit {
       (val: string | CreateRosterRSModel) => {
         this.manageRosterService.setRosterDisplaySubject(val);
         if(typeof val != 'string') {
-            this.router.navigate([LOGIN_URL])
+            this.router.navigate([NEW_ROSTER_URL])
         }
 
       },

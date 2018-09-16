@@ -1,0 +1,69 @@
+@import url('https://fonts.googleapis.com/css?family=Oswald:500');
+
+
+
+.container {
+  display: flex;
+
+}
+
+.main {
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 95%;
+
+  width: 100%;
+}
+
+.card {
+
+  height: inherit;
+  width: 95%;
+}
+
+/* Centers the div component */
+.center-component {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.all-roster-card {
+  height: 90%;
+  width: inherit;
+}
+
+.content-expansion-panel {
+  widht: inherit;
+}
+
+.roster-content {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
+  height : 95%;
+}
+
+.button {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.button > div {
+  width: 45%;
+  height: 20%;
+  margin: 10px;
+
+}
+
+
+
+#textFont {
+    font-family: 'Oswald', sans-serif;
+}

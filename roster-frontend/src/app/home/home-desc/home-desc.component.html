@@ -13,14 +13,18 @@
           {{homeDescText}}
         </p>
         <div class="button-row">
-          <button mat-raised-button color="primary"
-                  (click)="onStateChanged()">
-            {{buttonName}}
-          </button>
-          <button mat-raised-button color="primary"
-                  (click)="onContinue()">
-            {{continueButton}}
-          </button>
+          <div class="">
+            <button mat-raised-button color="primary"
+                    (click)="onStateChanged()">
+              {{buttonName}}
+            </button>
+          </div>
+          <div class="">
+            <button mat-raised-button color="primary"
+                    (click)="onContinue()">
+              {{continueButton}}
+            </button>
+          </div>
         </div>
       </div>
     </mat-grid-tile>

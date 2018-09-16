@@ -46,19 +46,11 @@ export class AuthenticationService {
     )
   }
 
+  /**
+  * Method to logout user. It removes the token from local storage.
+  */
   userLogout() {
-    const url = this.urlBuilderService.buildLoginUrl();
-
-    return this.httpClient.delete(url, {}).pipe(
-       catchError((err: HttpErrorResponse) => {
-         console.log(err)
-         return throwError(err.status);
-       }),
-       tap(res => {
-         this.tokenService.removeToken();
-       })
-     )
-
+      this.tokenService.removeToken();
   }
 
 

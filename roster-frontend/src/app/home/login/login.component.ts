@@ -21,6 +21,7 @@ import { Users } from '@interfaces/users-interface'
 /* Service imports  */
 import { AuthenticationService } from '@services/auth'
 import { TokenService } from '@services/auth'
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -65,7 +66,8 @@ export class LoginComponent implements OnInit {
 
   constructor(fb: FormBuilder,
               private authService: AuthenticationService,
-              private tokenService: TokenService) {
+              private tokenService: TokenService,
+            private router: Router) {
 
     this.options = fb.group({
       hideRequired: false,
@@ -111,7 +113,7 @@ export class LoginComponent implements OnInit {
         (val) => {
             this.tokenService.saveToken(val['token']);
             this.isWrongCredentials = false;
-            
+            this.router.navigate([''])
         },
         response => {
             this.isWrongCredentials = true;

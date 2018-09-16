@@ -8,6 +8,7 @@ import { MaterialModule } from '../material.module';
 /* Angular Forms import */
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { DisplayRosterComponent, RosterSheetComponent } from './display-roster/display-roster.component';
+import { SimpleDialogComponent } from './simple-dialog/simple-dialog.component';
 
 
 @NgModule({
@@ -24,9 +25,10 @@ import { DisplayRosterComponent, RosterSheetComponent } from './display-roster/d
     FormsModule,
     ReactiveFormsModule,
     DisplayRosterComponent,
+    SimpleDialogComponent
 
   ],
   entryComponents: [RosterSheetComponent],
-  declarations: [RosterInputComponent, DisplayRosterComponent, DisplayRosterComponent, RosterSheetComponent]
+  declarations: [RosterInputComponent, DisplayRosterComponent, DisplayRosterComponent, RosterSheetComponent, SimpleDialogComponent]
 })
 export class SharedModule { }

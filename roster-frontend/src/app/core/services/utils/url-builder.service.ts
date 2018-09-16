@@ -36,4 +36,10 @@ export class UrlBuilderService {
     return this.getServerAddress() + LIST_ROSTERS_URL;
   }
 
+
+  /* method to build url for a particular Roster*/
+  public buildRosterViewUrl(rosterHash: string): string {
+    return this.buildListRostersUrl() + rosterHash + '/';
+  }
+
 }

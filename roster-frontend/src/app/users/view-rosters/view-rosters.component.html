@@ -1,0 +1,9 @@
+<div *ngIf = "!isError;else error"class = "view-container">
+  <app-display-roster></app-display-roster>
+</div>
+
+<ng-template #error>
+    <ng-container>
+      <h1>404 Page not found</h1>
+    </ng-container>
+</ng-template>

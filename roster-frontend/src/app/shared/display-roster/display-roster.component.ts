@@ -39,7 +39,6 @@ export class DisplayRosterComponent implements OnInit {
   ngOnInit() {
     this.manageRosterService.currentRoster.subscribe((message: CreateRosterRSModel) => {
       this.displayRoster = message;
-      console.log(message)
 
       if(typeof this.displayRoster != 'string' && this.displayRoster.toString() != 'No Data') {
           this.updateViewRoster();

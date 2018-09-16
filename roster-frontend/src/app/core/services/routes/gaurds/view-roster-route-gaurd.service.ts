@@ -15,7 +15,6 @@ export class ViewRosterRouteGaurdService implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | Observable<boolean> | Promise<boolean> {
     let canRosterBeViewed: boolean = this.manageRosterService.canRosterBeViewed();
-    console.log(this.manageRosterService.canRosterBeViewed())
     return canRosterBeViewed;
 
   }

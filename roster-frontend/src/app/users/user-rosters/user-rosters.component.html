@@ -1,1 +1,57 @@
-<mat-progress-bar mode="determinate" [value]=progressStatus></mat-progress-bar>
+<div class="main conatiner">
+
+  <div class="card container">
+    <mat-card *ngIf = "isIntialized; else loading" class="all-roster-card">
+      <mat-card-header class="center-component">
+        <div class="mat-card-header-text">
+          <h2 id="textFont">
+            <span [matBadge]="rosterCount" matBadgeOverlap="false" [matBadgeColor] = "badgeColor"> 
+             {{getRosterHeading()}}
+           </span>
+          </h2>
+        </div>
+      </mat-card-header>
+      <mat-card-content >
+          <mat-accordion class = "content-expansion-panel">
+            <mat-expansion-panel *ngFor = "let roster of myRosters">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  {{roster.title}}
+                </mat-panel-title>
+                <mat-panel-description>
+                  {{getMonthFromNumber(roster.month)}}  {{roster.year}}
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+              <div class="roster-content container">
+                <div>
+                  <mat-chip-list>
+                    <mat-chip *ngFor = "let user of roster.user_rosters"
+                               [matTooltip]="user.per_session_count"
+                               id = "textFont">
+                               {{user.participant_name}}
+                    </mat-chip>
+                  </mat-chip-list>
+                </div>
+                <div class="button container">
+                  <div class="">
+                    <button mat-raised-button color="primary" (click) = "viewRoster(roster.unique_id)">View Roster</button>
+                  </div>
+                  <div class="">
+                    <button mat-raised-button color="warn">Delete Roster</button>
+                  </div>
+                </div>
+
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+</div>
+
+<ng-template #loading>
+
+  <mat-progress-bar *ngIf = "!isIntialized" mode="determinate" [value]=progressStatus></mat-progress-bar>
+
+</ng-template>

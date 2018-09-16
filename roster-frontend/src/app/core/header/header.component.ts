@@ -39,11 +39,8 @@ export class HeaderComponent implements OnInit {
 
   onButtonClicked() {
     if(this.isLoggedIn) {
-      this.authService.userLogout().subscribe(
-        (val) => {
-          this.router.navigate(['/']);
-        }
-      );
+      this.authService.userLogout();
+      this.router.navigate(['/roster']);
     }
   }
 

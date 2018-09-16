@@ -64,7 +64,7 @@ export class HomeDescComponent implements OnInit {
     this.homeDescHeader = HOME_DESC_HEADING
     this.homeDescText = HOME_DESC_TEXT
     this.continueButton = CONTINUE_BUTTON
-    
+
   }
 
   ngOnInit() {

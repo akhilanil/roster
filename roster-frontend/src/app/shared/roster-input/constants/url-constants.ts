@@ -1,3 +1,3 @@
 
 /* View roster route url */
-export const LOGIN_URL: string = '/new-roster';
+export const NEW_ROSTER_URL: string = 'roster/new-roster';

@@ -1,4 +1,12 @@
 .input-container {
   width: inherit;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 
+}
+
+.input-container > div {
+  width: 100%;
 }

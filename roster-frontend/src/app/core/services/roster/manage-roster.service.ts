@@ -64,9 +64,9 @@ export class ManageRosterService {
   }
 
   /* Method to change the value in the BehaviorSubject */
-  public setRosterDisplaySubject(message: CreateRosterRSModel | string) {
+  public setRosterDisplaySubject(message: CreateRosterRSModel | string, isRosterViewable: boolean=true) {
     this.rosterDisplaySubject.next(message);
-    this.isRosterViewable = true;
+    this.isRosterViewable = isRosterViewable;
   }
 
   /* This method is used by the route gaurd */
@@ -82,10 +82,36 @@ export class ManageRosterService {
 
     return this.httpClient.get(url).pipe(
       map((res: Array<CreateRosterRSModel>) => res),
-      catchError((err: HttpErrorResponse) => throwError(err.status))
+      catchError((err: HttpErrorResponse) => throwError(err))
     )
 
   }
+
+
+  /**
+    * Method to get the roster corresponding to the particular hashcode
+    */
+  public getSpecificRoster(uniqueHashCode: string): Observable<CreateRosterRSModel> {
+
+    const url = this.getUrlsFromRosterKey(uniqueHashCode);
+
+    return this.httpClient.get(url).pipe(
+      map((res : CreateRosterRSModel) => res),
+      catchError((err: HttpErrorResponse) => {
+        if(err.message.hasOwnProperty('deatil')) {
+          this.setRosterDisplaySubject(err.message['deatil'])
+        }
+        return throwError(err.status)
+      })
+    )
+
+  }
+
+  /* Method which invokes the urlBuilderService to get the url for a particular Roster */
+  private getUrlsFromRosterKey(rosterHash: string): string{
+    return this.urlBuilderService.buildRosterViewUrl(rosterHash)
+  }
+
 
 
 
