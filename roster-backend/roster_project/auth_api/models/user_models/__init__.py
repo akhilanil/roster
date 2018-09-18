@@ -1,1 +1,2 @@
 from .user_profile_model import UserProfileModel
+from .password_reset_model import PasswordResetModel

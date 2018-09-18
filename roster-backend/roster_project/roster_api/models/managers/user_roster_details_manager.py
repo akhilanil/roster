@@ -3,8 +3,9 @@ from django.db import IntegrityError
 
 import traceback
 
+from roster_api.exceptions.roster_exceptions.save_roster_exception import \
+    DuplicateRecordError, RequiredDataError
 
-from roster_api.exceptions.roster_exceptions.save_roster_exception import DuplicateRecordError, RequiredDataError
 
 class UserRosterDetailsManager(models.Manager):
 
@@ -28,7 +29,6 @@ class UserRosterDetailsManager(models.Manager):
             raise RequiredDataError(traceback.format_exc())
         else:
             try:
-                
                 participant = \
                     self.model(participant_name=participant_name,
                                participant_dates=participant_dates,
@@ -37,6 +37,5 @@ class UserRosterDetailsManager(models.Manager):
                 participant.save(using=self._db)
             except IntegrityError:
                 raise DuplicateRecordError(traceback.format_exc())
-
 
             return participant

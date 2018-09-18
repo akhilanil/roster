@@ -4,6 +4,8 @@ from auth_api.models.user_models import user_profile_model
 from django.http import HttpResponse
 from rest_framework import status
 import json
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_protect
 
 class RegisterView(viewsets.ModelViewSet):
 
@@ -13,6 +15,7 @@ class RegisterView(viewsets.ModelViewSet):
     queryset = user_profile_model.UserProfileModel.objects.all()
     http_method_names = ['post']
 
+    @method_decorator(csrf_protect)
     def create(self, request):
         """ Method to create a user prfile """
 

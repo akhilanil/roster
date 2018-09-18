@@ -1,7 +1,5 @@
 
-#from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import BaseUserManager
-from django.contrib.auth.models import PermissionsMixin
 
 # User defined exceptions
 from ...exceptions import EMAIL_ID_REQUIRED
@@ -36,3 +34,16 @@ class UserProfileManager(BaseUserManager):
         user.save(using=self._db)
 
         return user
+
+    def is_existing_user(self, email):
+        """
+        Method to check wheter a user with the give eamil exist
+        """
+        return super().get_queryset().filter(email=email).exist()
+
+
+    def get_user(self, email):
+        """
+            Method to get the user from email id
+        """
+        return super().get_queryset().filter(email=email)
