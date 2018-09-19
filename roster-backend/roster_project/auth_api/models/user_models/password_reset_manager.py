@@ -2,6 +2,8 @@ from django.db import models
 import datetime
 import pytz
 
+from django.core.exceptions import ObjectDoesNotExist
+
 
 class PasswordResetManager(models.Manager):
 
@@ -21,11 +23,28 @@ class PasswordResetManager(models.Manager):
 
         return is_expired
 
-    def is_record_existing(self, user):
-        return super().get_queryset().filter(user=user).exist()
+    def is_record_existing(self, user=None, token=None):
 
-    def get_user_record(self, user):
-        return super().get_queryset().filter(user=user)
+        if user is not None:
+            try:
+                super().get_queryset().get(user=user)
+            except ObjectDoesNotExist:
+                return False
+            return True
+        elif token is not None:
+            try:
+                super().get_queryset().get(token=token)
+            except ObjectDoesNotExist:
+                return False
+            return True
+        else:
+            return False
+
+    def get_user_record(self, user=None, token=None):
+        if user is not None:
+            return super().get_queryset().filter(user=user)
+        elif token is not None:
+            return super().get_queryset().filter(token=token)
 
     def insert_new_token(self, user):
         """
@@ -34,7 +53,8 @@ class PasswordResetManager(models.Manager):
         """
 
         if(self.is_record_existing(user=user)):
-            token = self.get_user_record(user=user).token
+            token = self.get_user_record(user=user)[0].token
+            print("asdasd",token)
             if(self.is_record_expired(token)):
                 self.delete_record(token)
                 new_request = self.model(user=user)
@@ -47,8 +67,19 @@ class PasswordResetManager(models.Manager):
             new_request.save(using=self._db)
             return new_request.token
 
+    def change_pasword(self, token, new_password):
+        """
+        Method to change password of user.
+        """
+
+        user = super().get_queryset().filter(token=token)[0].user
+        print(user,new_password, user.get_full_name())
+        user.set_password(new_password)
+        user.save()
+        self.delete_record(token=token)
+
     def delete_record(self, token):
         """
             Methd to delete record for a particular token
         """
-        super().get_queryset().filter(token=token).delete();
+        super().get_queryset().filter(token=token).delete()

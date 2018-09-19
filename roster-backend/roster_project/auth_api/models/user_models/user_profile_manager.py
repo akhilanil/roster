@@ -2,7 +2,9 @@
 from django.contrib.auth.models import BaseUserManager
 
 # User defined exceptions
-from ...exceptions import EMAIL_ID_REQUIRED
+from auth_api.exceptions import EMAIL_ID_REQUIRED
+
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class UserProfileManager(BaseUserManager):
@@ -39,11 +41,17 @@ class UserProfileManager(BaseUserManager):
         """
         Method to check wheter a user with the give eamil exist
         """
-        return super().get_queryset().filter(email=email).exist()
-
+        try:
+            super().get_queryset().get(email=email)
+        except ObjectDoesNotExist:
+            return False
+        return True
 
     def get_user(self, email):
         """
             Method to get the user from email id
         """
-        return super().get_queryset().filter(email=email)
+        return super().get_queryset().filter(email=email)[0]
+
+
+    

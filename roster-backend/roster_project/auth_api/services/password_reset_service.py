@@ -18,13 +18,13 @@ class PasswordResetService():
         return password_rest_serializer.PasswordResetSerializer
 
     @classmethod
-    def get_password_reset_serializer_object(self):
+    def get_password_reset_serializer_object(self, data=None):
         """
             Method to return the Instance of serializer class
 
         """
         if(self.serializer is None):
-            self.serializer = password_rest_serializer.PasswordResetSerializer()
+            self.serializer = password_rest_serializer.PasswordResetSerializer(data=data)
         return self.serializer
 
     @classmethod
