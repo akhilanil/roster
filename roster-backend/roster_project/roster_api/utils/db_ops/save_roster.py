@@ -1,4 +1,5 @@
-from roster_api.exceptions.roster_exceptions.save_roster_exception import DuplicateRecordError, RequiredDataError
+from roster_api.exceptions.roster_exceptions.save_roster_exception import \
+    DuplicateRecordError, RequiredDataError
 from roster_api.services.db_services import roster_db_services
 
 
@@ -29,7 +30,7 @@ class RosterSave():
         except RequiredDataError as required_data_error:
             raise required_data_error
 
-        all_participants = participants['user_rotsers']
+        all_participants = participants['user_rosters']
 
         for participant in all_participants:
             name = participant['participant_name']
@@ -44,4 +45,4 @@ class RosterSave():
             except RequiredDataError as required_data_error:
                 raise required_data_error
 
-            return user_roster.unique_id
+        return user_roster.unique_id

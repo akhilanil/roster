@@ -21,7 +21,6 @@ class CreateRosterView(viewsets.ViewSet):
     authentication_classes = (TokenAuthentication,)
     permission_classes = ()
 
-
     @transaction.atomic
     def create(self, request):
 
