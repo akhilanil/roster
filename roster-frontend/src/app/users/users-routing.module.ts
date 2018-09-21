@@ -5,16 +5,18 @@ import { Routes, RouterModule } from '@angular/router';
 import { UserRostersComponent } from '@app/users/user-rosters/user-rosters.component';
 import { ViewRostersComponent } from '@app/users/view-rosters/view-rosters.component';
 import { NewRostersComponent } from '@app/users/new-rosters/new-rosters.component';
-
+import { LoginRouteService } from '@app/core/services/routes/gaurds';
 
 const routes: Routes = [
   {
     path:'my-rosters',
     component: UserRostersComponent,
+    canActivate: [LoginRouteService]
   },
   {
     path: 'new-roster',
-    component: NewRostersComponent
+    component: NewRostersComponent,
+    canActivate: [LoginRouteService]
   },
   {
     path: 'view-roster/:id',

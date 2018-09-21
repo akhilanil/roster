@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 
 /* Custom service imports */
 import { ManageRosterService } from '@services/roster';
@@ -10,7 +10,7 @@ import { CreateRosterRSModel } from '@interfaces/business-interface'
 /* constants import */
 import { ROSTER_HEADER } from './constants/ui-constants'
 import { TOKEN_EXPIRED_DIALOG_HEADER, TOKEN_EXPIRED_DIALOG_DESCRIPTION } from './constants/ui-constants'
-import { VIEW_ROSTER_URL } from './constants/url-constants'
+import { VIEW_ROSTER_URL, NEW_ROSTER_URL, CURRENT_ROUTE_URL } from './constants/url-constants'
 import { TOKEN_EXPIRED_CLIENT, LOGOUT_ACTION } from './constants/data-constants'
 
 import { Router } from '@angular/router';
@@ -46,7 +46,8 @@ export class UserRostersComponent implements OnInit {
               private manageRosterService: ManageRosterService,
               private router: Router,
               private errorHandler: ErrorHandlerService,
-              private dialog: MatDialog
+              private dialog: MatDialog,
+              private zone: NgZone
             ) {
 
     this.isError = false;
@@ -198,11 +199,35 @@ export class UserRostersComponent implements OnInit {
 
     const routeUrl = VIEW_ROSTER_URL + uniqueHash;
 
-    console.log(routeUrl)
-
-
     this.router.navigate([routeUrl]);
 
+  }
+
+  public deleteRoster(uniqueHash:string): void {
+    const routeUrl = CURRENT_ROUTE_URL;
+    this.manageRosterService.deleteRoster(uniqueHash).subscribe(
+      (res) => {
+        // this.router.navigate([routeUrl])
+      },
+      (err) => {
+        this.zone.runOutsideAngular(() => {
+          location.reload();
+        })
+      },
+      () => {
+        this.zone.runOutsideAngular(() => {
+          location.reload();
+        })
+      }
+    )
+  }
+
+
+  public newRoster(): void {
+
+    const routeUrl = NEW_ROSTER_URL;
+
+    this.router.navigate([routeUrl]);
   }
 
 

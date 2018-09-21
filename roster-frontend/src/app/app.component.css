@@ -17,6 +17,14 @@
   width: 95%;
   height: 100%;
 
-
-
 }
+
+/* Centers the div component
+.center-component {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+*/

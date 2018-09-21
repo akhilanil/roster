@@ -1,11 +1,11 @@
-<div class="main conatiner">
+<div class="main conatiner center-component">
 
   <div class="card container">
     <mat-card *ngIf = "isIntialized; else loading" class="all-roster-card">
       <mat-card-header class="center-component">
         <div class="mat-card-header-text">
           <h2 id="textFont">
-            <span [matBadge]="rosterCount" matBadgeOverlap="false" [matBadgeColor] = "badgeColor"> 
+            <span [matBadge]="rosterCount" matBadgeOverlap="false" [matBadgeColor] = "badgeColor">
              {{getRosterHeading()}}
            </span>
           </h2>
@@ -37,7 +37,7 @@
                     <button mat-raised-button color="primary" (click) = "viewRoster(roster.unique_id)">View Roster</button>
                   </div>
                   <div class="">
-                    <button mat-raised-button color="warn">Delete Roster</button>
+                    <button mat-raised-button color="warn" (click) = "deleteRoster(roster.unique_id)">Delete Roster</button>
                   </div>
                 </div>
 
@@ -45,6 +45,11 @@
             </mat-expansion-panel>
           </mat-accordion>
       </mat-card-content>
+      <mat-card-actions class="center-component">
+        <div class="">
+            <button mat-raised-button color="primary" (click) = "newRoster()">Add New</button>
+        </div>
+      </mat-card-actions>
     </mat-card>
   </div>
 

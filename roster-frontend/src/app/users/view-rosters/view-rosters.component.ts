@@ -25,11 +25,12 @@ export class ViewRostersComponent implements OnInit {
               private route: ActivatedRoute,
               private manageRosterService: ManageRosterService) {
 
-    
+
     this.isError = false;
 
     this.route.params.pipe(
       mergeMap((val) => {
+        console.log(val['id'])
         return this.manageRosterService.getSpecificRoster(val['id'])
       })
     ).subscribe(
@@ -37,7 +38,10 @@ export class ViewRostersComponent implements OnInit {
         this.manageRosterService.setRosterDisplaySubject(rosterModel, false);
 
       },
-      (err => this.isError = true)
+      (err => {
+        console.log(err)
+        this.isError = true
+      })
     )
 
 

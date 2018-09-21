@@ -36,6 +36,8 @@ export class ManageRosterService {
   }
 
 
+
+
   /* Method to send HTTP Post request to create a new request */
   public createNewRoster(request : CreateRosterRQModel) : Observable< CreateRosterRSModel | string > {
 
@@ -84,7 +86,6 @@ export class ManageRosterService {
       map((res: Array<CreateRosterRSModel>) => res),
       catchError((err: HttpErrorResponse) => throwError(err))
     )
-
   }
 
 
@@ -95,11 +96,15 @@ export class ManageRosterService {
 
     const url = this.getUrlsFromRosterKey(uniqueHashCode);
 
-    return this.httpClient.get(url).pipe(
+    const loginHeaders = new HttpHeaders()
+                  .set('No-Auth','True')
+
+    return this.httpClient.get(url, {headers: loginHeaders}).pipe(
       map((res : CreateRosterRSModel) => res),
       catchError((err: HttpErrorResponse) => {
-        if(err.message.hasOwnProperty('deatil')) {
-          this.setRosterDisplaySubject(err.message['deatil'])
+
+        if(err.message.hasOwnProperty('detail')) {
+          this.setRosterDisplaySubject(err.message['detail'])
         }
         return throwError(err.status)
       })
@@ -108,10 +113,30 @@ export class ManageRosterService {
   }
 
   /* Method which invokes the urlBuilderService to get the url for a particular Roster */
-  private getUrlsFromRosterKey(rosterHash: string): string{
+  private getUrlsFromRosterKey(rosterHash: string): string {
     return this.urlBuilderService.buildRosterViewUrl(rosterHash)
   }
 
+
+  public deleteRoster(uniqueHashCode: string): Observable<any> {
+
+    const url = this.getUrlsFromRosterKey(uniqueHashCode);
+
+    const loginHeaders = new HttpHeaders()
+                  .set('No-Auth','True')
+
+
+    return this.httpClient.delete(url, {headers: loginHeaders}).pipe(
+      map(() => "SUCCESS"),
+      catchError((err: HttpErrorResponse) => {
+
+        if(err.message.hasOwnProperty('detail')) {
+          this.setRosterDisplaySubject(err.message['detail'])
+        }
+        return throwError(err.status)
+      })
+    )
+  }
 
 
 
