@@ -8,4 +8,11 @@ class UserPrfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = user_profile_model.UserProfileModel
         fields = ('id', 'email', 'first_name', 'last_name', 'password')
-        extra_kwargs = {'password': {'write_only': True}}
+        extra_kwargs = {
+                            'password': {'write_only': True},
+                            'email': {
+                                'error_messages': {
+                                    'unique': 'User already exist'
+                                }
+                            }
+                        }

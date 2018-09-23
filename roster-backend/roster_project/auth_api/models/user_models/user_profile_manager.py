@@ -52,6 +52,3 @@ class UserProfileManager(BaseUserManager):
             Method to get the user from email id
         """
         return super().get_queryset().filter(email=email)[0]
-
-
-    
