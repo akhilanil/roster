@@ -177,7 +177,7 @@
             </mat-card-header>
             <mat-card-content>
               <mat-select placeholder="Leave Dates" [formControlName] = "participant.leaveControlName" multiple>
-                
+
                 <mat-optgroup *ngFor="let group of participant.leaveDropDownGroup" [label]="group.date" >
                   <mat-option *ngFor="let sessions of group.sessions" [value]="sessions.value">
                     {{sessions.name}}

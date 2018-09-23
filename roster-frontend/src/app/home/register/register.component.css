@@ -1,5 +1,9 @@
-.register-component-container {
-   max-height: 400px;
+.container {
+  display: flex;
+}
+
+.register-component {
+
    min-width:  400px;
 }
 
@@ -8,9 +12,13 @@
   box-shadow:0 1px 4px rgba(0, 0, 0, 0.1), 0 0 40px rgba(0, 0, 0, 0.1) inset;
 }
 
+.center-box {
+  display: flex
+}
+
 .raised-box:before, .raised-box:after
 {
-    content:"";
+    /* content:"";
     position:absolute;
     z-index:-1;
     box-shadow:0 0 20px rgba(0,0,0,0.1);
@@ -18,7 +26,7 @@
     bottom:10px;
     left:0;
     right:0;
-    border-radius:100px / 10px;
+    border-radius:100px / 10px; */
 }
 .raised-box:after
 {
@@ -32,4 +40,24 @@
     text-align: center;
     width: 300px;
 
+}
+
+.form-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+
+}
+
+.form-wrapper > div{
+
+  margin: 20px;
+
+}
+.center-box {
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }

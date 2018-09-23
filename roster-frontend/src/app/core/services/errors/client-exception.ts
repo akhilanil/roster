@@ -8,3 +8,6 @@ export const UNAUTHORIZED_ACCESS_CLIENT: string = 'Invalid token'
 
 /* User deleted client action */
 export const USER_DELETED_CLIENT: string = 'User inactive or deleted'
+
+/* This is passed by the service method is the user is found to be existing */
+export const USER_ALREADY_EXIST = "USER_ALREADY_EXIST"

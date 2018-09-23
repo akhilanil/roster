@@ -1,36 +1,54 @@
-<div class="register-component-container raised-box">
-  <mat-grid-list cols="1" rowHeight="1:1">
-    <mat-grid-tile>
-
-      <div class="input-conatiner">
-        <p>
-          <mat-form-field [floatLabel]="options.value.floatLabel">
-            <mat-label>{{emailIdInputLabel}}</mat-label>
-            <input matInput placeholder="">
-          </mat-form-field>
-        </p>
-        <p>
-          <mat-form-field>
-            <input matInput placeholder={{passwordInputLabel}} [type]="hide ? 'password' : 'text'">
-            <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
-          </mat-form-field>
-        </p>
-        <p>
-          <mat-form-field>
-            <input matInput placeholder={{confirmPasswordInputLabel}} [type]="hide ? 'password' : 'text'">
-            <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
-          </mat-form-field>
-        </p>
-        <p style="text-align:center">
-          <button mat-raised-button color="primary">
-            {{registerButton}}
-          </button>
-        </p>
-
-
+<div class="register-component container raised-box center-box">
+      <div class="input conatiner">
+        <form novalidate (ngSubmit)="onRegister()" [formGroup]="registerFormGroup">
+          <div class="form-wrapper container">
+            <div class="">
+              <mat-form-field [floatLabel]="registerFormGroup.value.floatLabel">
+                <mat-label>{{emailIdInputLabel}}</mat-label>
+                <input matInput placeholder="" formControlName="emailIdControl">
+                <mat-error *ngIf="registerFormGroup.invalid || userAlreadyExist ">{{getEmailError()}}</mat-error>
+                
+              </mat-form-field>
+            </div>
+            <div class="">
+              <mat-form-field [floatLabel]="registerFormGroup.value.floatLabel" >
+                <mat-label>{{firstNameLabel}}</mat-label>
+                <input matInput placeholder="" formControlName="firstNameControl">
+                <mat-hint align="end">{{fieldHints}}</mat-hint>
+                <mat-error *ngIf="registerFormGroup.invalid ">{{getFirstNameError()}}</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="">
+              <mat-form-field [floatLabel]="registerFormGroup.value.floatLabel" >
+                <mat-label>{{lastNameLabel}}</mat-label>
+                <input matInput placeholder="" formControlName="lastNameControl">
+                <mat-hint align="end">{{fieldHints}}</mat-hint>
+                <mat-error *ngIf="registerFormGroup.invalid ">{{getLastNameError()}}</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="">
+              <mat-form-field >
+                <input matInput placeholder={{passwordInputLabel}} [type]="hide ? 'password' : 'text'" formControlName="passwordControl">
+                <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+                <mat-hint align="end">{{fieldHints}}</mat-hint>
+                <mat-error *ngIf="registerFormGroup.invalid ">{{getPasswordError()}}</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="" >
+              <mat-form-field >
+                <input matInput placeholder={{confirmPasswordInputLabel}} [type]="hide ? 'password' : 'text'" formControlName="confirmPasswordControl">
+                <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+                <mat-error *ngIf="registerFormGroup.invalid ">{{getConfirmPasswordError()}}</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="">
+              <button mat-raised-button color="primary" type="submit">
+                {{registerButton}}
+              </button>
+            </div>
+          </div>
+        </form>
       </div>
 
-    </mat-grid-tile>
-  </mat-grid-list>
 
 </div>
