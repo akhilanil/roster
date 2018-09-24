@@ -10,7 +10,7 @@
 
 .raised-box:before, .raised-box:after
 {
-    content:"";
+    /* content:"";
     position:absolute;
     z-index:-1;
     box-shadow:0 0 20px rgba(0,0,0,0.1);
@@ -18,7 +18,7 @@
     bottom:10px;
     left:0;
     right:0;
-    border-radius:100px / 10px;
+    border-radius:100px / 10px; */
 }
 .raised-box:after
 {

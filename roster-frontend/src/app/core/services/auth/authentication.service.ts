@@ -10,6 +10,7 @@ import { Observable, throwError } from 'rxjs';
 /* Custom Service Imports */
 import { TokenService } from './token.service'
 import { UrlBuilderService } from '@services/utils';
+import { USER_ALREADY_EXIST } from '@app/core/services/errors/client-exception';
 
 
 @Injectable({
@@ -24,7 +25,7 @@ export class AuthenticationService {
               ) { }
 
 
-  userLogin(user: Users): Observable<any> {
+  public userLogin(user: Users): Observable<any> {
 
     // const url = this.router.url +' /auth';
     const url = this.urlBuilderService.buildLoginUrl();
@@ -40,7 +41,6 @@ export class AuthenticationService {
     return this.httpClient.post(url, requestBody, {headers: loginHeaders})
       .pipe(
           catchError((err: HttpErrorResponse) => {
-            console.log(err)
             return throwError(err.status);
           })
     )
@@ -49,8 +49,42 @@ export class AuthenticationService {
   /**
   * Method to logout user. It removes the token from local storage.
   */
-  userLogout() {
+  public userLogout() {
       this.tokenService.removeToken();
+  }
+
+
+  /*
+   * Service Method for new User registeration
+   */
+  public registerNewUser(newUser: Users) {
+
+    const url = this.urlBuilderService.buildNewUserUrl();
+
+    const requestHeaders = new HttpHeaders()
+                  .set('No-Auth','True')
+
+    const requestBody = {
+      "email": newUser.username,
+      "first_name": newUser.firstName,
+      "last_name": newUser.lastName,
+      "password": newUser.password
+    }
+
+    return this.httpClient.post(url, requestBody, {headers: requestHeaders}).pipe (
+
+      catchError((err: HttpErrorResponse) => {
+        
+        if(err.status == 409) {
+
+          return throwError(USER_ALREADY_EXIST)
+        }
+        return throwError(err.status)
+      })
+
+    )
+
+
   }
 
 
