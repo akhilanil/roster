@@ -2,11 +2,13 @@ from rest_framework import viewsets
 from auth_api.serializers import user_profile_serializer
 from auth_api.models.user_models import user_profile_model
 from django.http import HttpResponse
+from rest_framework.response import Response
 from rest_framework import status
 import json
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
 from rest_framework.exceptions import ErrorDetail
+
 
 class RegisterView(viewsets.ModelViewSet):
 
@@ -29,11 +31,12 @@ class RegisterView(viewsets.ModelViewSet):
                 last_name=serializer.validated_data['last_name'],
                 password=serializer.validated_data['password']
             )
-            response_data = {"user": str(user.email)}
-            return HttpResponse(response_data, content_type="application/json")
+
+
+            return Response({'message': str(user.email)}, status.HTTP_201_CREATED)
 
         elif ('email' in serializer.errors):
-            print(serializer.errors)
+
             error_detail = serializer.errors['email'][0]
             if(isinstance(error_detail, ErrorDetail) and error_detail.code == 'unique'):
                 return HttpResponse(serializer.errors, status=status.HTTP_409_CONFLICT)

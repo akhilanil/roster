@@ -36,12 +36,13 @@ class ResetPasswordView(viewsets.ViewSet):
 
                 email_id = serializer.data.get('email_id')
                 is_valid_user = UserProfileModel.objects.is_existing_user(email=email_id)
-                user = UserProfileModel.objects.get_user(email=email_id)
+
 
                 if(not is_valid_user):
                     response = {'data': INVALID_EMAIL}
                     resposne_status = status.HTTP_404_NOT_FOUND
                 else:
+                    user = UserProfileModel.objects.get_user(email=email_id)
                     token = PasswordResetModel.objects.insert_new_token(user)
                     response = {'data': token}
                     # perform email service
