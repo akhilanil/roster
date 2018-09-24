@@ -7,6 +7,8 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { NewRosterComponent } from './new-roster/new-roster.component'
 import { ViewRosterComponent } from './view-roster/view-roster.component'
+import { ResetPasswordComponent } from './reset-password/reset-password.component'
+import { NewPasswordComponent } from './new-password/new-password.component'
 
 /* Custom service inputs */
 import { ViewRosterRouteGaurdService } from '@services/routes/gaurds'
@@ -18,11 +20,19 @@ const routes: Routes = [
     children: [
       {
         path:'login',
-        component: LoginComponent,
+        component: ResetPasswordComponent,
       },
       {
         path:'register',
         component: RegisterComponent,
+      },
+      {
+        path: 'reset-password',
+        component: ResetPasswordComponent,
+      },
+      {
+        path: 'reset-password/:id',
+        component: NewPasswordComponent,
       },
       {
         path:'',

@@ -59,7 +59,7 @@ export class ManageRosterService {
 
           } ),
           catchError((err: HttpErrorResponse) => {
-            console.log(err);
+            
             return throwError(err.status);
           })
       )

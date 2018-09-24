@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { SERVER_IP_ADDRESS, LOGIN_URL, NEW_ROSTER_URL, LIST_ROSTERS_URL, NEW_USER_URL } from '../service-settings'
+import { SERVER_IP_ADDRESS, LOGIN_URL, NEW_ROSTER_URL, LIST_ROSTERS_URL, NEW_USER_URL, CLIENT_DOMAIN_URL, RESET_PASSWORD_URL } from '../service-settings'
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +11,10 @@ export class UrlBuilderService {
 
   private getServerAddress() : string {
     return SERVER_IP_ADDRESS;
+  }
+
+  public getClientDomainAddress(): string {
+    return CLIENT_DOMAIN_URL;
   }
 
 
@@ -42,8 +46,14 @@ export class UrlBuilderService {
     return this.buildListRostersUrl() + rosterHash + '/';
   }
 
+  /** Method to build url for new user */
   public buildNewUserUrl(): string {
     return this.getServerAddress() + NEW_USER_URL;
+  }
+
+  /** Method to build url to reset password */
+  public buildResetPasswordUrl(): string {
+    return this.getServerAddress() + RESET_PASSWORD_URL;
   }
 
 

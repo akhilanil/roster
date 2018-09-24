@@ -6,8 +6,8 @@
               <mat-form-field [floatLabel]="registerFormGroup.value.floatLabel">
                 <mat-label>{{emailIdInputLabel}}</mat-label>
                 <input matInput placeholder="" formControlName="emailIdControl">
-                <mat-error *ngIf="registerFormGroup.invalid || userAlreadyExist ">{{getEmailError()}}</mat-error>
-                
+                <mat-error *ngIf="registerFormGroup.invalid">{{getEmailError()}}</mat-error>
+
               </mat-form-field>
             </div>
             <div class="">

@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 
+/* interface import */
 import { Users } from '@interfaces/users-interface'
+import { ChangePasswordModel } from '@interfaces/business-interface'
+
 
 import { HttpClient, HttpHeaders, HttpErrorResponse, HttpResponse } from "@angular/common/http";
 import { Router } from '@angular/router';
@@ -11,7 +14,8 @@ import { Observable, throwError } from 'rxjs';
 import { TokenService } from './token.service'
 import { UrlBuilderService } from '@services/utils';
 import { USER_ALREADY_EXIST } from '@app/core/services/errors/client-exception';
-
+import { VALIDATE_EMAIL_ACTION, VALIDATE_PSSWRD_RST_ACTION } from '@services/data/server-data'
+import { ErrorHandlerService } from '@services/errors'
 
 @Injectable({
   providedIn: 'root'
@@ -21,13 +25,14 @@ export class AuthenticationService {
   constructor(private httpClient: HttpClient,
               private router: Router,
               private tokenService: TokenService,
-              private urlBuilderService: UrlBuilderService
+              private urlBuilderService: UrlBuilderService,
+              private errorHandlerService: ErrorHandlerService
               ) { }
 
 
   public userLogin(user: Users): Observable<any> {
 
-    // const url = this.router.url +' /auth';
+
     const url = this.urlBuilderService.buildLoginUrl();
 
     const requestBody = {
@@ -73,19 +78,48 @@ export class AuthenticationService {
 
     return this.httpClient.post(url, requestBody, {headers: requestHeaders}).pipe (
 
+
+      map((res) =>{
+        return res
+      }),
       catchError((err: HttpErrorResponse) => {
-        
+
         if(err.status == 409) {
 
           return throwError(USER_ALREADY_EXIST)
         }
         return throwError(err.status)
       })
+    )}
 
+  /**
+    * This method is useed to trigger first api call for password reset.
+    * @param email_id the emailid to which reset link is to be send
+    */
+  public resetPasswordRequest(email_id: string) {
+
+    const requestUrl: string = this.urlBuilderService.buildResetPasswordUrl();
+
+    let requestData: ChangePasswordModel = {
+      action: VALIDATE_EMAIL_ACTION,
+      email_id: email_id,
+      domain_name: this.urlBuilderService.getClientDomainAddress()
+    }
+
+    const requestHeaders = new HttpHeaders()
+                  .set('No-Auth','True')
+
+    return this.httpClient.post(requestUrl, requestData, {headers: requestHeaders}).pipe (
+      map((res) => res),
+      catchError((err: HttpErrorResponse) => {
+        let response = this.errorHandlerService.getErrorResponse(err)
+        if(typeof response  === 'string') {
+          return throwError(response)
+        }
+        return throwError(response)
+      })
     )
 
-
   }
-
 
 }

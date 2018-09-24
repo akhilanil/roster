@@ -19,6 +19,7 @@ import { Users } from '@interfaces/users-interface'
 import { AuthenticationService } from '@services/auth';
 
 import { USER_ALREADY_EXIST } from './constants/data-constants'
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -60,7 +61,9 @@ export class RegisterComponent implements OnInit {
 
 
 
-  constructor(fb: FormBuilder, private authService: AuthenticationService) {
+  constructor(  private fb: FormBuilder,
+                private authService: AuthenticationService,
+                private router: Router) {
 
     this.registerFormGroup = fb.group({
       hideRequired: false,
@@ -129,7 +132,8 @@ export class RegisterComponent implements OnInit {
   public getEmailError(): string {
     return this.registerFormGroup.controls['emailIdControl'].hasError('required') ?   EMAIL_ID_REQUIRED :
             this.registerFormGroup.controls['emailIdControl'].hasError('email') ? EMAIL_ID_INVALID :
-            this.userAlreadyExist ? USER_ALREADY_EXIST_ERROR : ''
+            this.registerFormGroup.controls['emailIdControl'].hasError('duplicateUser') ? USER_ALREADY_EXIST_ERROR : ''
+
   }
 
   /*
@@ -180,17 +184,23 @@ export class RegisterComponent implements OnInit {
 
     if(this.registerFormGroup.valid){
       let newUser: Users = this.buildUserModel()
-      console.log(newUser)
       this.authService.registerNewUser(newUser).subscribe(
         (res) => {
+          this.authService.userLogin(newUser).subscribe(
+            (res) => {
 
-        },
+            },
+            (err) => {
+
+            },
+            () => {
+              this.router.navigate([''])
+            }
+          )},
         (err) => {
 
           if(err === USER_ALREADY_EXIST) {
-            console.log(err)
-            this.registerFormGroup.controls['emailIdControl'].markAsDirty;
-            this.registerFormGroup.controls['emailIdControl'].markAsTouched;
+            this.registerFormGroup.controls['emailIdControl'].setErrors({'duplicateUser': true});
             this.userAlreadyExist = true;
           }
         },
