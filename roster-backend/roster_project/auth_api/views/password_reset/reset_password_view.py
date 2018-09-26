@@ -7,7 +7,8 @@ from django.core.mail import BadHeaderError, send_mail
 from auth_api.services.password_reset_service import PasswordResetService
 
 from auth_api.constants.data_constants import \
-    VALIDATE_EMAIL_ACTION, INVALID_EMAIL, VALIDATE_PSSWRD_RST_ACTION
+    VALIDATE_EMAIL_ACTION, INVALID_EMAIL, VALIDATE_PSSWRD_RST_ACTION, \
+    VALIDATE_PSSWRD_RST_TOKEN_ACTION
 
 
 class ResetPasswordView(viewsets.ViewSet):
@@ -37,7 +38,6 @@ class ResetPasswordView(viewsets.ViewSet):
                 email_id = serializer.data.get('email_id')
                 is_valid_user = UserProfileModel.objects.is_existing_user(email=email_id)
 
-
                 if(not is_valid_user):
                     response = {'data': INVALID_EMAIL}
                     resposne_status = status.HTTP_404_NOT_FOUND
@@ -49,6 +49,17 @@ class ResetPasswordView(viewsets.ViewSet):
 
                     pass
 
+                return Response(response, status=resposne_status)
+
+            elif(VALIDATE_PSSWRD_RST_TOKEN_ACTION == action):
+                resposne_status = status.HTTP_200_OK
+                response = {'data': "SUCCESS"}
+                token = serializer.data.get('password_token')
+
+                is_valid_token = PasswordResetModel.objects.is_record_existing(token=token)
+                if(not is_valid_token):
+                    resposne_status = status.HTTP_401_UNAUTHORIZED
+                    response = {'data': "INVALID TOKEN"}
                 return Response(response, status=resposne_status)
 
             elif(VALIDATE_PSSWRD_RST_ACTION == action):
