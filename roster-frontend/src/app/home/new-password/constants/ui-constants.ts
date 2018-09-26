@@ -6,7 +6,7 @@ export const EMAIL_ID_LABEL: string = 'Enter your email id';
 export const EMAIL_ID_INVALID: string = 'Please enter a valid email id';
 
 /* Error label for EMAIL_ID_REQUIRED */
-export const EMAIL_ID_REQUIRED: string = 'Please enter a email id';
+export const EMAIL_ID_REQUIRED: string = 'Please enter an email id';
 
 /* This is passed by the service method is the user is not found  */
 export const USER_DOESNOT_EXIST_ERROR = 'This email id is not registered in our system.'

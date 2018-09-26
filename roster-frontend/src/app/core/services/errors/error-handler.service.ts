@@ -2,11 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpErrorResponse} from "@angular/common/http";
 
 /* Server response constants */
-import { TOKEN_EXPIRED_SERVER } from './server-exception'
+import { TOKEN_EXPIRED_SERVER, INVALID_TOKEN_SERVER } from './server-exception'
 import { PASSWORD_RST_INVALID_EMAIL_SERVER } from './server-exception'
 
 /* Client response constants */
-import { TOKEN_EXPIRED_CLIENT } from './client-exception'
+import { TOKEN_EXPIRED_CLIENT, INVALID_TOKEN_CLIENT } from './client-exception'
 import { PASSWORD_RST_INVALID_EMAIL_CLIENT } from './client-exception'
 
 
@@ -36,9 +36,17 @@ export class ErrorHandlerService {
           return PASSWORD_RST_INVALID_EMAIL_CLIENT;
         }
       }
+    } else if(httpErrorResponse.status === 401) {
+      if(httpErrorResponse.error['data']) {
+        let responseServerMessage: string = httpErrorResponse.error['data'].trim();
+        if(INVALID_TOKEN_SERVER === responseServerMessage ) {
+          return INVALID_TOKEN_CLIENT;
+        }
+      }
     }
     return httpErrorResponse;
   }
+
 
 
 }

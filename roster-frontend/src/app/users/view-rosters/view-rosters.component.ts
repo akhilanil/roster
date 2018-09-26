@@ -30,7 +30,7 @@ export class ViewRostersComponent implements OnInit {
 
     this.route.params.pipe(
       mergeMap((val) => {
-        console.log(val['id'])
+
         return this.manageRosterService.getSpecificRoster(val['id'])
       })
     ).subscribe(

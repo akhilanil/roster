@@ -52,9 +52,10 @@ export class NewPasswordComponent implements OnInit {
   }
 
   public getEmailError() {
-    (this.resetPasswordFormGroup.controls['emailIdControl'].hasError('required')) ? EMAIL_ID_REQUIRED :
-      (this.resetPasswordFormGroup.controls['emailIdControl'].hasError('email')) ? EMAIL_ID_INVALID :
-        (this.resetPasswordFormGroup.controls['emailIdControl'].hasError('doesnotExist')) ? USER_DOESNOT_EXIST_ERROR : ''
+    
+    return this.resetPasswordFormGroup.controls['emailIdControl'].hasError('required') ? EMAIL_ID_REQUIRED :
+            this.resetPasswordFormGroup.controls['emailIdControl'].hasError('email') ? EMAIL_ID_INVALID :
+              this.resetPasswordFormGroup.controls['emailIdControl'].hasError('doesnotExist') ? USER_DOESNOT_EXIST_ERROR : ''
 
   }
 

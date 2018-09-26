@@ -12,6 +12,8 @@ export const USER_DELETED_CLIENT: string = 'User inactive or deleted'
 /* This is passed by the service method is the user is found to be existing */
 export const USER_ALREADY_EXIST = "USER_ALREADY_EXIST"
 
-
 /**Client Response  to be mapped from server response for invalid email during password reset*/
 export const PASSWORD_RST_INVALID_EMAIL_CLIENT = "NOT_REGISTERED"
+
+/**Client Response  to be mapped from server response for invalid token during password reset*/
+export const INVALID_TOKEN_CLIENT = "INVALID_TOKEN"
