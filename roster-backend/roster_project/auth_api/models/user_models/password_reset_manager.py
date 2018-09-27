@@ -14,7 +14,7 @@ class PasswordResetManager(models.Manager):
 
     def is_record_expired(self, token):
 
-        created_date = super().get_queryset().filter(token=token).created_date
+        created_date = super().get_queryset().get(token=token).created_date
         utc_now = (datetime.datetime.utcnow()).replace(tzinfo=pytz.UTC)
 
         is_expired = False
@@ -54,7 +54,7 @@ class PasswordResetManager(models.Manager):
 
         if(self.is_record_existing(user=user)):
             token = self.get_user_record(user=user)[0].token
-            print("asdasd",token)
+            print("----------------->",token)
             if(self.is_record_expired(token)):
                 self.delete_record(token)
                 new_request = self.model(user=user)

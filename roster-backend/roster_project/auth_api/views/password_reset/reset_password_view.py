@@ -3,6 +3,9 @@ from rest_framework import status
 from rest_framework.response import Response
 
 from django.core.mail import BadHeaderError, send_mail
+from django.core.mail import send_mail
+from django.conf import settings
+from django.core.exceptions import ValidationError
 
 from auth_api.services.password_reset_service import PasswordResetService
 
@@ -46,20 +49,33 @@ class ResetPasswordView(viewsets.ViewSet):
                     token = PasswordResetModel.objects.insert_new_token(user)
                     response = {'data': token}
                     # perform email service
+                    domain = serializer.data.get('domain_name') + str(token)
+                    subject = 'Your password reset request'
+                    message = 'Click here /n ' + domain
+                    from_email = settings.EMAIL_HOST_USER
+                    to_list = [email_id, settings.EMAIL_HOST_USER]
+                    send_mail(subject, message, from_email, to_list, fail_silently=False)
 
                     pass
 
                 return Response(response, status=resposne_status)
 
             elif(VALIDATE_PSSWRD_RST_TOKEN_ACTION == action):
+                print('TOken validator')
                 resposne_status = status.HTTP_200_OK
                 response = {'data': "SUCCESS"}
                 token = serializer.data.get('password_token')
+                print('======>',token)
 
-                is_valid_token = PasswordResetModel.objects.is_record_existing(token=token)
+                try:
+                    is_valid_token = PasswordResetModel.objects.is_record_existing(token=token)
+                except ValidationError:
+                    is_valid_token = False
+
                 if(not is_valid_token):
                     resposne_status = status.HTTP_401_UNAUTHORIZED
                     response = {'data': "INVALID TOKEN"}
+                print(response)
                 return Response(response, status=resposne_status)
 
             elif(VALIDATE_PSSWRD_RST_ACTION == action):
@@ -67,14 +83,14 @@ class ResetPasswordView(viewsets.ViewSet):
                 resposne_status = status.HTTP_200_OK
                 response = {'data': "SUCCESS"}
 
-                token = serializer.data.get('password_token')
-
+                token = serializer.validated_data['password_token']
+                print('=========>', token)
                 is_valid_token = PasswordResetModel.objects.is_record_existing(token=token)
 
                 if(is_valid_token):
                     # get the user, change the user password, delete the user from the other table
 
-                    new_password = serializer.data.get('new_password')
+                    new_password = serializer.validated_data['new_password']
                     user = PasswordResetModel.objects.change_pasword(
                                         token=token, new_password=new_password)
 
@@ -83,5 +99,6 @@ class ResetPasswordView(viewsets.ViewSet):
                     response = {'data': "INVALID TOKEN"}
                 return Response(response, status=resposne_status)
         else:
+            print(serializer.errors)
             return Response(
                 serializer.errors, status=status.HTTP_400_BAD_REQUEST)

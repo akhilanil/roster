@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from auth_api.constants.data_constants import \
     VALIDATE_EMAIL_ACTION, VALIDATE_PSSWRD_RST_ACTION, MISSING_EMAILID, \
-    MISSING_TOKEN, MISSING_NEW_PASSWORD, MISSING_DOMAIN_NAME
+    MISSING_TOKEN, MISSING_NEW_PASSWORD, MISSING_DOMAIN_NAME, VALIDATE_PSSWRD_RST_TOKEN_ACTION
 
 
 class PasswordResetSerializer(serializers.Serializer):
@@ -9,7 +9,7 @@ class PasswordResetSerializer(serializers.Serializer):
     """ serializer class for Password reset  """
 
      # Represents the purpose of the current request
-    action = serializers.CharField(max_length=30, required=True)
+    action = serializers.CharField(max_length=50, required=True)
 
     # Represents the email_id whose password is to be changed
     email_id = serializers.EmailField(max_length=50, required=False)
@@ -40,6 +40,8 @@ class PasswordResetSerializer(serializers.Serializer):
                 raise serializers.ValidationError(MISSING_TOKEN)
             elif ('new_password' not in data):
                 raise serializers.ValidationError(MISSING_NEW_PASSWORD)
+            return data
+        elif (VALIDATE_PSSWRD_RST_TOKEN_ACTION == data['action']):
             return data
         else:
             raise serializers.ValidationError("INVALID_ACTION")

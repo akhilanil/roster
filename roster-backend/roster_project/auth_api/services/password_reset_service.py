@@ -23,8 +23,8 @@ class PasswordResetService():
             Method to return the Instance of serializer class
 
         """
-        if(self.serializer is None):
-            self.serializer = password_rest_serializer.PasswordResetSerializer(data=data)
+
+        self.serializer = password_rest_serializer.PasswordResetSerializer(data=data)
         return self.serializer
 
     @classmethod

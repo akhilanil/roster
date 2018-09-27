@@ -13,5 +13,5 @@ router.register('register', register_view.RegisterView, base_name='register')
 urlpatterns = [
     path('login/', login_view.LoginViewSet.as_view(), name='login'),
     path('', include(router.urls)),
-    path('reset-password', ResetPasswordView.as_view({'post': 'create'}), name='reset-password')
+    path('reset-password/', ResetPasswordView.as_view({'post': 'create'}), name='reset-password')
 ]
