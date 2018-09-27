@@ -24,6 +24,12 @@
           <br><br><br>
           <mat-error *ngIf="isWrongCredentials">{{getAuthErrorMessage()}}</mat-error>
         </p>
+        <p>
+          <a routerLink = '/roster/home/reset-password/'>Reset password</a>
+          <!-- <a [routerLink] = ['/roster/home/reset-password/']>
+            Reset password
+          </a> -->
+        </p>
       </form>
 
     </mat-grid-tile>

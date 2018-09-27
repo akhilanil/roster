@@ -53,11 +53,11 @@ export class HomeDescComponent implements OnInit {
   constructor(private router: Router) {
 
     /* Checks the current url and set appropriate value for the route */
-    
+
     if(this.router.url === LOGIN_URL){
       this.isLogin = true
       this.buttonName = REGISTER_BUTTON
-    } else if(this.router.url === REGISTER_URL){
+    } else {
       this.isLogin = false
       this.buttonName = LOGIN_BUTTON
     }
