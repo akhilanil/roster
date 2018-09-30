@@ -4,9 +4,10 @@ from auth_api.models.user_models import user_profile_model
 from django.http import HttpResponse
 from rest_framework.response import Response
 from rest_framework import status
-import json
-from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_protect
+# import json
+# from django.utils.decorators import method_decorator
+# from django.views.decorators.csrf import csrf_protect
+
 from rest_framework.exceptions import ErrorDetail
 
 

@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
-
+    'corsheaders',
     'auth_api',
     'roster_api',
 
@@ -56,13 +56,14 @@ REST_FRAMEWORK = {
 
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
 ]
 
 ROOT_URLCONF = 'roster_project.urls'
@@ -85,6 +86,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'roster_project.wsgi.application'
 
+# CORS_ORIGIN_WHITELIST = (
+#     '192.168.1.6:8000',
+#     '192.168.43.85:8000',
+#     'localhost:8000',
+# )
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
@@ -144,3 +150,16 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'xxx@xxx.com'
 EMAIL_HOST_PASSWORD = 'xxxxx'
 EMAIL_PORT = 587
+
+# CORS Config
+# CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_WHITELIST = ('192.168.1.7:4200', '192.168.1.6:8000', 'localhost:4200')
+
+from corsheaders.defaults import default_methods, default_headers
+
+CORS_ALLOW_METHODS = default_methods
+CORS_ALLOW_HEADERS = default_headers + ('No-Auth',)
+
+# CSRF_TRUSTED_ORIGINS = (
+#     '192.168.1.7:4200',
+# )

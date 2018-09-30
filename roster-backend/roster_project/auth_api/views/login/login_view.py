@@ -1,12 +1,12 @@
+import datetime
+import json
+import pytz
+
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework import status
 
-import datetime
 from django.http import HttpResponse
 from rest_framework.authtoken.models import Token
-
-import json
-import pytz
 
 
 class LoginViewSet(ObtainAuthToken):
@@ -27,7 +27,5 @@ class LoginViewSet(ObtainAuthToken):
                 token.save()
 
             response_data = {'token': token.key}
-            return HttpResponse(json.dumps(response_data), content_type="application/json")
-
-        print(serializer.errors)
+            return HttpResponse(json.dumps(response_data), status=status.HTTP_200_OK)
         return HttpResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
