@@ -56,6 +56,7 @@ export class CoreModule {
         UrlBuilderService,
         ManageRosterService,
         ViewRosterRouteGaurdService
+
       ]
     };
   }

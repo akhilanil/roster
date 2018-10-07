@@ -42,7 +42,7 @@ export class AuthenticationService {
     const loginHeaders = new HttpHeaders()
                   .set('No-Auth','True')
 
-
+                 
     return this.httpClient.post(url, requestBody, {headers: loginHeaders})
       .pipe(
           catchError((err: HttpErrorResponse) => {

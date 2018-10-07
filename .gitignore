@@ -1,0 +1,5 @@
+# Ignore  all cache
+*/__pycache__
+
+# Ignore email settings
+email_settings.py

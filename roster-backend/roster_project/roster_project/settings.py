@@ -27,7 +27,7 @@ SECRET_KEY = '9v%9r3kjs)@i=ej=7d&iu0et=52l#p&q(d-^_(#dk9pmn$++hl'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.6', 'localhost', '192.168.43.85']
+ALLOWED_HOSTS = ['192.168.1.6', 'localhost', '192.168.43.85', '192.168.1.7']
 
 
 # Application definition
@@ -140,16 +140,19 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
+
+from .email_settings import  *
+
 STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'auth_api.UserProfileModel'
 
 
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'xxx@xxx.com'
-EMAIL_HOST_PASSWORD = 'xxxxx'
-EMAIL_PORT = 587
+EMAIL_USE_TLS = EMAIL_USE_TLS_SETTINGS
+EMAIL_HOST = EMAIL_HOST_SETTINGS
+EMAIL_HOST_USER = EMAIL_HOST_USER_SETTINGS
+EMAIL_HOST_PASSWORD = EMAIL_HOST_PASSWORD_SETTINGS
+EMAIL_PORT = EMAIL_PORT_SETTINGS
 
 # CORS Config
 # CORS_ORIGIN_ALLOW_ALL = True

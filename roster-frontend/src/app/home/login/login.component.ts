@@ -104,6 +104,7 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
 
+
     this.hasTriedToLogin = true;
     this.userModel.username = this.emailControl.value;
     this.userModel.password = this.passwordControl.value;

@@ -2,10 +2,10 @@
 // export const SERVER_IP_ADDRESS: string = 'http://192.168.1.6:8000'
 
 /** DOMAIN  of the server*/
-export const SERVER_IP_ADDRESS: string = 'http://192.168.43.85:8000'
+export const SERVER_IP_ADDRESS: string = 'http://192.168.1.7:8000'
 
 /** Login Url */
-export const LOGIN_URL: string = '/login/'
+export const LOGIN_URL: string = '/login'
 
 /** Url to create new roster */
 export const NEW_ROSTER_URL: string = '/rosters/new-roster/'
