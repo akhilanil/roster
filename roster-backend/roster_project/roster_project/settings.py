@@ -20,7 +20,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '9v%9r3kjs)@i=ej=7d&iu0et=52l#p&q(d-^_(#dk9pmn$++hl'
+from .secrets import *
+SECRET_KEY = DJANGO_SECRET_KEY
 
 
 
@@ -141,12 +142,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 
-from .email_settings import  *
 
 STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'auth_api.UserProfileModel'
 
+from .email_settings import  *
 
 EMAIL_USE_TLS = EMAIL_USE_TLS_SETTINGS
 EMAIL_HOST = EMAIL_HOST_SETTINGS

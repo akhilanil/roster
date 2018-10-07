@@ -1,5 +1,11 @@
 # Ignore  all cache
-*/__pycache__
+**/__pycache__
 
 # Ignore email settings
 email_settings.py
+
+# Ignore secret key
+secrets.py
+
+# Ignore SqlLite
+db.sqlite3
