@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
-import { SERVER_IP_ADDRESS, LOGIN_URL, NEW_ROSTER_URL, LIST_ROSTERS_URL, NEW_USER_URL, CLIENT_DOMAIN_URL, RESET_PASSWORD_URL } from '../service-settings'
+import { SERVER_IP_ADDRESS, LOGIN_URL, NEW_ROSTER_URL, LIST_ROSTERS_URL,
+  NEW_USER_URL, CLIENT_DOMAIN_URL, RESET_PASSWORD_URL, GITHUB_LINK } from '../service-settings'
 
 @Injectable({
   providedIn: 'root'
@@ -54,6 +55,11 @@ export class UrlBuilderService {
   /** Method to build url to reset password */
   public buildResetPasswordUrl(): string {
     return this.getServerAddress() + RESET_PASSWORD_URL;
+  }
+
+  /** Service method to get the GitHub link @return GitHub link (string)*/
+  public buildGitHubLinkUrl(): string {
+    return GITHUB_LINK;
   }
 
 

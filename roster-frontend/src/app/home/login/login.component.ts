@@ -60,9 +60,8 @@ export class LoginComponent implements OnInit {
   /* Set to true if wrong Credentials are entered */
   isWrongCredentials: boolean;
 
-  /* Set to true  if the login button clicked atleast once*/
-  hasTriedToLogin: boolean;
-
+  /* Set to true when login button is clicked. This disables the login button. */
+  isLoginClicked: boolean;
 
   constructor(fb: FormBuilder,
               private authService: AuthenticationService,
@@ -82,7 +81,7 @@ export class LoginComponent implements OnInit {
     this.passwordControl = new FormControl('', [Validators.required]);
     this.isWrongCredentials = false;
     this.userModel = {} as Users;
-    this.hasTriedToLogin = false;
+    this.isLoginClicked = false;
 
   }
 
@@ -104,8 +103,11 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
 
+    if(this.emailControl.invalid || this.passwordControl.invalid) {
+      return;
+    }
 
-    this.hasTriedToLogin = true;
+    this.isLoginClicked = true;
     this.userModel.username = this.emailControl.value;
     this.userModel.password = this.passwordControl.value;
 
@@ -118,10 +120,9 @@ export class LoginComponent implements OnInit {
         },
         response => {
             this.isWrongCredentials = true;
+            this.isLoginClicked = false;
         },
-        () => {
-            console.log("User Logged in");
-        });
+    );
 
   }
 

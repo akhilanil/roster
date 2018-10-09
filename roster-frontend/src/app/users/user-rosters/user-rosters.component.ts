@@ -85,7 +85,7 @@ export class UserRostersComponent implements OnInit {
 
         if(TOKEN_EXPIRED_CLIENT === errorResponse) {
 
-          const dialogRef = this.dialog.open(SimpleDialogComponent, {width: '250px',
+          const dialogRef = this.dialog.open(SimpleDialogComponent, {width: '400px',
           data: {title: TOKEN_EXPIRED_DIALOG_HEADER, description: TOKEN_EXPIRED_DIALOG_DESCRIPTION, actions: LOGOUT_ACTION}
         });
 

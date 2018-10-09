@@ -27,6 +27,10 @@ export class NewPasswordComponent implements OnInit {
 
   continueButtonLabel: string
 
+  /* Set to true when email  send button is clicked. This disables the login button. */
+  isContinueClicked: boolean;
+
+
   constructor(private formBuilder: FormBuilder,
               private authService: AuthenticationService,
               private router: Router) {
@@ -46,13 +50,15 @@ export class NewPasswordComponent implements OnInit {
 
     this.continueButtonLabel = CONTINUE_BUTTON_LABEL;
 
+    this.isContinueClicked = false;
+
   }
 
   ngOnInit() {
   }
 
   public getEmailError() {
-    
+
     return this.resetPasswordFormGroup.controls['emailIdControl'].hasError('required') ? EMAIL_ID_REQUIRED :
             this.resetPasswordFormGroup.controls['emailIdControl'].hasError('email') ? EMAIL_ID_INVALID :
               this.resetPasswordFormGroup.controls['emailIdControl'].hasError('doesnotExist') ? USER_DOESNOT_EXIST_ERROR : ''
@@ -60,15 +66,19 @@ export class NewPasswordComponent implements OnInit {
   }
 
   public onSubmit() {
+
     if(this.resetPasswordFormGroup.valid) {
+        this.isContinueClicked = true;
         this.authService.resetPasswordRequest(this.resetPasswordFormGroup.controls['emailIdControl'].value).subscribe(
           (res =>{
             this.router.navigate([''])
+            this.isContinueClicked = false;
           }),
           (err => {
             if(err === PASSWORD_RST_INVALID_EMAIL_CLIENT) {
               this.resetPasswordFormGroup.controls['emailIdControl'].setErrors({'doesnotExist': true});
             }
+            this.isContinueClicked = false;
           })
         )
     }

@@ -32,6 +32,8 @@ export class ResetPasswordComponent implements OnInit {
 
   passwordToken: string;
 
+
+
   constructor(private formBuilder: FormBuilder,
               private authService: AuthenticationService,
               private route: ActivatedRoute,
@@ -65,6 +67,8 @@ export class ResetPasswordComponent implements OnInit {
       this.passwordToken = val['id'];
     })
 
+
+
   }
 
   ngOnInit() {
@@ -86,12 +90,16 @@ export class ResetPasswordComponent implements OnInit {
   }
 
   public onSubmit() {
+
     if(this.resetPasswordFormGroup.valid) {
         this.authService.confirmResetPassword(this.passwordToken, this.resetPasswordFormGroup.controls['newPasswordControl'].value).subscribe(
           (res =>{
             this.router.navigate([''])
+
           }),
-          (err => {})
+          (err => {
+          
+          })
         )
     }
   }

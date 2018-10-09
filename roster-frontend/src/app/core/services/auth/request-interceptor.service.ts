@@ -30,7 +30,7 @@ export class RequestInterceptorService implements HttpInterceptor {
     }
     req = req.clone({ headers: req.headers.set('Accept', 'application/json') });
 
-    if (req.headers.get('No-Auth') == "True"){
+    if (req.headers.get('No-Auth') == "True" || req.headers.get('No-Auth') == undefined){
 
       return next.handle(req.clone());
     }

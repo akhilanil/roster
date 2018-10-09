@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
 import { TokenService, AuthenticationService } from '@services/auth'
+import { UrlBuilderService } from '@services/utils'
+
 import { Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material';
@@ -19,12 +21,14 @@ export class HeaderComponent implements OnInit {
         private tokenService: TokenService,
         private authService: AuthenticationService,
         private router: Router,
-        iconRegistry: MatIconRegistry,
-        sanitizer: DomSanitizer) {
+        private iconRegistry: MatIconRegistry,
+        private sanitizer: DomSanitizer,
+        private urlService: UrlBuilderService) {
 
-          iconRegistry.addSvgIcon(
-        'github',
-        sanitizer.bypassSecurityTrustResourceUrl('assets/img/header/github-circle.svg'));
+            iconRegistry.addSvgIcon(
+            'github',
+            sanitizer.bypassSecurityTrustResourceUrl('assets/img/header/github-circle.svg')
+          );
 
          }
 
@@ -42,6 +46,11 @@ export class HeaderComponent implements OnInit {
       this.authService.userLogout();
       this.router.navigate(['/roster']);
     }
+  }
+
+  onGitHubClicked() {
+    let gitHubLink = this.urlService.buildGitHubLinkUrl();
+    window.open(gitHubLink, '_blank')
   }
 
 }

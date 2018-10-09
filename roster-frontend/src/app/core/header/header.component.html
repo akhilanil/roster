@@ -1,10 +1,11 @@
 <mat-toolbar color = primary>
-  <button mat-button>
-    <mat-icon>github</mat-icon>
+  <button mat-button (click) = "onGitHubClicked()">
+    <mat-icon svgIcon="github"></mat-icon>
     <span class="content-text">GitHub</span>
   </button>
   <span class="content-spacer"></span>
-  <span class = "header-text" id = "site_name">Duty Roster</span>
+  <button mat-button [routerLink]="['']"><span class = "header-text" id = "site_name">Team Roster</span></button>
+  <span class = "header-text" id = "site_name"></span>
   <span class="content-spacer"></span>
   <button mat-button (click)="onButtonClicked()"><span class="content-text">{{buttonText}}</span></button>
 

@@ -28,7 +28,7 @@ SECRET_KEY = DJANGO_SECRET_KEY
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.6', 'localhost', '192.168.43.85', '192.168.1.7']
+ALLOWED_HOSTS = ['192.168.1.6', 'localhost', '192.168.43.246', '192.168.1.7']
 
 
 # Application definition
