@@ -36,6 +36,9 @@ import { CreateRosterRSModel } from '@interfaces/business-interface'
 /* Validator class import */
 import {RosterInputValidator} from './roster-input-validator'
 import { Router } from '@angular/router';
+import { TokenService } from '@services/auth';
+import { RosterListCacheService } from '@services/cache-manager';
+import { forkJoin } from 'rxjs';
 
 
 
@@ -137,7 +140,9 @@ export class RosterInputComponent implements OnInit {
   constructor(private dateUtilService: DateUtilsService,
               private manageRosterService: ManageRosterService,
               private router: Router,
-              private formBuilder: FormBuilder) {
+              private formBuilder: FormBuilder,
+              private tokenService: TokenService,
+              private rosterCache: RosterListCacheService) {
 
     this.initStepLabel = INITIAL_STEP_LABEL;
     this.secondStepLabel = SECOND_STEP_LABEL;
@@ -582,28 +587,49 @@ export class RosterInputComponent implements OnInit {
     this.participantLeaveDynamicStepperBuilder.forEach((participant) =>{
       this.createRosterRQModel.participants.push(this.prepareParticipantModel(participant))
     })
-    this.manageRosterService.createNewRoster(this.createRosterRQModel).subscribe(
 
-      (val: string | CreateRosterRSModel) => {
-        this.manageRosterService.setRosterDisplaySubject(val);
-        if(typeof val != 'string') {
-            this.router.navigate([NEW_ROSTER_URL])
-        } else {
-          console.log(val)
-          this.router.navigate([USER_ROSTER_URL])
-        }
 
-      },
-      (response) => {
-        console.log(response);
-      },
-      () => {
-        console.log("The POST observable is now completed.");
-      }
+    if(!this.rosterCache.isCacheSet() && this.tokenService.isAuthenticated()) {
 
-    );
-    console.log(JSON.stringify(this.createRosterRQModel));
+      let cacheObservable = this.manageRosterService.getAllRostersOfUser();
+      let newRosterObservable = this.manageRosterService.createNewRoster(this.createRosterRQModel);
+
+      forkJoin([cacheObservable, newRosterObservable]).subscribe(results => {
+        this.rosterCache.initCache(results[0])
+        this.rosterCache.updateCache(results[1])
+        this.router.navigate([USER_ROSTER_URL])
+      })
+
+    } else {
+      this.manageRosterService.createNewRoster(this.createRosterRQModel).subscribe(
+
+        (val:CreateRosterRSModel) => {
+          this.manageRosterService.setRosterDisplaySubject(val);
+
+          if(!this.tokenService.isAuthenticated()) {
+              this.router.navigate([NEW_ROSTER_URL])
+          } else {
+            this.rosterCache.updateCache(val);
+            this.router.navigate([USER_ROSTER_URL])
+          }
+        },
+        (response) => {
+          console.log(response);
+        },
+      );
+    }
   }
+
+  /** This method performs HTTP call to get the rosters of the existing users and initialises the cache
+    * if cache is not yet initialized
+    */
+  private setExistingUserRosterCache(): void {
+    this.manageRosterService.getAllRostersOfUser().subscribe(
+      (rosters: Array<CreateRosterRSModel>) => {
+        this.rosterCache.initCache(rosters)
+      })
+  }
+
 
   /* Method returns participant Models */
   prepareParticipantModel(participant: {participantName: string,

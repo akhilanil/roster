@@ -1,14 +1,15 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit, NgZone, OnDestroy } from '@angular/core';
 
 /* Custom service imports */
 import { ManageRosterService } from '@services/roster';
 import { ErrorHandlerService } from '@services/errors';
+import { RosterListCacheService } from '@services/cache-manager'
 
 /* interface imports*/
 import { CreateRosterRSModel } from '@interfaces/business-interface'
 
 /* constants import */
-import { ROSTER_HEADER } from './constants/ui-constants'
+import { ROSTER_HEADER, NOT_FOUND_CLIENT } from './constants/ui-constants'
 import { TOKEN_EXPIRED_DIALOG_HEADER, TOKEN_EXPIRED_DIALOG_DESCRIPTION } from './constants/ui-constants'
 import { VIEW_ROSTER_URL, NEW_ROSTER_URL, CURRENT_ROUTE_URL } from './constants/url-constants'
 import { TOKEN_EXPIRED_CLIENT, LOGOUT_ACTION } from './constants/data-constants'
@@ -16,13 +17,15 @@ import { TOKEN_EXPIRED_CLIENT, LOGOUT_ACTION } from './constants/data-constants'
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material';
 import { SimpleDialogComponent } from '@app/shared/simple-dialog/simple-dialog.component';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-user-rosters',
   templateUrl: './user-rosters.component.html',
   styleUrls: ['./user-rosters.component.css']
 })
-export class UserRostersComponent implements OnInit {
+export class UserRostersComponent implements OnInit, OnDestroy {
+
 
   /* Array conating deatils of all rosters */
   myRosters: Array<CreateRosterRSModel>;
@@ -42,12 +45,20 @@ export class UserRostersComponent implements OnInit {
   /* String representing the badge color */
   badgeColor: string;
 
+  /* Subscription for cache  */
+  cacheSubscription: Subscription
+
+  /* Array containing the raw server side response of the user rosters. This is set either from the cache or by HTTP response */
+  rostersResponse: Array<CreateRosterRSModel>
+
+
   constructor(
               private manageRosterService: ManageRosterService,
               private router: Router,
               private errorHandler: ErrorHandlerService,
               private dialog: MatDialog,
-              private zone: NgZone
+              private zone: NgZone,
+              private rosterListCacheService: RosterListCacheService,
             ) {
 
     this.isError = false;
@@ -58,40 +69,58 @@ export class UserRostersComponent implements OnInit {
 
   ngOnInit() {
 
-    this.manageRosterService.getAllRostersOfUser().subscribe(
-      (rosters: Array<CreateRosterRSModel>) => {
-
-        this.delay(2000, this.progressStatus, 40).then(val => this.progressStatus = val);
-        this.delay(3000, this.progressStatus, 20).then(val => this.progressStatus += val);
-        this.delay(4000, this.progressStatus, 30).then(val => this.isIntialized = true);
-
-        this.myRosters = rosters;
-
-        this.rosterCount = rosters.length;
-
-        this.badgeColor = (this.rosterCount >= 10) ? 'warn' : 'primary';
-
-        this.myRosters.forEach((roster) => {
-          roster.user_rosters.forEach((user) => {
-            user.per_session_count = this.getFormattedSessionCount(user.per_session_count);
-
-
-          })
-        })
-
-      },
-      error => {
-        const errorResponse: string = this.errorHandler.getErrorResponse(error);
-
-        if(TOKEN_EXPIRED_CLIENT === errorResponse) {
-
-          const dialogRef = this.dialog.open(SimpleDialogComponent, {width: '400px',
-          data: {title: TOKEN_EXPIRED_DIALOG_HEADER, description: TOKEN_EXPIRED_DIALOG_DESCRIPTION, actions: LOGOUT_ACTION}
-        });
-
-        }
+    if(this.rosterListCacheService.isCacheSet()) {
+      this.rostersResponse = new Array<CreateRosterRSModel>()
+      if(this.rosterListCacheService.isCacheEmpty()) {
+        this.handleRosterResponse(this.rostersResponse)
+      } else {
+        this.cacheSubscription = this.rosterListCacheService.rosterListCache.subscribe(
+          (roster: CreateRosterRSModel) => {
+            this.rostersResponse.push(roster)
+            this.handleRosterResponse(this.rostersResponse)
+          }
+        )
       }
-    )
+
+    } else {
+      // DO HTTP call
+      this.manageRosterService.getAllRostersOfUser().subscribe(
+        (rosters: Array<CreateRosterRSModel>) => {
+          this.rostersResponse = rosters
+          this.handleRosterResponse(this.rostersResponse)
+          this.rosterListCacheService.initCache(this.rostersResponse)
+        },
+        error => {
+          const errorResponse: string = this.errorHandler.getErrorResponse(error);
+          if(TOKEN_EXPIRED_CLIENT === errorResponse) {
+            const dialogRef = this.dialog.open(SimpleDialogComponent, {width: '400px',
+            data: {title: TOKEN_EXPIRED_DIALOG_HEADER, description: TOKEN_EXPIRED_DIALOG_DESCRIPTION, actions: LOGOUT_ACTION}
+          });
+          }
+        }
+      )
+    }
+  }
+
+  /** Handle roster display  */
+  private handleRosterResponse(rosters: Array<CreateRosterRSModel>) {
+
+    this.delay(2000, this.progressStatus, 40).then(val => this.progressStatus = val);
+    this.delay(3000, this.progressStatus, 20).then(val => this.progressStatus += val);
+    this.delay(4000, this.progressStatus, 30).then(val => this.isIntialized = true);
+
+    this.myRosters = rosters;
+
+    this.rosterCount = rosters.length;
+
+    this.badgeColor = (this.rosterCount >= 10) ? 'warn' : 'primary';
+
+    this.myRosters.forEach((roster) => {
+      roster.user_rosters.forEach((user) => {
+        user.per_session_count = this.getFormattedSessionCount(user.per_session_count);
+      })
+    })
+
   }
 
 
@@ -203,23 +232,30 @@ export class UserRostersComponent implements OnInit {
 
   }
 
-  public deleteRoster(uniqueHash:string): void {
+  /** Method invoked on delete roster click*/
+  public deleteRoster(uniqueHash: string): void {
     const routeUrl = CURRENT_ROUTE_URL;
     this.manageRosterService.deleteRoster(uniqueHash).subscribe(
       (res) => {
-        // this.router.navigate([routeUrl])
+        this.handleDeleteRoster(uniqueHash)
       },
       (err) => {
-        this.zone.runOutsideAngular(() => {
-          location.reload();
-        })
+        console.log(err)
+        if(err === NOT_FOUND_CLIENT) {
+
+          this.handleDeleteRoster(uniqueHash)
+
+        }
       },
-      () => {
-        this.zone.runOutsideAngular(() => {
-          location.reload();
-        })
-      }
     )
+  }
+
+  /** Method to handle thea actions for roster deletion */
+  private handleDeleteRoster(uniqueHash: string) {
+    this.rosterCount -=1;
+    this.rostersResponse = this.rostersResponse.filter((roster) => roster.unique_id != uniqueHash)
+    this.rosterListCacheService.resetCache();
+    this.rosterListCacheService.initCache(this.rostersResponse)
   }
 
 
@@ -228,6 +264,14 @@ export class UserRostersComponent implements OnInit {
     const routeUrl = NEW_ROSTER_URL;
 
     this.router.navigate([routeUrl]);
+  }
+
+  ngOnDestroy(): void {
+      if(this.cacheSubscription != undefined) {
+          this.cacheSubscription.unsubscribe()
+
+      }
+
   }
 
 

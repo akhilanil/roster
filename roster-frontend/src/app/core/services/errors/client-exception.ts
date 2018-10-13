@@ -15,5 +15,8 @@ export const USER_ALREADY_EXIST = "USER_ALREADY_EXIST"
 /**Client Response  to be mapped from server response for invalid email during password reset*/
 export const PASSWORD_RST_INVALID_EMAIL_CLIENT = "NOT_REGISTERED"
 
+/**Client Response  to be mapped for Server Response Roster not found eventhough roster gets deleted*/
+export const NOT_FOUND_CLIENT = "Not found."
+
 /**Client Response  to be mapped from server response for invalid token during password reset*/
 export const INVALID_TOKEN_CLIENT = "INVALID_TOKEN"

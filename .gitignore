@@ -9,3 +9,6 @@ secrets.py
 
 # Ignore SqlLite
 db.sqlite3
+
+#Ignore client settings file
+settings.ts

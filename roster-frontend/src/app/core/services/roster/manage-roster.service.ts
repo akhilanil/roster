@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpErrorResponse, HttpResponse } from "@angular/common/http";
 
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 
 import { BehaviorSubject } from 'rxjs';
 
@@ -12,6 +12,8 @@ import { CreateRosterRQModel, CreateRosterRSModel } from '@interfaces/business-i
 /* Custom Service Imports */
 import { TokenService } from '@services/auth'
 import { UrlBuilderService, DateUtilsService } from '@services/utils';
+import { ErrorHandlerService } from '@services/errors'
+
 
 
 @Injectable({
@@ -28,23 +30,25 @@ export class ManageRosterService {
   constructor(private httpClient: HttpClient,
               private tokenService: TokenService,
               private urlBuilderService: UrlBuilderService,
-              private dateUtilService: DateUtilsService
-  ) {
+              private dateUtilService: DateUtilsService,
+              private errorHandlerService: ErrorHandlerService,
+            ) {
 
         this.isRosterViewable = false;  // Intially setting it to false
 
-  }
+      }
 
 
 
 
   /* Method to send HTTP Post request to create a new request */
-  public createNewRoster(request : CreateRosterRQModel) : Observable< CreateRosterRSModel | string > {
+  public createNewRoster(request : CreateRosterRQModel) : Observable< CreateRosterRSModel> {
 
     let url = this.urlBuilderService.buildRotserCreateUrl();
 
     let requestHeaders: HttpHeaders;
     if(!this.tokenService.isAuthenticated()) {
+
       requestHeaders = new HttpHeaders()
                     .set('No-Auth','True')
 
@@ -53,13 +57,13 @@ export class ManageRosterService {
 
     return this.httpClient.post(url, request, {headers: requestHeaders})
       .pipe(
-          map((res: {message: CreateRosterRSModel | string}) => {
+          map((res: {message: CreateRosterRSModel}) => {
 
               return res['message'];
 
           } ),
           catchError((err: HttpErrorResponse) => {
-            
+
             return throwError(err.status);
           })
       )
@@ -77,12 +81,12 @@ export class ManageRosterService {
   }
 
 
-  /* Method to get All rosters of user */
+  /** Method to get All rosters of user */
   public getAllRostersOfUser(): Observable<Array<CreateRosterRSModel>> {
 
     const url = this.urlBuilderService.buildListRostersUrl();
-
     return this.httpClient.get(url).pipe(
+      // tap((val: Array<CreateRosterRSModel>) => console.log(val.length)),
       map((res: Array<CreateRosterRSModel>) => res),
       catchError((err: HttpErrorResponse) => throwError(err))
     )
@@ -118,22 +122,15 @@ export class ManageRosterService {
   }
 
 
+  /** Service method to delete the User Roster corresponding to the uniqueHashCode @param uniqueHashCode*/
   public deleteRoster(uniqueHashCode: string): Observable<any> {
 
     const url = this.getUrlsFromRosterKey(uniqueHashCode);
 
-    const loginHeaders = new HttpHeaders()
-                  .set('No-Auth','True')
+    return this.httpClient.delete(url).pipe(
 
-
-    return this.httpClient.delete(url, {headers: loginHeaders}).pipe(
-      map(() => "SUCCESS"),
       catchError((err: HttpErrorResponse) => {
-
-        if(err.message.hasOwnProperty('detail')) {
-          this.setRosterDisplaySubject(err.message['detail'])
-        }
-        return throwError(err.status)
+        return throwError(this.errorHandlerService.getErrorResponse(err, "DELETE_ROSTER_CLIENT"))
       })
     )
   }

@@ -45,8 +45,13 @@ class CreateRosterUtil():
 
         if unique_id:
             participant_dict['id'] = unique_id
+        else:
+            participant_dict['id'] = 'dumy_id'
 
-        participant_dict['user_name'] = user_name
+        if 'user_name':
+            participant_dict['user_name'] = str(user_name)
+        else:
+            participant_dict['user_name'] = 'dummy_user_name'
 
         participant_dict['month'] = month
 
@@ -110,23 +115,26 @@ class CreateRosterUtil():
         )
 
         _unique_key = None
+
         if username is not None:
 
-            # Generate the hash and store in DB and pass the hash value to view
-            _unique_key = UniqueKeyUtil.generate_unique_key()
 
             self.init_save_roster()
 
             try:
-                _unique_key = self.save_roster.handle_save_roster(
-                    self.convert_for_client(
-                        _unique_key, username, month, year, title, participants))
+                for_save = self.convert_for_client(
+                    _unique_key, username, month, year, title, participants)
+                _unique_key = self.save_roster.handle_save_roster(for_save)
+
+                if _unique_key:
+                    
+                    for_save['unique_id'] = _unique_key
+
             except DuplicateRecordError as duplicate_error:
                 raise duplicate_error
             except RequiredDataError as required_data_error:
                 raise required_data_error
-
-            return _unique_key
+            return for_save
         else:
 
             return self.convert_for_client(

@@ -1,7 +1,12 @@
 import { Injectable } from '@angular/core';
 
-import { SERVER_IP_ADDRESS, LOGIN_URL, NEW_ROSTER_URL, LIST_ROSTERS_URL,
-  NEW_USER_URL, CLIENT_DOMAIN_URL, RESET_PASSWORD_URL, GITHUB_LINK } from '../service-settings'
+import {  LOGIN_URL, NEW_ROSTER_URL, LIST_ROSTERS_URL,
+  NEW_USER_URL,  RESET_PASSWORD_URL, GITHUB_LINK, GITHUB_IMG_SAFE_URL } from '../service-settings'
+
+import { SERVER_DOMAIN, CLIENT_DOMAIN } from '@app/settings'
+
+
+import {SAFE_URL_LIST} from '../safe-url';
 
 @Injectable({
   providedIn: 'root'
@@ -11,11 +16,11 @@ export class UrlBuilderService {
   constructor() { }
 
   private getServerAddress() : string {
-    return SERVER_IP_ADDRESS;
+    return SERVER_DOMAIN;
   }
 
   public getClientDomainAddress(): string {
-    return CLIENT_DOMAIN_URL;
+    return CLIENT_DOMAIN;
   }
 
 
@@ -60,6 +65,16 @@ export class UrlBuilderService {
   /** Service method to get the GitHub link @return GitHub link (string)*/
   public buildGitHubLinkUrl(): string {
     return GITHUB_LINK;
+  }
+
+  /** Service method to get the URL for github img */
+  public buildGetGitHubImageUrl(): string {
+    return GITHUB_IMG_SAFE_URL;
+  }
+
+  /** Method to check whether these urls are safe. Includes all urls in the assets folder */
+  public isSafeURL(url : string): boolean {
+    return SAFE_URL_LIST.includes(url)
   }
 
 

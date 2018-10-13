@@ -8,6 +8,7 @@ import { HttpInterceptor, HttpRequest, HttpHandler, HttpUserEvent, HttpEvent } f
 import { Router } from "@angular/router";
 
 import {TokenService} from './token.service'
+import { UrlBuilderService } from '@services/utils';
 
 
 
@@ -19,7 +20,8 @@ export class RequestInterceptorService implements HttpInterceptor {
 
   constructor(
               private router: Router,
-              private tokenService: TokenService
+              private tokenService: TokenService,
+              private urlBuilderService: UrlBuilderService
 
               ) { }
 
@@ -30,7 +32,7 @@ export class RequestInterceptorService implements HttpInterceptor {
     }
     req = req.clone({ headers: req.headers.set('Accept', 'application/json') });
 
-    if (req.headers.get('No-Auth') == "True" || req.headers.get('No-Auth') == undefined){
+    if (req.headers.get('No-Auth') == "True" || this.isNoAuthRequiredURLs(req.url)){
 
       return next.handle(req.clone());
     }
@@ -54,4 +56,15 @@ export class RequestInterceptorService implements HttpInterceptor {
       )
     }
   }
+
+  /** This method checks whether the request falls in the category of safe list urls.
+    * If it is a safe url then No-Auth required can be confirmed
+    */
+  private isNoAuthRequiredURLs(url: string) : boolean {
+
+    return this.urlBuilderService.isSafeURL(url);
+
+  }
+
+
 }

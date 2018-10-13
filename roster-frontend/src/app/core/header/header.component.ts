@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { TokenService, AuthenticationService } from '@services/auth'
 import { UrlBuilderService } from '@services/utils'
+import { RosterListCacheService } from '@services/cache-manager'
 
 import { Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -23,11 +24,12 @@ export class HeaderComponent implements OnInit {
         private router: Router,
         private iconRegistry: MatIconRegistry,
         private sanitizer: DomSanitizer,
-        private urlService: UrlBuilderService) {
+        private urlService: UrlBuilderService,
+        private rosterListCacheService: RosterListCacheService,) {
 
             iconRegistry.addSvgIcon(
             'github',
-            sanitizer.bypassSecurityTrustResourceUrl('assets/img/header/github-circle.svg')
+            sanitizer.bypassSecurityTrustResourceUrl(this.urlService.buildGetGitHubImageUrl())
           );
 
          }
@@ -44,6 +46,8 @@ export class HeaderComponent implements OnInit {
   onButtonClicked() {
     if(this.isLoggedIn) {
       this.authService.userLogout();
+      /* destroys the cache of current user */
+      this.rosterListCacheService.resetCache();
       this.router.navigate(['/roster']);
     }
   }

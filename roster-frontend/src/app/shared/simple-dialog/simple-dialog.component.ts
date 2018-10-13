@@ -39,7 +39,7 @@ export class SimpleDialogComponent implements OnInit {
     switch(action){
       case LOGOUT_ACTION:
         this.authService.userLogout();
-        this.router.navigate(['']);
+        this.router.navigate(['/']);
 
     }
 

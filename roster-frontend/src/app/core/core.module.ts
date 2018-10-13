@@ -17,6 +17,7 @@ import { TokenService, AuthenticationService } from '@services/auth';
 import { DateUtilsService, UrlBuilderService } from '@services/utils';
 import { ManageRosterService } from '@services/roster'
 import { ViewRosterRouteGaurdService } from '@services/routes/gaurds'
+import { RosterListCacheService } from '@services/cache-manager'
 
 @NgModule({
   imports: [
@@ -55,8 +56,8 @@ export class CoreModule {
         DateUtilsService,
         UrlBuilderService,
         ManageRosterService,
-        ViewRosterRouteGaurdService
-
+        ViewRosterRouteGaurdService,
+        RosterListCacheService
       ]
     };
   }

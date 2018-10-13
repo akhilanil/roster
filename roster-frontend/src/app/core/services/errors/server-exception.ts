@@ -14,3 +14,6 @@ export const PASSWORD_RST_INVALID_EMAIL_SERVER = "NOT_REGISTERED"
 
 /**Server Response for invalid token*/
 export const INVALID_TOKEN_SERVER = "INVALID_TOKEN"
+
+/**Server Response Roster not found eventhough roster gets deleted*/
+export const NOT_FOUND_SERVER = "Not found."

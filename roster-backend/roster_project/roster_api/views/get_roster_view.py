@@ -49,11 +49,16 @@ class GetRosterView(mixins.RetrieveModelMixin,
     #     except (ObjectDoesNotExist):
     #         return Response({'data': "Not Found"}, status.HTTP_404_NOT_FOUND)
 
+
+    # def destroy(self, request):
+    #     roster_to_delete
+
     def get_queryset(self):
         from roster_api.models.user_roster_model import UserRosterModel
-        print(self.action)
+
         if self.action == 'list':
             user = self.request.user
+            print(user)
             return UserRosterModel.objects.filter(user_name=user)
 
         if self.action == 'retrieve':
@@ -61,15 +66,12 @@ class GetRosterView(mixins.RetrieveModelMixin,
             return UserRosterModel.objects.filter(unique_id=unique_id)
 
         if self.action == 'destroy':
-            try:
-                unique_id = self.kwargs["unique_id"]
-                roster_to_delete = UserRosterModel.objects.get(unique_id=unique_id)
-                roster_to_delete.delete()
-                user = self.request.user
-                return UserRosterModel.objects.filter(user_name=user)
 
-            except (ObjectDoesNotExist, ValidationError):
-                pass
+            unique_id = self.kwargs["unique_id"]
+            roster_to_delete = UserRosterModel.objects.filter(unique_id=unique_id).distinct()
+            print(roster_to_delete)
+            roster_to_delete.delete()
+            return roster_to_delete
 
     def get_serializer_class(self):
         from roster_api.services.SerializerService import view_roster_service
