@@ -93,13 +93,24 @@ export class UserRostersComponent implements OnInit, OnDestroy {
         error => {
           const errorResponse: string = this.errorHandler.getErrorResponse(error);
           if(TOKEN_EXPIRED_CLIENT === errorResponse) {
-            const dialogRef = this.dialog.open(SimpleDialogComponent, {width: '400px',
-            data: {title: TOKEN_EXPIRED_DIALOG_HEADER, description: TOKEN_EXPIRED_DIALOG_DESCRIPTION, actions: LOGOUT_ACTION}
-          });
+            this.handleTokenExpired()
           }
         }
       )
     }
+  }
+
+  /**
+    * Handles token Expired error by showing a popup
+    */
+  private handleTokenExpired() {
+    const dialogRef = this.dialog.open(SimpleDialogComponent, {width: '400px',
+      data: {title: TOKEN_EXPIRED_DIALOG_HEADER, description: TOKEN_EXPIRED_DIALOG_DESCRIPTION, actions: LOGOUT_ACTION}
+    });
+    dialogRef.afterClosed().subscribe(() => {
+      this.router.navigate(['/']);
+      window.location.reload();
+    });
   }
 
   /** Handle roster display  */
@@ -240,11 +251,10 @@ export class UserRostersComponent implements OnInit, OnDestroy {
         this.handleDeleteRoster(uniqueHash)
       },
       (err) => {
-        console.log(err)
         if(err === NOT_FOUND_CLIENT) {
-
           this.handleDeleteRoster(uniqueHash)
-
+        } else if(TOKEN_EXPIRED_CLIENT === err) {
+          this.handleTokenExpired()
         }
       },
     )
@@ -254,6 +264,7 @@ export class UserRostersComponent implements OnInit, OnDestroy {
   private handleDeleteRoster(uniqueHash: string) {
     this.rosterCount -=1;
     this.rostersResponse = this.rostersResponse.filter((roster) => roster.unique_id != uniqueHash)
+    this.myRosters = this.myRosters.filter(roster => roster.unique_id != uniqueHash);
     this.rosterListCacheService.resetCache();
     this.rosterListCacheService.initCache(this.rostersResponse)
   }
@@ -269,9 +280,7 @@ export class UserRostersComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
       if(this.cacheSubscription != undefined) {
           this.cacheSubscription.unsubscribe()
-
       }
-
   }
 
 

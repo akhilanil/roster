@@ -64,7 +64,7 @@ export class ManageRosterService {
           } ),
           catchError((err: HttpErrorResponse) => {
 
-            return throwError(err.status);
+            return throwError(this.errorHandlerService.getErrorResponse(err));
           })
       )
   }

@@ -194,7 +194,7 @@
             <button mat-raised-button color="primary" matStepperPrevious (click)="isSecondStepperCompleted = false">Back</button>
         </div>
         <div class="">
-            <button mat-raised-button color="primary" matStepperNext>Next</button>
+            <button mat-raised-button color="primary" matStepperNext [disabled] = "isCreateClicked">Create Roster</button>
         </div>
       </div>
 

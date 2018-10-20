@@ -2,7 +2,7 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.authentication import TokenAuthentication
-
+from auth_api.views.login.authentication import ExpiringTokenAuthentication
 from roster_api.exceptions.roster_exceptions.save_roster_exception import DuplicateRecordError,RequiredDataError
 
 
@@ -18,7 +18,7 @@ class CreateRosterView(viewsets.ViewSet):
         fucntionalities of the Roster """
 
     serializer_class = CreateRosterSerializerService.get_serializer_class()
-    authentication_classes = (TokenAuthentication,)
+    authentication_classes = (ExpiringTokenAuthentication,)
     permission_classes = ()
 
     @transaction.atomic

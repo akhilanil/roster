@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatSlideToggleChange, MatSelectChange } from '@angular/material';
+import { MatSlideToggleChange, MatSelectChange, MatDialog } from '@angular/material';
 
 import {FormControl, Validators, FormGroup, FormBuilder} from '@angular/forms';
 
@@ -16,6 +16,8 @@ import { SESSION_SELECT_ERROR_REQUIRED, PARTICIPANT_SELECT_ERROR_REQUIRED } from
 import { PARTICIPANT_INPUT_LABEL, PARTICIPANT_INPUT_ERROR_REQUIRED, PARTICIPANT_INPUT_ERROR_MINLEN } from './constants/ui-constants'
 import { SESSION_INPUT_LABEL, SESSION_INPUT_ERROR_REQUIRED, SESSION_INPUT_ERROR_MINLEN } from './constants/ui-constants'
 import { INVALID_INPUT } from './constants/ui-constants'
+import { TOKEN_EXPIRED_CLIENT, LOGOUT_ACTION } from './constants/data-constants'
+import { TOKEN_EXPIRED_DIALOG_HEADER, TOKEN_EXPIRED_DIALOG_DESCRIPTION } from './constants/ui-constants'
 
 /* URL constants */
 import {NEW_ROSTER_URL, USER_ROSTER_URL} from './constants/url-constants'
@@ -39,6 +41,7 @@ import { Router } from '@angular/router';
 import { TokenService } from '@services/auth';
 import { RosterListCacheService } from '@services/cache-manager';
 import { forkJoin } from 'rxjs';
+import { SimpleDialogComponent } from '@app/shared/simple-dialog/simple-dialog.component';
 
 
 
@@ -129,6 +132,10 @@ export class RosterInputComponent implements OnInit {
   /* Leave Session Group */
   leaveSessionGroup: Array<{date: string, sessions: Array<{name: string, value: string}>}>
 
+  /* Enables/Disables the final submit button based on this boolean value */
+  isCreateClicked: boolean;
+
+
   participantLeaveDynamicStepperBuilder: Array<
                                   {
                                     participantName: string,
@@ -137,9 +144,12 @@ export class RosterInputComponent implements OnInit {
                                   }>
 
 
+
+
   constructor(private dateUtilService: DateUtilsService,
               private manageRosterService: ManageRosterService,
               private router: Router,
+              private dialog: MatDialog,
               private formBuilder: FormBuilder,
               private tokenService: TokenService,
               private rosterCache: RosterListCacheService) {
@@ -165,6 +175,7 @@ export class RosterInputComponent implements OnInit {
 
     this.totalSessionDropDown = this.prepareNumberDropDown(1, MAX_SESSIONS);
 
+    this.isCreateClicked = false;
 
     /* Intialise Controllers */
     this.initFromConroller()
@@ -584,6 +595,8 @@ export class RosterInputComponent implements OnInit {
 
   /* This method is called when final submit is clicked   */
   onFinalSubmit() {
+
+    this.isCreateClicked = true;
     this.participantLeaveDynamicStepperBuilder.forEach((participant) =>{
       this.createRosterRQModel.participants.push(this.prepareParticipantModel(participant))
     })
@@ -594,11 +607,20 @@ export class RosterInputComponent implements OnInit {
       let cacheObservable = this.manageRosterService.getAllRostersOfUser();
       let newRosterObservable = this.manageRosterService.createNewRoster(this.createRosterRQModel);
 
-      forkJoin([cacheObservable, newRosterObservable]).subscribe(results => {
-        this.rosterCache.initCache(results[0])
-        this.rosterCache.updateCache(results[1])
-        this.router.navigate([USER_ROSTER_URL])
-      })
+      forkJoin([cacheObservable, newRosterObservable]).subscribe(
+        results => {
+          this.isCreateClicked = false;
+          this.rosterCache.initCache(results[0])
+          this.rosterCache.updateCache(results[1])
+          this.router.navigate([USER_ROSTER_URL])
+        },
+        err => {
+          this.isCreateClicked = false;
+          if(TOKEN_EXPIRED_CLIENT === err) {
+            this.handleTokenExpired()
+          }
+        }
+      )
 
     } else {
       this.manageRosterService.createNewRoster(this.createRosterRQModel).subscribe(
@@ -613,8 +635,11 @@ export class RosterInputComponent implements OnInit {
             this.router.navigate([USER_ROSTER_URL])
           }
         },
-        (response) => {
-          console.log(response);
+        (err) => {
+          if(TOKEN_EXPIRED_CLIENT === err) {
+            this.handleTokenExpired()
+          }
+
         },
       );
     }
@@ -675,9 +700,22 @@ export class RosterInputComponent implements OnInit {
       }
       leaveSessionModels.push(leaveSessionModel);
     });
-
     return leaveSessionModels;
   }
 
+
+  /**
+    * Handles token Expired error by showing a popup
+    */
+  private handleTokenExpired() {
+    const dialogRef = this.dialog.open(SimpleDialogComponent, {width: '400px',
+      data: {title: TOKEN_EXPIRED_DIALOG_HEADER, description: TOKEN_EXPIRED_DIALOG_DESCRIPTION, actions: LOGOUT_ACTION}
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.router.navigate(['/']);
+      window.location.reload();
+    })
+  }
 
 }

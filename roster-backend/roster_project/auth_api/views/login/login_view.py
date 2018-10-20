@@ -3,6 +3,7 @@ import json
 import pytz
 
 from rest_framework.authtoken.views import ObtainAuthToken
+from django.conf import settings
 from rest_framework import status
 
 from django.http import HttpResponse
@@ -20,7 +21,7 @@ class LoginViewSet(ObtainAuthToken):
 
             utc_now = (datetime.datetime.utcnow()).replace(tzinfo=pytz.UTC);
 
-            if not created and token.created < utc_now - datetime.timedelta(hours=1):
+            if not created and token.created < utc_now - datetime.timedelta(hours=settings.TOKEN_EXPIRATION_HOUR):
                 token.delete()
                 token = Token.objects.create(user=serializer.validated_data['user'])
                 token.created = datetime.datetime.utcnow()

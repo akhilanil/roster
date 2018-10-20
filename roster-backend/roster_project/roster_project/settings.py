@@ -164,6 +164,5 @@ from corsheaders.defaults import default_methods, default_headers
 CORS_ALLOW_METHODS = default_methods
 CORS_ALLOW_HEADERS = default_headers + ('No-Auth',)
 
-# CSRF_TRUSTED_ORIGINS = (
-#     '192.168.1.7:4200',
-# )
+# TOKEN EXPIRATION HOUR
+TOKEN_EXPIRATION_HOUR = 5

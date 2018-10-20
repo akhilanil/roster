@@ -34,13 +34,9 @@ export class SimpleDialogComponent implements OnInit {
 
   private performAction(): void {
 
-    const action: string  = this.data.actions;
-
-    switch(action){
+    const action: string  = this.data.actions;switch(action){
       case LOGOUT_ACTION:
         this.authService.userLogout();
-        this.router.navigate(['/']);
-
     }
 
   }
