@@ -52,8 +52,8 @@ class ResetPasswordView(viewsets.ViewSet):
                     domain = serializer.data.get('domain_name') + str(token)
                     subject = 'Your password reset request'
                     message = 'Click here /n ' + domain
-                    from_email = settings.EMAIL_HOST_USER
-                    to_list = [email_id, settings.EMAIL_HOST_USER]
+                    from_email = settings.FROM_EMAIL
+                    to_list = [email_id, from_email]
                     send_mail(subject, message, from_email, to_list, fail_silently=False)
 
                     pass
@@ -61,11 +61,11 @@ class ResetPasswordView(viewsets.ViewSet):
                 return Response(response, status=resposne_status)
 
             elif(VALIDATE_PSSWRD_RST_TOKEN_ACTION == action):
-                print('TOken validator')
+
                 resposne_status = status.HTTP_200_OK
                 response = {'data': "SUCCESS"}
                 token = serializer.data.get('password_token')
-                print('======>',token)
+                
 
                 try:
                     is_valid_token = PasswordResetModel.objects.is_record_existing(token=token)

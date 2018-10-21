@@ -20,13 +20,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-from .secrets import *
-SECRET_KEY = DJANGO_SECRET_KEY
+from .settings_api import secrets
+SECRET_KEY = secrets.DJANGO_SECRET_KEY
 
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['192.168.1.6', 'localhost', '192.168.43.246', '192.168.1.7']
 
@@ -87,21 +87,52 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'roster_project.wsgi.application'
 
-# CORS_ORIGIN_WHITELIST = (
-#     '192.168.1.6:8000',
-#     '192.168.43.85:8000',
-#     'localhost:8000',
-# )
+
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+
+if DEBUG:
+    from .settings_api.dev import db_settings
+    DATABASES = {
+        'default': {
+            'ENGINE': db_settings.ENGINE_SETTINGS,
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
     }
-}
+else:
+    from .settings_api.prod import db_settings
+    DATABASES = {
+        'default': {
+            'ENGINE': db_settings.ENGINE_SETTINGS,
+            'NAME': db_settings.NAME_SETTINGS,
+            'HOST': db_settings.HOST_SETTINGS,
+            'PORT': db_settings.PORT_SETTINGS,
+            'USER': db_settings.USER_SETTINGS,
+            'PASSWORD': db_settings.PASSWORD_SETTINGS,
+        }
+    }
+
+#
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
+#
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'roster123',
+#         'HOST': 'testrosterinstance.crdre4odblr5.us-east-1.rds.amazonaws.com',
+#         'PORT': '3306',
+#         'USER': 'roster123',
+#         'PASSWORD': 'roster123',
+#     }
+# }
+
 
 
 # Password validation
@@ -147,17 +178,26 @@ STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'auth_api.UserProfileModel'
 
-from .email_settings import  *
+if DEBUG:
+    from .settings_api.dev import email_settings
+else:
+    from .settings_api.prod import email_settings
 
-EMAIL_USE_TLS = EMAIL_USE_TLS_SETTINGS
-EMAIL_HOST = EMAIL_HOST_SETTINGS
-EMAIL_HOST_USER = EMAIL_HOST_USER_SETTINGS
-EMAIL_HOST_PASSWORD = EMAIL_HOST_PASSWORD_SETTINGS
-EMAIL_PORT = EMAIL_PORT_SETTINGS
-
+EMAIL_USE_TLS = email_settings.EMAIL_USE_TLS_SETTINGS
+EMAIL_HOST = email_settings.EMAIL_HOST_SETTINGS
+EMAIL_HOST_USER = email_settings.EMAIL_HOST_USER_SETTINGS
+EMAIL_HOST_PASSWORD = email_settings.EMAIL_HOST_PASSWORD_SETTINGS
+EMAIL_PORT = email_settings.EMAIL_PORT_SETTINGS
+FROM_EMAIL = email_settings.FROM_EMAIL_SETTINGS
 # CORS Config
 # CORS_ORIGIN_ALLOW_ALL = True
-CORS_ORIGIN_WHITELIST = ('192.168.1.7:4200', '192.168.1.6:8000', 'localhost:4200')
+
+if DEBUG:
+    from .settings_api.dev import cross_origin_settings
+else:
+    from .settings_api.prod import cross_origin_settings
+
+CORS_ORIGIN_WHITELIST = cross_origin_settings.CORS_ORIGIN_WHITELIST_SETTINGS
 
 from corsheaders.defaults import default_methods, default_headers
 
