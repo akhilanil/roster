@@ -11,6 +11,15 @@ const routes: Routes = [
     path: '',
     loadChildren: './users/users.module#UsersModule',
   },
+  {
+    path: '**',
+    redirectTo: 'my-rosters',
+    pathMatch: 'full',
+  },
+  // {
+  //   path:'404',
+  //   loadChildren: ''
+  // }
 
 ]
 

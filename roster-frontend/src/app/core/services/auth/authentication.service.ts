@@ -42,7 +42,7 @@ export class AuthenticationService {
     const loginHeaders = new HttpHeaders()
                   .set('No-Auth','True')
 
-                 
+
     return this.httpClient.post(url, requestBody, {headers: loginHeaders})
       .pipe(
           catchError((err: HttpErrorResponse) => {
@@ -99,7 +99,6 @@ export class AuthenticationService {
   public resetPasswordRequest(email_id: string) {
 
     const requestUrl: string = this.urlBuilderService.buildResetPasswordUrl();
-    console.log(requestUrl)
 
     let requestData: ChangePasswordModel = {
       action: VALIDATE_EMAIL_ACTION,
@@ -132,8 +131,6 @@ export class AuthenticationService {
       action: VALIDATE_PSSWRD_RST_TOKEN_ACTION,
       password_token: token,
     }
-
-    console.log(requestData)
     const requestHeaders = new HttpHeaders()
                   .set('No-Auth','True')
 

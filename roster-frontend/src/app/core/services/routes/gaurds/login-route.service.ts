@@ -15,7 +15,7 @@ export class LoginRouteService implements CanActivate {
     if(this.tokenService.isAuthenticated()) {
       return true;
     } else {
-      this.router.navigate(['/roster'])
+      this.router.navigate(['roster'])
       return false;
     }
   }

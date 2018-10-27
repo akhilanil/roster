@@ -86,7 +86,7 @@ export class ManageRosterService {
 
     const url = this.urlBuilderService.buildListRostersUrl();
     return this.httpClient.get(url).pipe(
-      // tap((val: Array<CreateRosterRSModel>) => console.log(val.length)),
+      
       map((res: Array<CreateRosterRSModel>) => res),
       catchError((err: HttpErrorResponse) => throwError(err))
     )

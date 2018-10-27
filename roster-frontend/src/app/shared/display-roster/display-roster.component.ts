@@ -69,9 +69,6 @@ export class DisplayRosterComponent implements OnInit {
 
     let participantModel : Array<ParticipantRSModel> = this.displayRoster.user_rosters
     this.insertParticipantRSModel(participantModel);
-
-    console.log(JSON.stringify(this.rosterData));
-
   }
 
   /* Method to insert ParticipantRSModel to rosterData */

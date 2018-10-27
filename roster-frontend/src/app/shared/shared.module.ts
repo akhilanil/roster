@@ -10,6 +10,8 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { DisplayRosterComponent, RosterSheetComponent } from './display-roster/display-roster.component';
 import { SimpleDialogComponent } from './simple-dialog/simple-dialog.component';
 
+import { PageNotFoundComponent } from './error/page-not-found/page-not-found.component';
+
 
 @NgModule({
   imports: [
@@ -25,10 +27,11 @@ import { SimpleDialogComponent } from './simple-dialog/simple-dialog.component';
     FormsModule,
     ReactiveFormsModule,
     DisplayRosterComponent,
-    SimpleDialogComponent
+    SimpleDialogComponent,
+    PageNotFoundComponent,
 
   ],
   entryComponents: [RosterSheetComponent],
-  declarations: [RosterInputComponent, DisplayRosterComponent, DisplayRosterComponent, RosterSheetComponent, SimpleDialogComponent]
+  declarations: [RosterInputComponent, DisplayRosterComponent, DisplayRosterComponent, RosterSheetComponent, SimpleDialogComponent, PageNotFoundComponent]
 })
 export class SharedModule { }

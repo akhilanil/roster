@@ -15,6 +15,7 @@ import { CoreModule } from '@app/core/core.module'
 
 /* Form Builder import */
 import {FormBuilder} from '@angular/forms';
+import { SharedModule } from '@app/shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,7 @@ import {FormBuilder} from '@angular/forms';
     BrowserAnimationsModule,
     CoreModule.forRoot(),
     AppRoutingModule,
-   
+    SharedModule
 
 
   ],

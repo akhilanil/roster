@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSlideToggleChange, MatSelectChange, MatDialog } from '@angular/material';
 
+import { MatStepper } from '@angular/material';
 import {FormControl, Validators, FormGroup, FormBuilder} from '@angular/forms';
 
 /* UI Constant imports */
 import { INITIAL_STEP_LABEL, SECOND_STEP_LABEL, FINAL_STEP_LABEL } from './constants/ui-constants'
-import { TITLE_INPUT_LABEL, TITLE_INPUT_ERROR_MINLEN, TITLE_INPUT_ERROR_REQUIRED } from './constants/ui-constants'
+import { TITLE_INPUT_LABEL, TITLE_INPUT_ERROR_MINLEN, TITLE_INPUT_ERROR_REQUIRED, DUPLICATE_ROSTER_ERROR } from './constants/ui-constants'
 import { YEAR_SELECT_LABEL, YEAR_SELECT_ERROR_REQUIRED } from './constants/ui-constants';
 import { MONTH_SELECT_LABEL, MONTH_SELECT_ERROR_REQUIRED } from './constants/ui-constants'
 import { SUNDAYS_INCLUDED_LABEL, SATURDAYS_INCLUDED_LABEL } from './constants/ui-constants'
@@ -135,6 +136,9 @@ export class RosterInputComponent implements OnInit {
   /* Enables/Disables the final submit button based on this boolean value */
   isCreateClicked: boolean;
 
+  /* List of already added rosters */
+  rosterList: Array<CreateRosterRSModel>;
+
 
   participantLeaveDynamicStepperBuilder: Array<
                                   {
@@ -153,6 +157,29 @@ export class RosterInputComponent implements OnInit {
               private formBuilder: FormBuilder,
               private tokenService: TokenService,
               private rosterCache: RosterListCacheService) {
+
+
+    if(this.tokenService.isAuthenticated()) {
+      this.rosterList = new Array<CreateRosterRSModel>();
+
+      if(this.rosterCache.rosterListCache == null) {
+        this.manageRosterService.getAllRostersOfUser().subscribe((roster : Array<CreateRosterRSModel>) => {
+            this.rosterCache.initCache(roster)
+            this.rosterCache.rosterListCache.subscribe((roster : CreateRosterRSModel) => {
+              this.rosterList.push(roster)
+            })
+        })
+
+      } else {
+        this.rosterCache.rosterListCache.subscribe((roster : CreateRosterRSModel) => {
+          this.rosterList.push(roster)
+        })
+      }
+
+
+
+    }
+
 
     this.initStepLabel = INITIAL_STEP_LABEL;
     this.secondStepLabel = SECOND_STEP_LABEL;
@@ -220,6 +247,8 @@ export class RosterInputComponent implements OnInit {
 
     })
 
+
+
     this.secondFormGroup = this.formBuilder.group({});
     this.thirdFormGroup = this.formBuilder.group({});
 
@@ -228,13 +257,30 @@ export class RosterInputComponent implements OnInit {
 
   /* Mehtod to initialise all Form controllers */
   private initFromConroller(): void {
-    this.titleControl = new FormControl('', [Validators.required, Validators.maxLength(14), Validators.minLength(4), Validators.pattern('^[a-zA-Z][a-zA-Z ]*[a-zA-Z]$')]);
-    this.yearControl = new FormControl('', [Validators.required]);
-    this.monthControl = new FormControl('', [Validators.required]);
+    this.titleControl = new FormControl('', [
+                                              Validators.required,
+                                              Validators.maxLength(14),
+                                              Validators.minLength(4),
+                                              Validators.pattern('^[a-zA-Z][a-zA-Z ]*[a-zA-Z]$'),
+                                              // RosterInputValidator.validateForDupRoster(this.rosterList, this.titleControl, this.yearControl, this.monthControl),
+                                              RosterInputValidator.validateForDupRoster(this.rosterList, this.initalFormGroup),
+                                            ]);
+    this.yearControl = new FormControl('', [
+                                              Validators.required,
+                                              RosterInputValidator.validateForDupRoster(this.rosterList, this.initalFormGroup),
+
+                                            ],);
+    this.monthControl = new FormControl('', [
+                                              Validators.required,
+                                              RosterInputValidator.validateForDupRoster(this.rosterList, this.initalFormGroup ),
+
+                                            ]);
 
     this.holidayControl = new FormControl('');
     this.totalParticipantControl = new FormControl('', [Validators.required]);
     this.totalSessionControl = new FormControl('', [Validators.required]);
+
+
 
     this.monthControl.disable();
     this.totalParticipantControl.disable();
@@ -266,6 +312,11 @@ export class RosterInputComponent implements OnInit {
       return TITLE_INPUT_ERROR_REQUIRED
     } else if(this.titleControl.hasError('minlength')) {
       return TITLE_INPUT_ERROR_MINLEN
+    } else if(this.titleControl.hasError('duproster')){
+      // this.yearControl.setErrors({'duproster': true});
+      // this.monthControl.setErrors({'duproster': true});
+      // this.titleControl.setErrors({'duproster': true});
+      return DUPLICATE_ROSTER_ERROR
     } else {
       return INVALID_INPUT;
     }
@@ -274,12 +325,26 @@ export class RosterInputComponent implements OnInit {
 
   /* Method to get year error message */
   getYearErrorMessage(): string {
-    return YEAR_SELECT_ERROR_REQUIRED;
+    if(this.yearControl.hasError('duproster')){
+      // this.titleControl.setErrors({'duproster': true});
+      // this.monthControl.setErrors({'duproster': true});
+      return DUPLICATE_ROSTER_ERROR
+    } else {
+        return YEAR_SELECT_ERROR_REQUIRED;
+    }
+
   }
 
   /* Method to get month error message */
   getMonthErrorMessage(): string {
-    return MONTH_SELECT_ERROR_REQUIRED
+    if(this.monthControl.hasError('duproster')) {
+      // this.titleControl.setErrors({'duproster': true});
+      // this.yearControl.setErrors({'duproster': true});
+      return DUPLICATE_ROSTER_ERROR
+    } else {
+        return MONTH_SELECT_ERROR_REQUIRED
+    }
+
   }
 
   /* Method to get participant error message */
@@ -405,10 +470,6 @@ export class RosterInputComponent implements OnInit {
     };
   }
 
-  onYearSelected() {
-
-  }
-
   onSessionSelected() {
     //this.totalParticipantControl.markAsDirty();
 
@@ -418,7 +479,23 @@ export class RosterInputComponent implements OnInit {
   }
 
 
-  onInitSubmit() {
+  onInitSubmit(stepper: MatStepper) {
+
+    if(this.isDuplicateRoster()) {
+
+      this.yearControl.setErrors({'duproster': true});
+      this.monthControl.setErrors({'duproster': true});
+      this.titleControl.setErrors({'duproster': true});
+      // debugger
+      return;
+    }
+
+    this.yearControl.setErrors({'duproster': null});
+    this.yearControl.updateValueAndValidity();
+    this.monthControl.setErrors({'duproster': null});
+    this.monthControl.updateValueAndValidity();
+    this.titleControl.setErrors({'duproster': null});
+    this.titleControl.updateValueAndValidity();
 
     var title: string = this.titleControl.value.trim().toUpperCase();
     var year = this.yearControl.value;
@@ -443,6 +520,8 @@ export class RosterInputComponent implements OnInit {
     this.createRestFormGroup(totalParticipants, totalSessions)
 
     this.isFirstStepperCompleted = true;
+
+    stepper.next();
 
   }
 
@@ -717,5 +796,54 @@ export class RosterInputComponent implements OnInit {
       window.location.reload();
     })
   }
+
+
+    /** Validator for duplicate roster */
+    public isDuplicateRoster(): boolean {
+
+      if(this.titleControl == null || this.yearControl == null || this.monthControl == null) {
+        return null;
+      }
+
+      if(this.rosterList == null || this.rosterList.length === 0) {
+        return false;
+      }
+
+      let title: string = this.titleControl.value;
+      let year: string = '' + this.yearControl.value;
+      let month: string = '' + this.monthControl.value;
+      let isDuplicate: boolean = false;
+
+      this.rosterList.forEach((roster: CreateRosterRSModel) => {
+
+        let rosterMonth: string;
+        let rosterYear: string;
+        let rosterTitle: string = roster.title;
+
+        if(typeof roster.month === "number") {
+          rosterMonth = '' + roster.month
+        } else {
+          rosterMonth = roster.month
+        }
+        if(typeof roster.year === "number") {
+          rosterYear = '' + roster.year
+
+        } else {
+          rosterYear = roster.year;
+        }
+        //debugger
+        if(title.trim().toUpperCase() ===  rosterTitle.trim().toUpperCase() &&
+           year.trim().toUpperCase() === rosterYear.trim().toUpperCase()   &&
+           month.trim().toUpperCase() === rosterMonth.trim().toUpperCase()
+         ) {
+          isDuplicate = true;
+          return;
+        }
+      });
+
+      return isDuplicate;
+  }
+
+
 
 }

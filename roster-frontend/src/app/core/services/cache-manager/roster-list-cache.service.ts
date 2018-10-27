@@ -57,7 +57,7 @@ export class RosterListCacheService {
   public resetCache() {
     this.emptyCache = true;
     this.rosterListSubject.complete()
-
+    this.rosterListCache = null;
   }
 
   /**
@@ -68,7 +68,7 @@ export class RosterListCacheService {
 
      let isCacheAlreadySet: boolean = false
 
-    if(this.rosterListCache != undefined /*&& this.rosterListSubject.observers.length != 0*/) {
+    if(this.rosterListCache != null /*&& this.rosterListSubject.observers.length != 0*/) {
        isCacheAlreadySet = true;
      }
 

@@ -1,6 +1,6 @@
 <mat-horizontal-stepper linear #stepper>
   <mat-step [stepControl]="initalFormGroup" >
-      <form novalidate #initalForm = ngForm (ngSubmit)="onInitSubmit()" [formGroup]="initalFormGroup">
+      <form novalidate #initalForm = ngForm (ngSubmit)="onInitSubmit(stepper)" [formGroup]="initalFormGroup">
       <ng-template matStepLabel>{{initStepLabel}}</ng-template>
 
       <div class="container title">
@@ -118,7 +118,7 @@
         </div>
       </div>
       <div class="container stepper-contorl">
-        <button mat-raised-button color="primary" matStepperNext>Next</button>
+        <button mat-raised-button color="primary" >Next</button>
       </div>
     </form>
   </mat-step>

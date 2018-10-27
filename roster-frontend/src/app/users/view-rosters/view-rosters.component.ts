@@ -36,10 +36,8 @@ export class ViewRostersComponent implements OnInit {
     ).subscribe(
       (rosterModel: CreateRosterRSModel) => {
         this.manageRosterService.setRosterDisplaySubject(rosterModel, false);
-
       },
       (err => {
-        console.log(err)
         this.isError = true
       })
     )

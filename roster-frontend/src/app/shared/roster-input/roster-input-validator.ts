@@ -1,10 +1,80 @@
-import { ValidatorFn, AbstractControl, FormGroup } from "@angular/forms";
+import { ValidatorFn, AbstractControl, FormGroup, FormControl } from "@angular/forms";
+
+import { RosterListCacheService } from '@services/cache-manager'
+import { ReplaySubject } from "rxjs";
+import { CreateRosterRSModel } from "@interfaces/business-interface";
 
 export class RosterInputValidator {
 
 
-  constructor() {
 
+
+  constructor() {}
+
+
+  /** Validator for duplicate roster */
+  public static validateForDupRoster( rosterList: Array<CreateRosterRSModel>, formGroup: FormGroup): ValidatorFn {
+    return (control: AbstractControl)  => {
+
+      if(formGroup == null) {
+        return null;
+      }
+
+
+      let titleControl = formGroup.get('tc');
+      let yearControl = formGroup.get('yc');
+      let monthControl = formGroup.get('mc');
+
+
+      console.log(titleControl, yearControl, monthControl, control.value)
+
+
+      if(titleControl == null || yearControl == null || monthControl == null) {
+        return null;
+      }
+
+      control.value
+
+      if(control.pristine ||
+        rosterList == null ||
+        rosterList.length === 0 ||
+        titleControl.pristine ||
+        yearControl.pristine ||
+        monthControl.pristine) {
+        return null;
+      }
+
+      let title: string = titleControl.value;
+      let year: string = yearControl.value;
+      let month: string = monthControl.value;
+
+      rosterList.forEach((roster: CreateRosterRSModel) => {
+
+        let rosterMonth: string;
+        let rosterYear: string;
+        let rosterTitle: string
+
+        if(typeof roster.month === "number") {
+          rosterMonth = '' + roster.month
+        }
+        if(typeof roster.year === "number") {
+          rosterYear = '' + roster.month
+        }
+
+        let isDuplicate: boolean = false;
+        console.log(title, year, month);
+        console.log(rosterList)
+
+        if(title.trim().toUpperCase ===  rosterTitle.trim().toUpperCase &&
+           year.trim().toUpperCase === rosterYear.trim().toUpperCase   &&
+           month.trim().toUpperCase === rosterMonth.trim().toUpperCase
+         ) {
+          return  {'duproster': true};
+        }
+      });
+
+      return  null;
+    }
   }
 
   /*Validates for same name */
@@ -60,7 +130,7 @@ export class RosterInputValidator {
       })
       let isNotValid: boolean = false;
       controlMap.forEach((value, key) => {
-        
+
         if(!key.startsWith(currentGroup) && value == control.value ) {
           isNotValid = true;
         }
