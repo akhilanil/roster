@@ -91,10 +91,10 @@ export class RosterInputValidator {
         Object.keys(formGroup.controls).forEach(key => {
           let val:string = formGroup.get(key).value
           if(formGroup.controls[key] != control && val.length != 0 && key.startsWith(checkFor)) {
-            values.push(val);
+            values.push(val.toUpperCase());
           }
         })
-        return values.includes(control.value)?  {'duplicates': true} : null;
+        return values.includes(control.value.toUpperCase())?  {'duplicates': true} : null;
       }
   }
 
@@ -113,7 +113,7 @@ export class RosterInputValidator {
       }
       controlMap.clear();
       Object.keys(formGroup.controls).forEach(key => {
-        let val:string = formGroup.get(key).value;
+        let val:string = formGroup.get(key).value.toUpperCase();
         if(val.trim().length != 0) {
           if(formGroup.controls[key] == control) {
             if(key.startsWith('session')) {
@@ -131,7 +131,7 @@ export class RosterInputValidator {
       let isNotValid: boolean = false;
       controlMap.forEach((value, key) => {
 
-        if(!key.startsWith(currentGroup) && value == control.value ) {
+        if(!key.startsWith(currentGroup) && value == control.value.toUpperCase() ) {
           isNotValid = true;
         }
       })
