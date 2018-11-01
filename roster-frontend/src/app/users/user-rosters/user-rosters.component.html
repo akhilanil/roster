@@ -37,7 +37,7 @@
                     <button mat-raised-button color="primary" (click) = "viewRoster(roster.unique_id)">View Roster</button>
                   </div>
                   <div class="">
-                    <button mat-raised-button color="warn" (click) = "deleteRoster(roster.unique_id)">Delete Roster</button>
+                    <button mat-raised-button color="warn" (click) = "deleteRoster(roster.unique_id)" [disabled]="isDeleteClicked">Delete Roster</button>
                   </div>
                 </div>
 

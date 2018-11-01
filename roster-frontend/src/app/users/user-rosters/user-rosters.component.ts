@@ -51,6 +51,9 @@ export class UserRostersComponent implements OnInit, OnDestroy {
   /* Array containing the raw server side response of the user rosters. This is set either from the cache or by HTTP response */
   rostersResponse: Array<CreateRosterRSModel>
 
+  /* Enable/Disable Delete button */
+  isDeleteClicked: boolean;
+
 
   constructor(
               private manageRosterService: ManageRosterService,
@@ -64,7 +67,7 @@ export class UserRostersComponent implements OnInit, OnDestroy {
     this.isError = false;
     this.isIntialized = false;
     this.progressStatus = 30;
-
+    this.isDeleteClicked = false;
   }
 
   ngOnInit() {
@@ -246,9 +249,11 @@ export class UserRostersComponent implements OnInit, OnDestroy {
   /** Method invoked on delete roster click*/
   public deleteRoster(uniqueHash: string): void {
     const routeUrl = CURRENT_ROUTE_URL;
+    this.isDeleteClicked = true;
     this.manageRosterService.deleteRoster(uniqueHash).subscribe(
       (res) => {
-        this.handleDeleteRoster(uniqueHash)
+        this.handleDeleteRoster(uniqueHash);
+        this.isDeleteClicked = false;
       },
       (err) => {
         if(err === NOT_FOUND_CLIENT) {
@@ -256,6 +261,7 @@ export class UserRostersComponent implements OnInit, OnDestroy {
         } else if(TOKEN_EXPIRED_CLIENT === err) {
           this.handleTokenExpired()
         }
+        this.isDeleteClicked = false;
       },
     )
   }
