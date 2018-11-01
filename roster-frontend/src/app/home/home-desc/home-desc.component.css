@@ -11,7 +11,7 @@ mat-grid-tile {
   align-items: center;
   justify-content: center;
   width: 100%;
-  background-image: url('assets/img/background/bg.jpg');
+  background-image: url('/assets/img/background/bg.jpg');
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;

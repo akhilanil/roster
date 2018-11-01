@@ -93,7 +93,7 @@ WSGI_APPLICATION = 'roster_project.wsgi.application'
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
 
-if DEBUG:
+if  DEBUG:
     from .settings_api.dev import db_settings
     DATABASES = {
         'default': {

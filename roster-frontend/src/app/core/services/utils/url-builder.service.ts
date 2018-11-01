@@ -3,8 +3,9 @@ import { Injectable } from '@angular/core';
 import {  LOGIN_URL, NEW_ROSTER_URL, LIST_ROSTERS_URL,
   NEW_USER_URL,  RESET_PASSWORD_URL, GITHUB_LINK, GITHUB_IMG_SAFE_URL } from '../service-settings'
 
-import { SERVER_DOMAIN, CLIENT_DOMAIN } from '@app/settings'
+// import { SERVER_DOMAIN, CLIENT_DOMAIN } from '@app/settings'
 
+import { environment } from '../../../../environments/environment'
 
 import {SAFE_URL_LIST} from '../safe-url';
 
@@ -16,11 +17,16 @@ export class UrlBuilderService {
   constructor() { }
 
   private getServerAddress() : string {
-    return SERVER_DOMAIN;
+
+
+    return environment.serverDomain;
+
+    //return SERVER_DOMAIN;
   }
 
   public getClientDomainAddress(): string {
-    return CLIENT_DOMAIN;
+    return environment.clientDomain;
+
   }
 
 

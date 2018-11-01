@@ -12,4 +12,9 @@ export const CONTINUE_BUTTON: string = 'Continue without signup';
 export const HOME_DESC_HEADING: string = 'Make Rosters on the go..!!';
 
 /* Text for home component */
-export const HOME_DESC_TEXT: string = 'Lorem ipsum dolor sit amet, ne mel stet duis, perfecto dignissim disputando id vim. Illum indoctum ne his, mel tempor voluptaria in. Quo in elaboraret reprimique, vel in zril aliquip epicuri. Ex sumo quot noster nam, ius urbanitas constituto eu, populo iriure eu eum. Fabellas scriptorem deterruisset ex vim.';
+export const HOME_DESC_TEXT: string =   ' Tired of making rosters for your team ?'
+                                      + ' You are at the right place.'
+                                      + ' Just create a free account and with few simple steps you could prepare roster for your team.'
+                                      + ' Guess what? You could even share the roster among your team just by sharing your roster link. '
+                                      + ' Well.. You don\'t believe, do you ? Why don\'t you experience it yourself be clicking on'
+                                      + ' Continue without signup button to see how it works.';

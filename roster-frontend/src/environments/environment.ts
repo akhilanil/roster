@@ -3,7 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  serverDomain: 'http://192.168.1.7:8000',
+  clientDomain: 'http://localhost:4200/roster/home/reset-password/'
 };
 
 /*
