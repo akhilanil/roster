@@ -21,7 +21,7 @@ class PasswordResetSerializer(serializers.Serializer):
     new_password = serializers.CharField(max_length=15, min_length=4, required=False)
 
     # Represents the url to which the token is to be appended
-    domain_name = serializers.CharField(max_length=50, required=False)
+    domain_name = serializers.CharField(max_length=150, required=False)
 
     def validate(self, data):
         """
