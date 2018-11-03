@@ -111,7 +111,6 @@ else:
             'ENGINE': db_settings.ENGINE_SETTINGS,
             'NAME': db_settings.NAME_SETTINGS,
             'HOST': db_settings.HOST_SETTINGS,
-            'PORT': db_settings.PORT_SETTINGS,
             'USER': db_settings.USER_SETTINGS,
             'PASSWORD': db_settings.PASSWORD_SETTINGS,
         }

@@ -100,4 +100,20 @@ export class HomeDescComponent implements OnInit {
     this.router.navigate([CONTINUE_URL])
   }
 
+  divideBoxStyle() {
+
+    let styles = {};
+    if(window.innerWidth >= 400) {
+      styles = {
+        'flex': '0 0 50%'
+      };
+    }
+    
+    return styles;
+  }
+
+  hostBoxStyle() {
+
+  }
+
 }

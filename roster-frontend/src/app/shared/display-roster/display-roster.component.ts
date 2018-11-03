@@ -26,6 +26,7 @@ export class DisplayRosterComponent implements OnInit {
   /* Data to display */
   private rosterData: Array<Array<DisplayRosterModel>>;
 
+  private isMobileDevice: boolean;
 
   constructor(
                 private manageRosterService: ManageRosterService,
@@ -42,6 +43,11 @@ export class DisplayRosterComponent implements OnInit {
 
       if(typeof this.displayRoster != 'string' && this.displayRoster.toString() != 'No Data') {
           this.updateViewRoster();
+      }
+      if(window.innerWidth <= 400) {
+        this.isMobileDevice = true;
+      } else {
+        this.isMobileDevice = false;
       }
 
     })
@@ -224,6 +230,14 @@ export class DisplayRosterComponent implements OnInit {
     return monthName;
   }
 
+  /** Filters out Invalid month for mobile devices */
+  filterWeekArray(weekArray: Array<DisplayRosterModel>) {
+    if(this.isMobileDevice) {
+      return weekArray.filter((rosterDay: DisplayRosterModel) => rosterDay.isValid)
+    } else {
+      return weekArray;
+    }
+  }
 
 }
 

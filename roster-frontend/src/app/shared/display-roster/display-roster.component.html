@@ -4,7 +4,7 @@
     <!-- Container for a row in calendar -->
     <div class="week container" *ngFor = "let rosterWeek of rosterData">
       <!-- Container for a single day -->
-      <div class="day-block" *ngFor = "let day of rosterWeek">
+      <div class="day-block" *ngFor = "let day of filterWeekArray(rosterWeek)">
         <mat-card class="day-block-card">
           <mat-card-header class="center-component">
             <div class="mat-card-header-text"><h3 id="dayHeaderText" *ngIf = "day.isValid; else invalidDay"> {{day.calendar.day}} </h3></div>

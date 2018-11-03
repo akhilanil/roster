@@ -1,7 +1,19 @@
-.login-component-container {
-   max-height: 400px;
-   min-width:  400px;
+:host {
+  height: 60%;
+  width:  60%;
+}
 
+.login-component-container {
+   height: 100%;
+   width:  100%;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+.login-component-container > div {
+  text-align: center;
+  width: 300px;
 }
 
 .raised-box {

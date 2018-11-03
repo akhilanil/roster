@@ -1,25 +1,47 @@
 @import url('https://fonts.googleapis.com/css?family=Nunito:600i|Open+Sans');
 
-mat-grid-tile {
-  /* background: #515F79; */
+/* All container will be flex box conatiner */
+.container {
+  display: flex;
 }
 
-.grid-container{
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.main {
+
   justify-content: center;
+  align-items: center;
+  height: 100%;
   width: 100%;
   background-image: url('/assets/img/background/bg.jpg');
   background-position: center;
-  background-repeat: no-repeat;
+  background-repeat: repeat;
   background-size: cover;
+}
+
+.center {
+
+  height: inherit;
+  width: inherit;
+  align-items: center;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+
+.center > div {
+  
+  height: 90%;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.divide-by-half {
+
+
 }
 
 .grid-container > div {
   width: 100%;
-
+  height: inherit;
 }
 
 .desc-heading {
