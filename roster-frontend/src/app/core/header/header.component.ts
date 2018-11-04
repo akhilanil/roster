@@ -49,6 +49,8 @@ export class HeaderComponent implements OnInit {
       /* destroys the cache of current user */
       this.rosterListCacheService.resetCache();
       this.router.navigate(['/roster']);
+    } else {
+      window.location.href = "mailto:akhilanil95@gmail.com"
     }
   }
 

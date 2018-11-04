@@ -108,7 +108,6 @@ export class HomeDescComponent implements OnInit {
         'flex': '0 0 50%'
       };
     }
-    
     return styles;
   }
 
