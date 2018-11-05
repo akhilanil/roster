@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  serverDomain: 'http://192.168.1.7:8000',
+  serverDomain: 'http://localhost:8000',
   clientDomain: 'http://localhost:4200/roster/home/reset-password/'
 };
 

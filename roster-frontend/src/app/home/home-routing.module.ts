@@ -11,7 +11,7 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
 import { NewPasswordComponent } from './new-password/new-password.component'
 
 /* Custom service inputs */
-import { ViewRosterRouteGaurdService, ResetPasswordGaurdService } from '@services/routes/gaurds'
+import { ViewRosterRouteGaurdService, ResetPasswordGaurdService, LoginRouteService } from '@services/routes/gaurds'
 
 const routes: Routes = [
   {
@@ -21,6 +21,7 @@ const routes: Routes = [
       {
         path:'login',
         component: LoginComponent,
+        canActivate: [LoginRouteService]
       },
       {
         path:'register',
